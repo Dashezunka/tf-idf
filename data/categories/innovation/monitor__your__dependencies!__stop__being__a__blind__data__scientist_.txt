@@ -1,0 +1,35 @@
+Dominos as an analogy for dependencies, pixabay.com.
+
+Monitor Your Dependencies! Stop Being A Blind Data-Scientist.
+
+Reasons for monitoring your model dependencies.
+
+In my previous article “Monitor! Stop Being A Blind Data Scientist”, I mentioned the many use cases and the monumental importance of monitoring & alerts on our field, specifically from a data-science-researcher point-of-view. I looked at use-cases and reviewed several companies that provide varying solutions for this huge, but strangely undiscussed problem, i.e., the lack of model monitoring, a problem that atm overruns our industry.
+
+Use Cases
+
+In the original article, I listed several use cases for data monitoring & alerts, I am sure there are others, but these ones that have the most impact on a data scientist. The list was written in chronological order. In this article, we’ll look into package dependency-versions and explore several incidents that can affect your clients directly.
+
+Annotators Performance Annotation Distribution Data Integrity, i.e., schemas and test-driven data analysis. Data Distributions, i.e., concept drifts Dependency Versions, i.e., your package imports. Model Versions Model Parameters Model Metrics Business-Product Metrics Model Software & Hardware Performance
+
+Package Dependencies
+
+Algorithms rely on various packages and each one of these packages will have multiple versions throughout their lifetime. The following are several situations, out of many, where dependencies break your model or deployment and when that happens you’ll wish you had some sort of mechanism to monitor your dependencies. In addition to alerts that may notify you when, what and where a problem happened.
+
+At times you will have “requirements.txt” discrepancies between environments, for example, your research environment is always up-to-date when it comes to scientific packages, not to mention that you recently upgraded scikit-learn. However, your deployment has a lock on a specific version. Once new code or a serialized model are uploaded to staging or production, packages such as pickle or joblib will break when deserializing a model, that was serialized using older package versions. You may be using a package that converts emojis to text, i.e., 😃 -> happy. Your NLP algorithm relies on a certain mapping of emojis to text and was measured with a specific package-version. A newer version with additional emojis was released yesterday and now it has changed many of the emojis to word mappings. For your model, this is a critical change that may lead to a model breaking expected classification, or simply influencing prediction probabilities. Someone outside of your team tweaks a package, which is under their responsibility, it may happen up- or down-stream and it ultimately changes or breaks the expected functionality of your model. If it breaks, it’s a matter of figuring out where the exception came from and we all know that when that happens, it is time-consuming, especially when it's external to your code-base. On the other hand, if it keeps on ticking then you won't be aware there is a problem until a client complains. A deployment flow was recently introduced in your pipeline and for some reason it broke, falling back on the previous flow which had been deprecated months ago but still points to old code, old dependencies and old serialized models. Your clients will be served with predictions based on stale data. Data for new clients will be non-existent in these old models and you will have a small catastrophe on your hands.
+
+In all of these cases, monitoring your dependencies in each environment will save you expensive man-hours by shortening time to detection, time to response and resolution, and most importantly it will shorten the time that your clients are badly influenced by these incidents.
+
+Figure 1: black dots represent a dependency or model version checkpoint, this illustration is composed on top of an actual view by superwise.ai.
+
+I imagine a dashboard in which it is easy to identify such incidents. Figure 1, is a suggestion illustration where model versions are tracked over a timeline, imagine each one of the curves from top to bottom, is monitoring some kind of model activity in training, testing, staging and production environments, respectively.
+
+“If you can’t track your dependency versions, you can’t trust that your research, model performance or deployment will be deterministic”
+
+Conclusion
+
+In order to preserve a deterministic behavior, we must record all the dependency-versions in every environment, as seen in Figure 1. We need to enable alerts when dependencies don't match between environments.
+
+Keep in mind that unit tests may pass and you won't catch these types of problems unless you closely monitor your model performance, talk to your clients or if something completely breaks.
+
+Dependency-version-history should be mapped to your prediction, so you can figure out what went wrong, when it went wrong, where it went wrong and deal with it quickly and easily.

@@ -1,0 +1,63 @@
+Generative and discriminative models are widely used machine learning models. For example, Logistic Regression, Support Vector Machine and Conditional Random Fields are popular discriminative models; Naive Bayes, Bayesian Networks and Hidden Markov models are commonly used generative models.
+
+Probabilistic graphical models (PGMs) are a rich framework for encoding probability distributions over complex domains like joint distributions over large numbers of random variables that interact with each other.
+
+In this article, we will explore generative and discriminative models’ graphical structures as PGMs using Naive Bayes and Logistic Regression as an example. We will also discuss the similarities and differences in these models.
+
+Model Structures
+
+Suppose we are solving a classification problem to decide if an email is spam or not based on the words in the email. We have a joint model over labels Y=y, and features X={x1, x2, …xn}. The joint distribution of the model can be represented as p(Y , X) = P(y, x1,x2…xn). Our goal is to estimate the probability of spam email: P(Y=1|X). Both generative and discriminative models can solve this problem, but in different ways.
+
+Let’s see why and how they are different!
+
+To get the conditional probability P(Y|X), generative models estimate the prior P(Y) and likelihood P(X|Y) from training data and use Bayes rule to calculate the posterior P(Y |X):
+
+On the other hand, discriminative models directly assume functional form for P(Y|X) and estimate parameters of P(Y|X) directly from training data.
+
+The graph above shows the difference in the structures of generative and discriminative models. The circles represent variable(s) and the direction of the lines indicates what probabilities we can infer. In our spam classification problem, we are given X: the words in the emails, and Y is unknown. We see that the arrow in the discriminative model graph(right) is pointing from X to Y, indicating that we can infer P(Y|X) directly from the given X. However, the arrow in the generative model graph(left) is pointing towards the opposite direction, which means we need to infer the values of P(Y) and P(X|Y) from the data first and use them to calculate P(Y|X).
+
+Mathematical Deductions
+
+The graph above shows the underlying probability distributions of these two models when features X are expanded. We can see that each feature xi depends on all the previous features: {x1, x2…x(i-1)}. This won’t affect discriminative models as they simply treat X as given facts and all they need to estimate is P(Y|X), but it makes computing hard in generative models.
+
+Generative Models (Naive Bayes)
+
+The posterior probability can be written as:
+
+We see that the dependence of all the X makes it hard to infer P(X|Y) as we need to condition the probability of xi on y and {x1, x2…x(i-1)}. To simplify the problem, we assume all the X are conditionally independent:
+
+With this assumption, now we can rewrite the posterior distribution as:
+
+The graph structure of generative models is also changed:
+
+2. Discriminative Models (Logistic Regression)
+
+As we mentioned earlier, we can directly estimate the posterior probability for discriminative models with training data:
+
+In Logistic Regression, we parameterize the posterior probability as:
+
+Maximum likelihood estimation is used to estimate the parameters.
+
+Comparison
+
+1. Accuracy
+
+Generative models are less accurate than discriminative models when the assumption of conditional independence is not satisfied. For example, in our spam classification problem, let x1 = number of times “bank” appear in the email data, and x2 = number of times “account” appear in the email. Regardless of whether spam, these two words always appear together, i.e. x1 = x2. Learning in naive Bayes results in p(x1 | y) = p(x2 | y), which double counts the evidence. Logistic regression doesn’t have this problem because it can set either α1=0 or α2=0.
+
+2. Missing Data
+
+Generative models can work with missing data, and discriminative models generally can’t. In generative models, we can still estimate the posterior by marginalizing over the unseen variables:
+
+However, discriminative models usually require all the features X to be observed.
+
+3. Performance
+
+Compared with discriminative models, generative models need less data to train. This is because generative models are more biased as they make stronger assumptions (assumption of conditional independence).
+
+4. Application
+
+Discriminative models are “discriminative” because they are useful but only useful for discriminating Y’s label, so they can only solve classification problems. Generative models have more applications besides classification, e.g. samplings, bayes learning, MAP inference.
+
+Conclusion
+
+Generative and discriminative models are both very useful models we use to solve machine learning problems. Which model to use depends on the use case and data. Generally speaking, generative models are often used when we have a notion of the underlying distribution of the data and we want to find the hidden parameters of that distribution, while discriminative models are more suitable when we only want to find the boundary that separates the data into different classes.

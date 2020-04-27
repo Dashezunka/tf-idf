@@ -1,0 +1,169 @@
+Feature selection in machine learning
+
+Methods for feature selection with Python
+
+Introduction
+
+The gradient boosted decision trees, such as XGBoost and LightGBM [1–2], became a popular choice for classification and regression tasks for tabular data and time series. Usually, at first, the features representing the data are extracted and then they are used as the input for the trees.
+
+Schematics of decision trees ensembling, author: Mohtadi Ben Fraj, source: medium
+
+The feature is an individual measurable property or characteristic of a phenomenon being observed [3] — an attribute in your data set. Features may include various statistics (mean, std, median, percentiles, min, max, etc), trends (rise and decays), peak analysis (periods, average peaks width, peaks number, frequencies), autocorrelations and cross-correlations and many others. There are several open-source libraries that help to extract all basic features, like NumPy, SciPy, sklearn, tsfresh [4–7], and others. Often, it’s also useful to design custom-made features for the task, based on the domain knowledge and physical understanding of the problem.
+
+Once the features are extracted from the data they are used as in input for the gradient boosted decision trees (GBDT) [8]. However, the GBDT are prone to overfitting, and for the relatively small data sets, it’s important to reduce the number of features, leaving only those that help the classifier.
+
+An important part of the pipeline with decision trees is the features selection process. The features selection helps to reduce overfitting, remove redundant features, and avoid confusing the classifier. Here, I describe several popular approaches used to select the most relevant features for the task.
+
+Automated Recursive feature elimination
+
+One of the possibilities to remove extra features is an automatic tool for recursive feature elimination from sklearn library [9]. Recursive Feature Elimination with Cross-Validation [10] is used more often than the option without cross-validation.
+
+The goal of this tool is to select features by recursively considering smaller and smaller sets of features.
+
+First, the estimator is trained on the initial set of features and the importance of each feature is obtained.
+
+Then, the least important features are removed from the current set of features and the classification metric is checked again.
+
+The procedure is repeated recursively until the desired number of features to select is eventually reached.
+
+This tool provides the first approximation of the useful feature set. However, the automated feature elimination is not always optimal, and often it requires further fine-tuning. After the initial set of features is selected with the recursive elimination described above, I use permutation importance for selecting features.
+
+Permutation importance
+
+This method is known as “permutation importance” or “Mean Decrease Accuracy” and is described in Breiman [11]. The permutation importance is computed as a decrease in the score when feature values are permuted (become noise).
+
+One of the ways to measure feature importance is to remove it entirely, train the classifier without that feature and see how doing so affects the score. However, this approach requires re-training of the classifier for each feature which is computationally expensive. The way around it is removing the feature under question from the validation set only, and computing the score for the validation set without that feature. As the trained classifier still expects to have this feature available, instead of removing the feature it can be replaced with random noise from the same distribution, as initial feature values. The easiest way to get such distribution is simply shuffling (or permuting) original feature values. And this is exactly how the permutation importance is implemented. The feature is still there for the classifier, but it does not contain any useful information.
+
+The permutation importance can be computed using the eli5 package [12]. It provides a ranking of the features, and then I remove ones with negative or small importance. The eli5 package provides a way to compute feature importances for any black-box estimator by measuring how the score decreases when a feature is not available.
+
+Example:
+
+import eli5
+
+from eli5.sklearn import PermutationImportancefrom lightgbm import LGBMClassifier # set data and targets, split, and metric # set a classifier
+
+clf = LGBMClassifier(**best_params) # fit the classifier model
+
+clf.fit(x_train, y_train,
+
+eval_set=[(x_train, y_train), (x_valid, y_valid)],
+
+eval_metric=lgbm_multi_weighted_logloss,
+
+verbose=100,
+
+early_stopping_rounds=400,
+
+sample_weight=y_train.map(weights), ) # calculate permitation importance for the classifier
+
+perm = PermutationImportance(
+
+clf, scoring=permutation_scorer,
+
+random_state=1).fit(x_valid, y_valid)
+
+expl = eli5.explain_weights(
+
+perm, feature_names=x_valid.columns.tolist(), top=None) print(eli5.format_as_text(expl)) print(expl.feature_importances) # save importances to html
+
+text_file = open("importance.html", "w") text_file.write(eli5.format_as_html(expl))
+
+text_file.close()
+
+The method is most suitable for computing feature importance when a number of features are not huge; it can be resource-intensive otherwise. Therefore, I use it as the second step after the initial automated features elimination described above.
+
+I remove features with low or negative permutation importance while checking improvement for the model performance.
+
+Some features can have high permutation importance but define the very similar aspects of the data. In this case, finding a correlation between features can help to identify redundant features.
+
+Removing redundant features
+
+Source: knowyourmeme.com , Creative Commons Attribution-ShareAlike License
+
+Correlation is a statistical technique that can show whether and how strongly pairs of variables are related.
+
+When the correlation is equal to 1 the features are perfectly correlated
+
+When the correlation is zero, the features are totally independent
+
+Features with high correlation are more linearly dependent and hence have almost the same effect on the dependent variable. Hence, when two features are highly correlated, we can drop one of them.
+
+The correlation matrix can be calculated simply as corr = X.corr(), where vector X contained all columns with considered features.
+
+The correlation matrix between all features has the 1 on the diagonal elements, as the feature is 100% correlated with itself. The off-diagonal elements with high correlation values indicate redundant features.
+
+sns.heatmap(corr)
+
+Author: A. Hubin, License: MIT
+
+Removing redundant features (those, that are highly correlated) manually one-by-one while checking the metric on validation helps to reduce the features set and improve the performance of the GBDT. To do so, simply compare the correlation between different features (off-diagonal elements) and try to remove one of two features that have a correlation higher than some threshold (e.g. 0.9)
+
+Principle component analysis
+
+Another way to reduce the number of features is by using principal component analysis (PCA) [13]. This technique allows a reduction in the dimensionality of the features space while finding the most prominent components from the combination of features.
+
+Source: scikit-learn.org, BSD license
+
+The main idea of PCA is to reduce the dimensionality of a data set consisting of many variables correlated with each other, either heavily or lightly, while retaining the variation present in the dataset, up to the maximum extent.
+
+It can be easily implemented using the sklearn library [14]. PCA is sensitive to scaling and the features need to be normalised before applying this algorithm. An example:
+
+from sklearn.preprocessing import StandardScaler
+
+from sklearn.decomposition import PCA features = [‘feat_a’, ‘feat_b’, ‘feat_c’, ‘feat_d’] # Scale the features
+
+x = StandardScaler().fit_transform(features) # decide on the number of components
+
+pca = PCA(n_components=2)
+
+principalComponents = pca.fit_transform(x)
+
+There are many courses and blog-posts, where you can read in details about this technique, for example, in [15].
+
+Final words
+
+There are, of course, other methods for features selection, such as using autoencoders, P-value, LightGBM importance, and others. Here I described the subset of my personal choice, that I developed during competitive machine learning on Kaggle.
+
+I perform steps 1–2–3 one by one for the features selection. Here is the example of applying feature selection techniques at Kaggle competition PLAsTiCC Astronomical Classification [16]. At first, the features were selected using automatic Recursive feature elimination with cross-validation [10], giving 167 features. Then, the remaining features were ranked using the permutation importance algorithm implemented in eli5 and top features were chosen. As we can see, 50 features were not sufficient and 100 features performed better for this data set. Finally, the redundant features were removed from the top 100 using correlation, leaving us with selected 82 features [17].
+
+The model results for different sets of features, see the full article in [17]
+
+Such a multi-step approach improves the model performance compared to the automatic feature selection, but not dramatically. Defining and designing the most relevant features is still the priority to get the best model with GBDT classifiers/ regressors.
+
+Tatiana Gabruseva, PhD
+
+References:
+
+[1] LightGBM, https://lightgbm.readthedocs.io/en/latest/
+
+[2] XGBoost, https://xgboost.readthedocs.io/en/latest/tutorials/index.html
+
+[3] Bishop, Christopher (2006). Pattern recognition and machine learning. Berlin: Springer. ISBN 0–387–31073–8.
+
+[4] NumPy, https://numpy.org/
+
+[5] SciPy, https://www.scipy.org/
+
+[6] sklearn, https://scikit-learn.org/stable/modules/classes.html#module-sklearn.feature_extraction
+
+[7] tsfresh, https://tsfresh.readthedocs.io/en/latest/text/introduction.html
+
+[8] https://en.wikipedia.org/wiki/Gradient_boosting
+
+[9 ] RFE, https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFE.html
+
+[10 ] RFECV, https://scikit-learn.org/stable/modules/generated/sklearn.feature_selection.RFECV.html
+
+[11] Breiman, “Random Forests”, Machine Learning, 45(1), 5–32, 2001 (available online at https://www.stat.berkeley.edu/%7Ebreiman/randomforest2001.pdf).
+
+[12] Mikhail Korobov, Konstantin Lopuhin, eli5, https://eli5.readthedocs.io/en/latest/overview.html
+
+[13] PCA, https://en.wikipedia.org/wiki/Principal_component_analysis
+
+[14] sklearn.decomposition.PCA, https://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html
+
+[15] PCA: Application in Machine Learning, https://medium.com/apprentice-journal/pca-application-in-machine-learning-4827c07a61db
+
+[16] PLAsTiCC Astronomical Classification, https://www.kaggle.com/c/PLAsTiCC-2018
+
+[17] T. Gabruseva, S. Zlobin and P. Wang, Photometric light curves classification with machine learning, JAI, 2020 (ArXiv: https://arxiv.org/pdf/1909.05032.pdf)

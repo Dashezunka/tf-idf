@@ -1,0 +1,65 @@
+How Long?
+
+Perhaps the key question on both founders’ and investors’ minds is: when will things get back to normal?
+
+While it’s definitely too early to say anything about the broader global financial situation, I asked the investors I spoke with to estimate when will early stage investor appetite bounce back to pre-COVID-19 levels?
+
+Optimists and pessimists
+
+From the answers, it’s clear that investors fall into two categories:
+
+The relative optimists , who believe appetite will come back towards the end of 2020, or beginning of 2021
+
+, who believe The relative pessimists, who believe it will take the early stage investment market two years to recover, perhaps longer. For this group, this appears to be more of an “if” question than a “when” question.
+
+When do investors believe early stage investor appetite will bounce back?
+
+In my opinion, the realities represented by these two groups aren’t necessarily mutually exclusive: it’s very likely that, while short-term recovery will be fueled by fresh funds putting their capital to work, the next cycle of VC re-ups will see fewer, smaller funds, and the overall market will contract.
+
+So, What Should Founders Be Doing?
+
+In light of all this, what should you, the founders, be doing differently as you’re talking to investors? Here are a few pieces of advice:
+
+Pay attention to mood-setters
+
+First, remember that all of the adjustments and predictions above are strongly affected by sentiments and moods that swing, sometimes on a daily basis. But, volatile as they may be, these sentiments have a very real impact, most notably on investment decisions and terms.
+
+Here are three key developments that will likely dictate the pace of market recovery, and shape investor sentiment, in the near future. They are worth tracking and understanding:
+
+At what pace will the US get things under control? In this respect, the next few weeks’ worth of numbers and pictures from NY are critical. Will we be seeing a second wave of mass infections in China after the first wave subsided, and if so, how bad it will be? How quickly will scientific and medical breakthroughs be made, and how effective will these be in changing in-force containment paradigms?
+
+Pitch different
+
+To state the obvious, you can’t go into a pitch meeting/call and not address the quarantined elephant in the room. Here’s what the investors I spoke with expect to see that’s different:
+
+Be realistic and thoughtful: investors are already quite cynical about how founders contextualize their pitch to the current situation (see the quote below). Remember that VCs are long-term investors. In your pitch, present your long-term thesis on the impact of the coronavirus on your market, and don’t shy away from discussing the harsh near-term operating reality. Present a longer budget and plan: six months ago, companies were raising money in 18–24 month cycles (12–18 to operate + 6 to fundraise). Today, wary of an adverse financing market in the medium-term, most investors are looking for 24–30 or even 36 month plans. Given the state of the global economy, many of them believe in a more balanced approach emphasizing business health at the expense of growth. Revise your go-to-market assumptions: with the very basics of daily human interaction changing, it’s safe to assume that even the most tried and true GTM strategies will yield mixed results in the foreseeable future. Make sure you address this in your pitch and adjust your plan accordingly. Relying on high-touch sales? How will the cancellation of conferences and travel restrictions impact your pace? Shipping a freemium consumer app? What will conversion rates look like in an economy with 25% unemployment? Investor empathy: as both founder and investor, I know that founders have it harder than investors do. Full stop. But investors, especially ones with portfolio companies in sensitive positions, are still in very stressful situations. And just like founders, they are now forced to juggle their personal, family, and professional lives through a chaotic daily routine. Recognize that the person you’re engaging is also, well, a person. Embracing your commonalities will make processes smoother and lead to stronger, more successful relationships.
+
+Every company tells me it’s the best thing to ever happen to them. Feels like Corona is the new AI… - Early stage investor surveyed
+
+Adjust your expectations
+
+As the data suggests, investors are playing a very different game than they were even a month ago. And this “new normal” is likely to persist for at least a few months. Therefore, my advice for founders would be to adapt, the sooner the better:
+
+Patience: whether it’s internal reasons like VCs spending more time with their portfolio companies or external ones like extra constraints on scheduling meetings, investment processes will take longer than they used to. I suspect that most investors will be more brittle during the next few months: if you push them to make a decision prematurely, they are more likely to come back with a “no”. So take a breath and avoid doing that. Valuation: the era of rosy valuations is over, at least for the time being. Regardless of whether recent valuation levels were warranted or not, it’s indisputable that they’ve become a major vanity metric for both founders and investors (those who got in at lower prices, anyway). Founders will receive term sheets valuing their company at X only weeks after their friends with similar metrics had theirs valued at 1.5X. It sucks, but in the reality of an outlier-driven market, it also doesn’t really matter. Allocation: some investors will be playing defense for a while, allocating more of their capital to existing portfolio companies over new deals. Do your research and know the funds you’re engaging (online DBs, SEC filings, and fund announcements are all good sources). If the fund is on the older side (2018 vintage and earlier), don’t be afraid to ask investors tough, direct questions. It’s better than spending time and effort on a process that’s unlikely to succeed.
+
+Adopt Crunch Mentality
+
+Get leaner faster: investors will be funding companies for longer with more or less the same amount of money. A 24–30 month plan on the same budget means 25–33% reduction in monthly burn compared to 18–24 month plans. Founders have to learn to do more with less. Earn your burn: condition increases in expenses and hiring on milestones in your roadmap. It’s important these milestones be well-defined to prevent “burn creep” in a tumultuous financing market. This will allow you to stay on top of your runway and tie your spend to your performance.
+
+It’s a great time to be building
+
+Whether we’re headed for a “mere” global economic slowdown (at best) or a full-blown recession (at worst), nearly all sectors will see a drop-off in activity levels for at least a few quarters.
+
+The silver lining is that times like these are great for focusing on product, building out the company’s assets, and preparing for the eventual momentum of a recovering market:
+
+Increased product focus: fewer, longer customer conversations mean you’ll have fewer external pressures on your product roadmap. This allows you to focus on longer-term initiatives that would normally be de-prioritized or under-resourced. A (slightly) relaxed hiring market: with recent events, the sad reality is that some tech companies will let go of talented employees, while others will shut down completely. Many investors I spoke with said they were anticipating a small talent wave washing the market, and a slight correction in salaries all around. Investor focus on product milestones: with funds having capital to deploy into markets with fluctuating activity levels, many investors are beginning to talk about a shift in focus from business milestones to product milestones. This is a good time to educate your investors about your product vision and the larger opportunity.
+
+Consider waiting before pulling the trigger
+
+I was hesitant to bring up this last point, because it could be somewhat controversial in a “raise all you can when you can” industry. Having said that, this topic came up in more than a handful of conversations, so I think it’s important to create common knowledge around it.
+
+If you’re a founder who hasn’t taken any money yet, and you’re looking to raise your company’s first round… maybe wait a few weeks. Even if you think you’ll be successful raising now.
+
+The thinking behind this advice is that while things may deteriorate economically in the next month or two, there’ll be more visibility about where they might end up. The decreased uncertainty will lead to more informed, productive conversations around plans, budgets, and milestones.
+
+You may be excited to start, now that everyone’s saying “this is a great time to start a company”. That’s true, but it will remain equally true a month or two from now.

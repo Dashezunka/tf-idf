@@ -1,0 +1,113 @@
+COVID-19, the illness caused by the latest novel SARS virus, is preparing us for the “new normal” in which we must all move to virtualise and rethink how we engage our networks. We are seeing the risks of uncertainty playing themselves out in the stock market, employment numbers, and in the bank accounts of the average person. This volatility will compound as the impacts to our healthcare system and global GDP are assessed in the coming months.
+
+Oh, and everyone is freaking out (and in many cases, rightfully so).
+
+But what does this mean if you’re an entrepreneur, especially one with an early-stage startup, for example one that is pre-seed or that has just raised seed funding?
+
+There is no one-size-fits-all answer, but it’s important to start a conversation about how entrepreneurs should assess today’s changing risk landscape when it comes to early milestones, and especially funding. This contribution to that conversation is based on discussions I’ve had with seasoned investors over the last few weeks both on and off the record, as well as my past and current experience as a leader or advisor in over 25 startups.
+
+Note: if you scroll to the bottom of this article, there is a list of resources for small businesses and startups, including information on new disaster relief programs coming out of the Small Business Administration. This is changing by the day. Please feel free to add more in the comments to keep this a living and breathing resource for the entrepreneur community.
+
+Has this happened before?
+
+The closest analogous market events in our recent lifetimes are the 2008 / 2009 financial meltdown and the “dot com bubble” in the early 2000s. If you were to ask a venture capitalist to name the “last time something like this happened” these are probably the historical bookmarks they would reach for. These are also known as Black Swan events.
+
+A Black Swan is defined by author Nassim Nicholas Taleb as an event that:
+
+a) comes as a surprise,
+
+b) has a major disruptive effect, and
+
+c) is often inappropriately rationalised after the fact with benefit of hindsight.
+
+If we look at the general trends in the venture capital market after the historical Black Swans mentioned above with the benefit of hindsight, we can start to predict how the market may react in the present and near-term future to the COVID-19 health crisis.
+
+In general, three things tend to happen after a Black Swan event:
+
+Big investors hedge — when market volatility increases, institutional investors tend to put money into “safer” options such as physical resources, real estate or bonds. This reduces the overall pool of investment money flowing into higher risk options like venture funds. Venture capitalists slow down or stop investment into “new” ventures — as a downstream effect of #1, VCs tend to reduce or stop investments into new startup ventures until capital markets stabilise. Angel investors tend to stop investments completely (more on this later). Venture capitalists double-down on existing portfolios — smart investors also understand that these events can easily be the “death blow” for their startup equity plays. Most VCs will choose to focus most of their energy on their existing portfolio while either continuing on the established course or allocating funds into reserves to ensure a liquidity “bridge” to help their startups weather the event. This is the “conservative” play, as startups going out of business early can result in a 0% return on capital already invested and an increased risk that capital already invested in the company may not be recouped.
+
+“It’s quite rational if you understand the dynamics at play,” explains Tobias Walter, a principal at Cofounders Capital. “Some funds tell us in times like these that they essentially ‘convert’ from being an investment vehicle into being an asset preservation vehicle. If LPs are nervous in a down market, VCs think twice about calling down capital and focus on shoring up current investments. This all results in fewer net new investments until the market corrects.”
+
+These reactions above are generalised, of course, but there is ample data and evidence to support this as the normalised course of action when responding to an economic crisis in the venture capital space, historically.
+
+In short, funding for new ventures dries up.
+
+But what about COVID-19? Is this time different?
+
+A bit, yes. And it is also uncharted. Most of the unique risks of this event have to do with social distancing and the subsequent effects on the broader market due to an acute reduction in demand and interruptions to supply chains. However, this doesn’t change the broad perception of risk, especially after sharp downturns in the market. As such, entrepreneurs should understand how to navigate the real risks versus the perceived ones.
+
+In the world of early-stage startups, here are three specific examples of risk I’ve experienced since the COVID-19 crisis appeared on the radar:
+
+Angel investors stopping or “pausing” investments Companies scrambling to “virtualise” their business models Companies creating longer cash reserve “runways” to weather the storm
+
+Let’s investigate each of these within the specific context of an early-stage startup. Being able to address these concerns as an entrepreneur could help you in discussions with partners, early customers, and an existing or potential investor.
+
+Angel investors stop investing
+
+Traditionally, angel investors have less ability to absorb risk in their portfolio because they are investing their own money and are more exposed to market downturns.
+
+Let’s say you are an angel investor. In January of this year, you decided you’d like to invest $100,000 in a startup around the month of March or April. Let’s also say that you have a large amount of stock in your personal portfolio.
+
+Total Stock Market Performance Jan 2020 — March 2020
+
+By the time late March rolls around, can you see why you might be nervous about making a potentially risky investment in a startup after reviewing your portfolio?
+
+So, if you’re trying to raise a seed round right now, should you just ignore angel investors?
+
+“Not necessarily,” says Walter. “Always connect with any reputable investor you can — but go into conversations with an understanding of the investor’s background, incentives, and current state. You can always ask the investor about the last investment they’ve made and when it was closed. Or you can use sources like Crunchbase and press releases to find investors’ most recent activity. In times like these where you might have to spend a significant time to raise a round of financing (more so than in non-crisis times), I think it’s essential that you focus on funders who can prove they are actively investing versus the ones who are just saying they are investing.”
+
+If you have existing angel investors, now is the time to communicate with them about the future; you should be prepared to either present or co-create strategies to see this crisis through. If you need to ask for more funding, be clear about where the money is going and be honest about the stakes to your company if you don’t receive the funding. If your company will fold without additional funding, be clear about this. If your investor understands that their choice is between providing additional investment and shuttering the business, they can make that decision with full clarity and take into account any losses they would sustain in the process.
+
+Companies are scrambling to “virtualise”
+
+This is having an overall downward effect on the market as a whole, a precipitous effect on industries like travel and hospitality, and a positive effect on companies (like Zoom) who thrive on virtualisation. So when thinking about and discussing this risk with your co-founders and investors, it is not only important to consider your stage in the life cycle, but also how this is impacting your specific industry.
+
+Zoom stock trending upwards as virtualisation demand grows
+
+At highest risk are retail and established businesses that are plugged into supply chains or rely on physical proximity or people gathering (think: event planners). The good news is that most early-stage startups are young, small, and may be already geographically dispersed or built for virtualisation.
+
+If your startup is building software in the early stages (prototype or MVP), you most likely do not have a large dependence on the supply chain and may be essentially shielded from most of the macroeconomic impacts of this crisis. Encourage your investors to stay the course and use this time to build the best product possible. Identify opportunities without being opportunistic.
+
+Companies need longer cash reserve “runways”
+
+“At Cofounders we are advising our portfolio companies to have 18 months of cash runway to prepare for a dryer funding environment,” Walter says. “Reduce your burn, and ask for more cash and do it now. Slow burn companies will outlast hotter burning companies and can win the long game.”
+
+Peter Marsh, the Founding Partner at Flywheel Coworking agrees.
+
+“Experience teaches us that you have to anticipate the worst and do whatever you can to protect your cash reserves,” Marsh says. “In this case, it looks like at least a 1-month stretch. That means cutting all discretionary costs. If it’s not performing get rid of it — whether that’s people, fixed assets, or how you are using your time.”
+
+If your startup is still pre-seed, you are less affected by the need for cash reserves, especially if your startup is not yet your full-time job. However, if you are paying a team and incurring regular expenses then you are most likely in a position where you have to make some tough choices. This can mean raising more money sooner than you think or downsizing when you were preparing to scale. Or both.
+
+“That means inventing new revenue streams responsive to the current environment,” says Marsh. “And above all that means acting with integrity and empathy. This is when relationships really count, so any that you have with investors need to be actively nourished.”
+
+If you absolutely cannot take on more funding, there are things you can do to actively manage your expenses and contracts.
+
+“One way to extend runway in the short term is to negotiate longer net terms with your suppliers and shorter net terms with your customers,” suggests Adrian Smith, Program Director for Flywheel Coworking. “For example, if you currently pay for supplies 30 days after receiving them, see if the supplier will give you an extra couple of weeks to pay. You can sometimes do this in the reverse, and require customers to pay earlier, though this will be difficult during a time of crisis.”
+
+So what does this all mean for the entrepreneur?
+
+We’ve already established that a lot depends on your next milestone and the industry you’re focused on. Let’s look at a few use cases:
+
+If your next milestone is seed funding: This is probably the riskiest position to be in right now. Investors and VCs are assessing risk and we can expect this to result in the contraction dynamics described above. If you are already in negotiations for a round, your single biggest priority should be to close that round…fast. Even if you need to cave on valuation or take a convertible note — if liquidity is the only way to advance the company — you should do it. Maybe you are thinking that “pressing pause” for a few months on the project won’t make a difference, but what were you thinking in February of this year? Or January? Closing funding fast is the only way to mitigate unknown future events. Simplify. Make it easy for your investor to say “yes”. The more time that passes, the lower your chances for a close. That’s true always, but especially now.
+
+If your next milestone is Series A funding: This stage is also risky, but less so than seed funding because you presumably have investors already engaged and ready to help your business succeed. Remember that investors who already have skin in the game normally react to these events by shoring up existing investments (meaning you). Leverage this by being transparent about what you need and creative with funding vehicles — but aim to close fast and think about what you need for that 18-month runway.
+
+“We strongly advise our portfolio companies to raise additional runway money from existing investors, if they can,” Walter adds. “Your existing investors are more likely to reinvest at this time in their current portfolio, especially if you’re venture-backed.”
+
+Because this round of funding normally leads to increased market interaction and dependence on customers, take the concerns of your investors seriously and work with them to come up with solutions that will protect everyone from future events like COVID-19. Scenario plan for the future. Talk about cash reserves. The more included your funders are in these strategic discussions, the more of a chance that they will feel comfortable participating in your next round.
+
+If your next milestone is a prototype (pre-seed): This may not affect you much (especially if your product is software). If you are in the ideation, due diligence, or prototyping stage and are pre-funding (aka bootstrapping) then you should continue to focus on building your prototype. You can go heads down and really focus while social distancing. Set up virtual meetings with your co-founders. Don’t let the momentum slow down. When everyone opens up shop again, you’ll be ready to go after your next milestone. If your accelerator, incubator or pitch event got postponed, use this time to get better at what you do.
+
+If your next milestone is an MVP (post-seed): Again, this may not affect you much (especially if your product is software) if your funding is closed and in the bank. Keep your eye on the prize and build the best product you can. This stage is uniquely suited to a virtual and “heads down” environment. The current social landscape of distancing and quarantining actually plays in your favor at this stage in the life cycle. Just watch your spend. Think in terms of an 18-month runway and subtract from there.
+
+If your investor is nervous, ramp up the communication. Show them where the money is going and what is being accomplished. Remember, you will most likely ask existing investors for another round after your next set of milestones. Use this time to show how well you can manage both their investment and your business during a critical and difficult circumstance and this can become a net positive for your funding relationships.
+
+Bottom-line: over-communicate and do whatever it takes to ensure continuity
+
+Loss of funding is the greatest threat to any early-stage startup as an entity. A key mantra in startups is to “fail fast”. Prolonging, pausing and postponing liquidity events or product development almost always results in failure of the project.
+
+If your potential seed or angel investors are nervous — talk to them. Really listen. Use your understanding of historical events and your specific business insights to help them think through creative solutions. Make it easy for them to close a deal.
+
+If you are raising another round, remind your existing investors that pausing or stopping reinvestment into their portfolio projects is actually the greatest risk to the investment they’ve already made into those projects. Investors want you to succeed and want their equity to be worth something (meaning they want your business to be worth a lot of somethings). Use this force to your advantage when assessing true risk versus perceived.
+
+Startups move fast and are risky. However, they can also be uniquely shielded from Black Swans if their investors can stay committed to supporting the project through the hard times while helping the business navigate changing markets.

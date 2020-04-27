@@ -1,0 +1,357 @@
+MedCAT | Extracting Diseases from Electronic Health Records
+
+A deep dive into the MedCAT library: everything from building a concept database to unsupervised training and document annotation.
+
+Photo by Online Marketing from Unsplash.
+
+The focus in this post is completely on MedCAT and how to use it to extract information from EHRs. A typical MedCAT workflow:
+
+Building a Concept Database (CDB) and Vocabulary (Vocab), or using existing models for both. Unsupervised learning on any dataset in the target domain containing a large number of documents. Preparing data for online/supervised learning. Finetuning the NER+L models and adding meta-annotations via MedCATtrainer. Packing everything into one MedCAT pipeline and annotating documents (EHRs)
+
+This post will cover the steps 1,2 and 3, while a post on supervised training will go through 4 and 5.
+
+Building Custom Models
+
+Google Colab
+
+MedCAT uses two main models in its pipeline:
+
+Vocabulary (Vocab) — The vocabulary is used for spell checking and word embeddings. It is made so that it can use any type of word embeddings (from Word2Vec to BERT). If your dataset is from a very specific domain, it is usually recommended that you create your embeddings.
+
+Concept Database (CDB) — The concept database contains all the concepts of interest for a specific case. In medical applications, large databases like the UMLS or SNOMED are standard, which are then filter down to the required concepts. MedCAT is made to work with any kind of concept database no matter how big/small.
+
+The rest of the post will show how to build, from the ground up, each one of these models.
+
+Building a new Vocabulary (Vocab)
+
+The first of the two required models when running MedCAT is a Vocabulary model (Vocab). The model is used for two things: (1) Spell checking; and (2) Word Embedding.
+
+The Vocab is very simple and you can build it from a file that is structured as below:
+
+<token>\t<word_count>\t<vector_embedding_separated_by_spaces>
+
+token Usually, a word or subword if you are using Byte Pair Encoding or something similar.
+
+Usually, a word or subword if you are using Byte Pair Encoding or something similar. word_count The count for this word in your dataset or in any large dataset (Wikipedia also works nicely).
+
+The count for this word in your dataset or in any large dataset (Wikipedia also works nicely). vector_embedding_separated_by_spaces Precalculated vector embedding, it can be anything from Word2Vec to BERT.
+
+An example of a file used to build the vocabulary (this is a TSV file without a header) with 3-dimensional vector embeddings:
+
+house 34444 0.3232 0.123213 1.231231
+
+dog 14444 0.76762 0.76767 1.45454
+
+.
+
+.
+
+.
+
+Note that if the spelling is important (or if you want MedCAT later to be able to correct spelling mistakes) all the words in the vocabulary must be correctly spelt.
+
+Now, to build the vocab:
+
+from medcat.utils.vocab import Vocab vocab = Vocab()
+
+vocab.add_words(path=<path_to_the_tsv_file>)
+
+# Save the new Vocab
+
+vocab.save_dict(<save_path>)
+
+Building a New Concept Database (CDB)
+
+The second model that is required when using MedCAT is the Concept Database (CDB). This database holds a list of all concepts that we would like to detect and link to. For a large number of medical use-cases, we would use big databases like the UMLS or SNOMED. But this is not a requirement, MedCAT can be used with any database no matter how small or big it is.
+
+A CSV is necessary to build a CDB (the structure/headers shown below are required and must be there):
+
+cui,str
+
+1,kidney failure
+
+7,CoVid 2
+
+7,coronavirus
+
+This is the most basic version of the CSV file used to build a CDB:
+
+cui - The concept unique identifier, this is simply an ID in your database, can be a number or a string. str - String/Name of that concept. It is important to write all possible names and abbreviations for a concept of interest. If you have a concept that has multiple different names (like the one above with cui=7), you can simply add multiple rows with the same concept ID and MedCAT will merge that during the build phase.
+
+from medcat.utils.vocab import Vocab
+
+from medcat.prepare_cdb import PrepareCDB vocab = Vocab()
+
+vocab.load_dict(<path_to_a_vocab_model>) # Build the concept databse from a simple CSV
+
+prep_cdb = PrepareCDB(vocab=vocab) # Crete an array for paths to CSV files that will be used to build
+
+#our CDB
+
+paths = [<path_to_our_csv_file>]
+
+cdb = prep_cdb.prepare_csvs(paths) # Save the new model
+
+cdb.save_dict(<save_path>)
+
+To print the content our CDB (be careful with this function when the CDB is very large):
+
+print(cdb.cui2original_names) #Output: {'1': {'kidney failure'}, '7': {'coronavirus', 'CoVid 2'}}
+
+As you can see MedCAT has combined the two concepts with cui=7 and merged the different names.
+
+Full CSV specification
+
+The CSV can contain additional information, all possible fields are specified in the example below:
+
+cui,str,onto,tty,tui,sty,desc,examples
+
+1,Kidney Failure,SNOMED,PN,T047,Disease,Description of the concept,The patient was diagnosed with kidney failure
+
+1,Failure of Kidneys|KF|K. Failure,,,,,,
+
+.
+
+.
+
+Each one of these fields is optional and can be included or left out in your CSV:
+
+onto - Source ontology, e.g. HPO, SNOMED, HPC,... tty - Term type e.g. PN - Primary Name. Primary names are important and I would recommend to always add these fields when creating your CDB. tui - Semantic type identifier - e.g. T047 (taken from UMLS). sty - Semantic type - e.g. Disease desc - Description of this concept examples - Examples of this concept in a sentence (use short examples, not whole documents).
+
+Note: If one concept has multiple names, you can also separate the different names by a | — pipe symbol, or use the trick shown in the previous section of having multiple rows with the same CUI. Only one of the rows needs to have full information on the concept.
+
+The code for building the CDB from this CSV is the same as above, the only differences are the extra features on the built CDB:
+
+from medcat.utils.vocab import Vocab
+
+from medcat.prepare_cdb import PrepareCDB vocab = Vocab()
+
+vocab.load_dict(<path_to_a_vocab_model>) # Build the concept databse from a simple CSV
+
+prep_cdb = PrepareCDB(vocab=vocab) # Crete an array for paths to CSV files that will be used to build
+
+#our CDB
+
+paths = [<path_to_our_csv_file>]
+
+cdb = prep_cdb.prepare_csvs(paths) print(cdb.cui2original_names)
+
+# Output: {'1': {'KF', 'Kidney Failure', 'failure of kidneys'}} print(cdb.tui2cuis)
+
+# Output: {'T047': {'1'}} print(cdb.cui2tui)
+
+# Output: {'1': 'T047'} print(cdb.cui2desc)
+
+# Output: {'1': 'Description of the concept'}
+
+UMLS and SNOMED
+
+If you have access to UMLS or SNOMED you can also build large medical CDBs. Building the CDB is still done using the same code as above, you only need to put the UMLS/SNOMED concepts into a CSV file with the format described above.
+
+There are very few use-cases that require the full UMLS database, I recommend using a subset that is required for your use-case/domain. Building a CDB that contains the full UMLS database is, of course, possible but please take care that the process can take up to 36h and can require ~16Gb of RAM.
+
+Note: For UMLS I’ve prepared the scripts that create a CSV file given that we have UMLS In a PostgreSQL database. Appendix A in the MedCAT paper. Or if you want to build SNOMED a repository is available here.
+
+Unsupervised Training
+
+Google Colab
+
+The models that I will be using are created from UMLS; unfortunately, UMLS is not publicly available. You can request access to UMLS here and build your models, as described in the previous section.
+
+For those of you who want to follow the tutorial but don’t want to go through the trouble of getting access to UMLS, I’ve created models that use a free subset of UMLS. You can download the CDB model here and the Vocabulary here, these models are smaller, but still can be useful in many use-cases (the Google Colab already contains all the code for downloading the models).
+
+First, we load the models (if you have created your models you can use them):
+
+from medcat.cat import CAT
+
+from medcat.cdb import CDB
+
+from medcat.utils.vocab import Vocab # Create and load the CDB (Concept Database)
+
+cdb = CDB()
+
+cdb.load_dict(cdb_path) # Create and load the Vocabulary
+
+vocab = Vocab()
+
+vocab.load_dict(vocab_path) # Create CAT - the main class from medcat used for concept annotation
+
+cat = CAT(cdb=cdb, vocab=vocab)
+
+Then, we will set a couple of parameters (full list will be available on github):
+
+cat.spacy_cat.PREFER_FREQUENT = True # Frequent conceps are pref
+
+cat.spacy_cat.PREFER_ICD10 = False # Useful only for clinical coding
+
+cat.spacy_cat.WEIGHTED_AVG = True # The way context is calculated
+
+cat.spacy_cat.MIN_CONCEPT_LENGTH = 3 # Ignore concepts <= 3 characters
+
+We are now ready to run the unsupervised training. I have prepared a small dataset that can be used to test the unsupervised training, but please note that large datasets like MIMIC-III will produce much better results. The following blocks of code assume you have downloaded the data from the repository (or that you have MIMIC-III) if you are running locally (Google Colab already has everything):
+
+DATA_DIR = "./data/"
+
+data = pd.read_csv(DATA_DIR + "pt_notes.csv") # Enable the unsupervised training
+
+cat.train = True # Print statistics on the CDB model before training
+
+cat.cdb.print_stats() # Run the annotation procedure
+
+for i, text in enumerate(data['text'].values):
+
+# This will now run the training in the background
+
+_ = cat(text)
+
+
+
+# So we know how things are moving
+
+if i % 100 == 0:
+
+print("Finished {} - text blocks".format(i)) # Print statistics on the CDB after training
+
+cat.cdb.print_stats() # Disable the training mode
+
+cat.train = False
+
+This concludes the unsupervised training, if you look at the output of the print_stats function, you will see how many of our concepts received training. What is left is to save the trained model (only the CDB model receives training, vocab always stays the same):
+
+cdb.save_dict(<save_path>)
+
+Annotating Documents
+
+As the training is now finished, we can proceed with document annotation.
+
+text = "He was diagnosed with Kidney failure"
+
+doc = cat(text) print(doc.ents)
+
+# out: (diagnosed, kidney failure)
+
+And that is it, there is nothing more to it. If you want, you can also view the annotated document using displacy from spacy (works in Jupyter notebooks):
+
+from spacy import displacy displacy.render(doc, style='ent')
+
+Figure 0. Displacy output for the MedCAT annotations.
+
+The underlying CDB model is based on UMLS (even the openly available MedMentions model), this allows us to filter the annotations and get only the concepts that we are interested in (for our use-case that is T047 — Disease or Syndrom; and T048 — Mental or Behavioral Dysfunction), full list here.
+
+TUI_FILTER = ['T047', 'T048']
+
+cat.spacy_cat.TUI_FILTER = TUI_FILTER # Annotating documents will now give only the concepts
+
+#that have one of the two TUIs defined in the filter. text = "He was diagnosed with Kidney failure"
+
+doc = cat(text)
+
+#out: (kidney failure)
+
+Preparing Data for the MedCATtrainer
+
+Unsupervised learning is very useful as it does not require any annotation effort on our side, but it can learn some strange things. To fix the misses and mistakes we are going to fine-tune the models using online/supervised training via the MedCATtrainer. This way, most of the workload is done by the unsupervised learning and we only need to invest a bit of time to make it perfect.
+
+Looking again at the use-case of analysing the relation between age and diseases, we can carefully choose which documents to use to fine-tune the models. The goal is to show general population statistics on the connection between age and diseases, which means the most prevalent diseases (both mental and physical) are the most important. For the fine-tuning, it makes sense to choose the most frequent disease already detected by the MedCAT models (unsupervised) and check the mistakes (or possible improvements). More formally, the following is necessary:
+
+Annotate all documents with the existing MedCAT models for the concepts of interest (T047 and T048).
+
+Find the most frequent Diseases and Mental Disorders.
+
+Find the documents where the selected most frequent concepts appear.
+
+For each of the top 100 diseases in the two groups (T047 and T048), randomly select N=2 documents that will be used to validate the detections done by MedCAT.
+
+In this way, we are only going to look at documents where concepts of interest appear and not a random set of documents where possibly we will have no mentions of the relevant concepts.
+
+To annotate all the documents in our dataset we are going to use the multi_processing function in MedCAT, it allows to run things faster on multiple processors (if we have them). During the annotation process, we are going to record for each CUI in which document it appears.
+
+# This will be a map from CUI to a list of documents where it appears: {"cui": [<doc_id>, <doc_id>, ...], ..}
+
+cui_location = {} batch_size = 10000
+
+batch = []
+
+cnt = 0
+
+for id, row in data.iterrows():
+
+text = row['text']
+
+# Skip text if under 10 characters, not really necessary as we
+
+# have filtered before, but I like to be sure.
+
+if len(text) > 10:
+
+batch.append((id, text))
+
+
+
+if len(batch) > batch_size or id == len(data) - 1:
+
+# Update the number of processors depending on your machine.
+
+#We are using the only_cui option, means the
+
+#returned entities will only have a CUI (no other
+
+#information, try both if interested).
+
+results = cat.multi_processing(batch, nproc=2,only_cui=True)
+
+
+
+for pair in results:
+
+row_id = pair[0] # Convert to set to get unique CUIs
+
+cui_list = set(pair[1]['entities'])
+
+
+
+for cui in cui_list:
+
+if cui in cui_location:
+
+cui_location[cui].append(row_id)
+
+else:
+
+cui_location[cui] = [row_id]
+
+
+
+# Reset the batch
+
+batch = []
+
+Now that we have for each CUI the documents in which it appears, we can also plot the most frequent CUIs (Diseases) in our dataset (image below). Please refer to Notebook for a more complete code base.
+
+Figure 1. Distribution of the top 30 diseases/disorders in MIMIC-III by patients. Please don’t take this chart for granted, it was based on detecting mentions of diseases ignoring if they were negated/historical/hypothetical/irrelevant to the patient etc. All of those properties are meta-annotations explained below.
+
+What is left is to select the most frequent diseases and for each pick two documents at random and save them in the format required by MedCATtrainer. That is a simple CSV file with the following structure:
+
+name,text
+
+<name of a document>,<text of a document>
+
+MedCATtrainer
+
+Is a web-based interface that can be used to improve (or train new) MedCAT models. A full tutorial is available in the Repository + Blog post. There are many functionalities that the trainer supports, but our focus is on:
+
+Improving NER+L, the trainer allows us to see the concepts detected by MedCAT and for each one to say Correct/Incorrect. We can also add new concepts (annotations) if something was missed. While doing this, the models are updated and fine-tuned in the background. MetaAnnotations, for each detected concept (a disease in our case), we will add meta-annotations that represent context-dependent attributes of that concept.
+
+MetaAnnotations
+
+Simply extracting mentions of medical concepts from EHRs is not enough for many use-cases. Often it is needed to extract meta-annotations (attributes/properties) of each detected concept. Some possible meta-annotations are:
+
+Negation: Is the concept negated in text or not (e.g. The patient has cancer vs the Patient does not have cancer)
+
+Experiencer: Is the disease affecting the patient or someone else (e.g. The patient has cancer vs The patient’s parents have cancer)
+
+Temporality: Is the disease currently affecting the patient or was it in the past (e.g. The patient has fever vs The patient had fever 2 years ago).
+
+Uncertainty: Sometimes clinicians write hypothetical statements in the EHRs (e.g. This looks like kidney failure)
+
+There are many other meta-annotations that can be extracted, it all depends on the use-case.

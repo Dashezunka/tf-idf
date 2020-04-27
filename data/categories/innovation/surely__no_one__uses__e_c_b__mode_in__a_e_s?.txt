@@ -1,0 +1,141 @@
+Before I start, I must say that Zoom is my standard VC package and I love its performance and easy of setup.
+
+For cryptography one of the first lessons is to explain why you should never use the EBC mode in AES. It’s then a standard exam question on why you should use salt (and Initialisation Vector — IV) to protect the data. And so, it was a bit of a shock to read that Zoom has been using ECB for its video conferencing, and it make you wonder if many companies really understand encryption. I appreciate there may be reasons they have made that decision, but from a security point of view it is terrible!
+
+Blocks
+
+Encryption normally works by taking a number of text blocks, and then applies a key to these to produce cipher blocks. Typical block sizes are 64 or 128 bits (8 bytes or 16 bytes). Unfortunately, the cipher blocks could end up being the same, for the same input text. Thus an intruder could try and guess the cipher text. This is known as electronic code book. For example if we use 3DES to encrypt the word “fred”, with a key of “bert12345”, we will always get:
+
+HgvGuzedMg8=
+
+If you want to try this go to: here.
+
+You will find that ever time you encrypt, you will get the same value. Thus the intruder could start to guess what your mapping of the plain text to cipher text was. For example he could send “Hello. Can you send me a quick answer … just yes or no?”, and look at the reply, and guess that the mapping of “yes” or “no” to the cipher text. The intruder then does not need to know the key, he can play it back to others.
+
+Example
+
+Apart from using a password to generate an encryption key, which complete decimates the key space, we have the problem of the algorithm used to process the plain text. If this is ECB (Electronic Code Book) we have repeating cipher blocks for the same plain text.
+
+If I take “eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee” and encrypt with 3-DES and a key of “bill12345” we get:
+
+1122900B30BF1183 1122900B30BF1183 1122900B30BF11831 122900B30BF1183 1122900B30BF1183 1122900B30BF1183 7591F6A1D8B4FC8A
+
+where we can see that the “e..e” values are always coded with the same cipher text. As 3-DES has message blocks of 64-bits, then 8 ‘e’ values will fill each block.
+
+[eeeeeeee] [eeeeeeee] [eeeeeeeee]
+
+[eeeeeeee] [eeeeeeee] [eeeeeeee]
+
+[eeeeee PADDING]
+
+Thus we can say that “eeeeeeee” maps to the cipher text of 1122900B30BF1183. Try example here.
+
+Adding Salt
+
+So how do we overcome this problem, of always ending up with the same cipher text for a given plain text? Well we add a bit of salt, to make sure that your result is always changing. For this we cipher text will change each time. This is typically applied into shared-key encryption (also known as symmetric encryption) and in hashing (also known as one-way encryption), where we try and make sure that the cipher text differs for the same plain text.
+
+The method most often used is CBC (Cipher Block Chaining), where we start off with a random seed, known as an Initialization Vector (IV). This is then used to create the first block. Next the output from the first block is then used to chain into the next block by Exclusive-OR’ing the output of the first with the output of the second block, and so it goes on.
+
+When does it go wrong?
+
+We then end up with differing cipher block for a changing IV. To change the IV, we might increment it by one for every message that we send. Normally we could send it with the first message that we send, and we agree with the other side on how the IV vector will change. Unfortunately in WEP (the wireless encryption method), it had an IV which actually came round again after a certain amount of time, which meant that an intruder could actually determine the key used in the encryption, which obviously compromised the whole system. Many packages were thus created which made sure that the sender would eventually send out the same IV vector, typically be continually requesting small replies from the sender. As the IV was 24-bits long, there were 16,777,216 different vectors, which would eventually return to the original one, which resulted in the key being cracked. In WEP, the key was shared across the whole wireless network, which meant that the whole network was cracked. Luckily these days, WEP has been replaced by a session key which is unique to each host, and which times-out before it can roll-over.
+
+CBC by Example
+
+So let’s look at applying CBC with Blowfish. Let’s start with a message of “fred”, and a key of “bert”, and use and IV of 1: here
+
+which gives: 1AC9C54C951E180E0000000000000000
+
+Next we’ll change to an IV of 2: here
+
+which gives: D27FA68C6AC794200000000000000000
+
+Next we will apply it to 3DES, which uses a 112-bit key, and an IV value which is 8 bytes. Let’s take an example with a message of:
+
+The quick brown fox jumped over the lazy dog
+
+and a key of: [here]
+
+1234567890123456ABCDEFGH
+
+If we use an IV of “12345678” we get:
+
+E6B6345F1015380284481BBCFFB9052A227FC14F73072E8D5
+
+007AC01DFEDCC2BCBCE1EB14A95ED60BA1A44700F4E18AE
+
+but if we use an IV of “23456789” we get [here]
+
+5BF29657E6064EB99E52ACC8E3A6808A761A86A7EE85C25C
+
+327022C30D939D3A8A41A9CD42689AA4481FF20155816A8C
+
+So, at least, it will change of different IV values.
+
+AES Crack (copy-and-paste)
+
+AES can be susceptible to a copy-and-paste attack if ECB (Electronic Code Book) is used. Enter a passphrase (to generate a key) and a secret word. The secret word will then be ciphered with each character, and Eve can rebuild to provide a valid ciphertext string.
+
+The following uses a password of ‘napier’ and a secret word of ‘edinburgh’ [here]:
+
+2aeb8b1683f155b4009460ca4dcff462
+
+d272bb15c17b9f21567f0bbc059f442d
+
+11204d4653d3f5f9f9ad032efa706890
+
+5dd5b2a1b5a420c1f0186ec3e58944df
+
+2d63a1efa0160d5dafb90998bc9159d3
+
+504e6d032c4ceaa9c367b8f747d263ba
+
+f2f7719f7b2d38dbe3650e3d59e7eed2
+
+f4c44d30fe5d88fedd259d224c515ca2
+
+734a4b6f540e17ba02845cc529138fc6Decrypt: e☼☼☼☼☼☼☼☼☼☼☼☼☼☼☼d☼☼☼☼☼☼☼☼☼☼☼☼☼☼☼i☼☼☼☼☼☼☼☼☼☼☼☼☼☼☼n☼☼
+
+☼☼☼☼☼☼☼☼☼☼☼u☼☼☼☼☼☼☼☼☼☼☼☼☼☼☼r☼☼☼☼☼☼☼☼☼☼☼☼☼☼☼g☼☼☼☼☼☼☼☼☼☼☼☼☼☼☼h
+
+An outline of the code used is:
+
+from Crypto.Cipher import AES
+
+import hashlib
+
+import sys
+
+import binascii
+
+import Padding
+
+word='edinburgh'
+
+password='napier'plaintext='' def encrypt(plaintext,key, mode):
+
+encobj = AES.new(key,mode)
+
+return(encobj.encrypt(plaintext))
+
+def decrypt(ciphertext,key, mode):
+
+encobj = AES.new(key,mode)
+
+return(encobj.decrypt(ciphertext))ciphertext=''key = hashlib.sha256(password).digest()for ch in word:
+
+plaintext = Padding.appendPadding(ch,blocksize=Padding.AES_blocksize,mode='CMS') ciphertext = ciphertext+ encrypt(plaintext,key,AES.MODE_ECB)
+
+
+
+print ""+binascii.hexlify(encrypt(plaintext,key,AES.MODE_ECB))
+
+plaintext = decrypt(ciphertext,key,AES.MODE_ECB)
+
+plaintext = Padding.removePadding(plaintext,mode='CMS')
+
+print " decrypt: "+plaintext
+
+Conclusions
+
+I’m not bashing Zoom here, as I think it is a great package. What I am highlighting is the lack of though that some developers put into proper security. As Zoom is now used by governments, we really need to know what happens under the hood.

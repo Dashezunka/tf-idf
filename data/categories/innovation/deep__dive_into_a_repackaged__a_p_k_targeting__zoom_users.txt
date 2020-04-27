@@ -1,0 +1,61 @@
+With working from home on the rise, Zoom and other video conference applications have been in heavy use, by employees but also by malicious threat actors. On Apr 1st, Security Week wrote about a re-packaged version of Zoom targeting teleworking users on Android. In this blog, we will take a closer look at what this malicious APK looks to achieve and how it achieves it.
+
+This malicious APK takes a legitimate Zoom APK, release 4.1.35374.1217 version 41021, and introduces new permissions and a new package that utilizes AES encryption to remain hidden. As seen in the first image, on first upload only eight security vendors detected this APK as malicious.
+
+up4net-zook.apk was first seen on VirusTotal on March 20th
+
+We will first look at the data around the APK itself. When compiling this APK the malicious actor used a signing certificate with the Owner and Issuer matching the original Zoom APK in order to appear to be signed by Zoom Video Communications Inc.
+
+App Signing Certificate (With the Owner and Issuer spoofed to Zoom Video Communications Inc.)
+
+The core functionality of the APK is unchanged, you are able to sign-in to accounts, join meetings as you expect from the Zoom APK.
+
+On initial load, this APK appears to be a clone of the official Zoom APK, and retains original functionality.
+
+This APK is using 4.1.35374.1217 which was released in December of 2018
+
+In Android Studio, the original Zoom APK file is compared to this malicious APK file. Most of the files appear to be unchanged, there is more data in the AndroidManifest, as well as more data in the classes.dex where the java classes are stored. Near the bottom of this comparison, we can confirm that the signing certificate used by the malicious APK file is not the official Zoom certificate which was originally used.
+
+Comparison between the malicious Zoom APK and the original Zoom APK
+
+The first item that has changed that we see in this comparison is the AndroidManifest.xml. Upon deeper dive, we see that this malicious APK has added new permissions in the manifest; including the ability to read, send and receive SMS messages, meaning that the app has the ability to read all the SMSs that are received on the user’s phone as well as sending SMS messages. Along with the additional permissions, the app has a new package inside, us.zoom.videomeetings.byfsl. We can see this package is defined as a BroadcastReceiver as well as an android service allowing this package to run in the background with no visual interface and allowing communication.
+
+References to the new SMS permissions
+
+References to the malicious package in Manifest.xml
+
+Expanding into classes.dex, there is a new package under us.zoom.videomeetings call byfsl. Inside this folder, there are 11 new classes that are not in the original Zoom APK, and this is where the malicious code is present.
+
+The Malicious Package byfsl in classes.dex
+
+This new package, us.zoom.videomeetings.byfsl, includes several java classes that use AES encrypted strings to try and mask functionality.
+
+The main method is in the Pkipn class, the first thing this method does is get the absolute path of the application, this is the first of the AES encrypted strings, which we will look at in the next paragraph(the decrypted string is . ). The package also stores the malicious domain (bytearray[] a) and stores it along with the absolute path in the object h.
+
+Getting the absolute path with the const-string of .
+
+In the byfsl package, there are roughly 25 AES/CTR/NoPadding encrypted strings. The method for decrypting the strings is Qwkso.qdyiu, in this method, there is a check against the method initialize to determine if the DECODED_KEY has been stored yet. The DECODED_KEY is stored after the initialize method takes the ENCODED_KEY of peRcpinr/9e0CLOGnNg0kA==, converts this into a UTF-8 byte array and finally, base64 decodes this byte array to get the 16-byte DECODED_KEY. After the DECODED_KEY is stored this key is then used when outside classes call Qwkso.qdyiu.
+
+Initialize method in class Qwkso, this is where the ENCODED_KEY is initially decoded
+
+A snippet of the byte array which contains the malicious domain tcp://googleteamsupport.ddns.net:4444
+
+The next method that follows storing the domain and absolute path queries the PowerManager and creates a new WakeLock to keep the screen on allowing the malicious activity to continue as long as the app is open.
+
+PowerManager getSystemService(Power).NewWakeLock(appname)
+
+Finally, after setting the WakeLock the malicious connection is started. The bytearray a[] contains the tcp:// link that is used by this application tcp://googleteamsupport.ddns.net:4444, there are 3 if statements to determine if str starts with tcp or : or // (FJkiDDu3jjSJwK+ywmx09KXl4A== decodes to tcp, VnZnQoIx85b5BMH7EqtiNF4= decodes to : and TmXCTCW5NWLpz3dpWTyg4PU= decodes to /). Once this is determined the socket is opened and communication with the malicious domain begins.
+
+A few if statements to determine if the URL is in the correct format
+
+This domain has been linked to a previously used IP address used as a command control for SandoRAT / DroidJack by BitDefender.
+
+Going through the malicious package, we can see the effort used to try and stay hidden, providing an APK that is signed with a certificate that closely resembles the original APK and retaining the core functionality of the original APK. Though the difference in size may be small, the additional capabilities of being able to read SMS messages, as well as setting up a malicious backdoor potentially allowing malicious actors to spy on your device.
+
+This APK can only be installed by sideloading, it is recommended to only install the Zoom android app from the PlayStore and keep your apps updated, do not install APK files onto your device from third party sources.
+
+IOCs:
+
+Network: tcp://googleteamsupport.ddns.net:4444
+
+Hash: 232ec4629458b1df0e3ef934365cd0cede498205409db31b4701223fa80c31bb

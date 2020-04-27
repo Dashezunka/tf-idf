@@ -1,0 +1,237 @@
+This post dives into details supporting the learnings of lesson 2 in the ‘Introduction to ML for Coders’ course offered by Fast.ai. To go to my first post in this series which discusses the course context and to navigate to all lessons, click here.
+
+Summary:
+
+In this lesson, Jeremey builds a random forest model on the Bluebook for Bulldozers dataset, a dataset available on kaggle where the goal is to predict the sale price of bulldozers sold at auctions.” He prepares the data by quickly applying several fast.ai data preparation functions (covered in my post on Lesson 1) and goes into detail regarding the following topics:
+
+Error Metrics: R2, MSE, RMSE, and RMSLE Visualizing a Single Tree The Benefits of Bagging Out-Of-Bag Scoring Tuning a Random Forest
+
+Error Metrics
+
+Defining the right error metric is crucial to ensuring the success of solving a real-world problem with machine learning. In this lesson, Jeremy discussing the following types of error metrics for regression trees: R2 and RMSLE. To properly explain both of these error metrics, other related error metrics will also be discussed in this section:
+
+R2
+
+Adjusted R2
+
+Mean Absolute Error (MAE)
+
+Mean Squared Error (MSE)
+
+Root Mean Squared Error (RMSE)
+
+Mean Absolute Percentage Error (MAPE)
+
+Root Mean Squared Log Error (RMSLE )
+
+R2
+
+In statistics, the coefficient of determination, denoted R2 and pronounced “R squared”, is the proportion of the variance in the dependent variable that is predictable from the independent variable(s). (source: wikipedia)
+
+R2 ranges between −∞ to 1, and compares how good a model’s root mean squared error is compared to root mean squared error of the naïve mean model
+
+A score of 1 denotes that the model explains all of the variance around its mean an a score of 0 denotes that the model explains none of the variance amounts its mean
+
+If a simple model always predicted the mean of the data it would have an R2 score of 0. A score of <0 is only possible when a model is consistently predicting worse than the mean
+
+While R2 is often not the error metric one is trying to optimize, it is a metric which can be considered for every regression type model to interpret model fit. While generally a higher R2 score is better, note that this score does not take into account the number of variables used in the model and so a high R2 value might be caused by a model which is overfitting. One way to potentially avoid this is through comparing the R2 value of a training vs. test set.
+
+Underfitting vs Overfitting Models (Source: Hiromi Suenaga)
+
+Adjusted R2
+
+R2 shows how well terms (data points) fit a curve or line. Adjusted R2 also indicates how well terms fit a curve or line, but adjusts for the number of terms in a model. If you add more and more useless variables to a model, adjusted r-squared will decrease. If you add more useful variables, adjusted r-squared will increase (Source: Statistics How To)
+
+Adjusted R2 Formula
+
+Compared to the general R2 metric, adjusted R2 penalizes models which contain unnecessary predictor features which do not improve model performance beyond what would be expected by random change. In other words, adjusted R2 reflects the percentage of variation only by the independent variables which actually have a relationship with the dependent variable.
+
+MAE vs. MSE
+
+MAE (Mean absolute error) is the average of the absolute difference between the residuals, the difference between predictions and ground truth value pairs. On the other hand, MSE (Mean Squared Error), is the average of the residuals squared.
+
+The formulas for MSE and MAE
+
+MAE it is not sensitive as sensitive to outliers in comparison with MSE. This is because given several examples with the same input feature values, the error in prediction will be the median value rather that the average value for MSE. It can also be useful if you know that your distribution is multimodal, and it’s desirable to have predictions at one of the modes, rather than at the mean of them (source: Peltarion).
+
+MSE will tend to punish large errors more compared to MSE because it squares all the errors. Thus, if it is particularly undesirable to have large errors in a specific task, it might be worth considering to use MSE instead of MAE (source: Peltarion).
+
+RMSE
+
+RMSE (Root Mean Squared Error) is the square root of the average of squared errors. In other words, RMSE is equal to the square root of MSE. Shown below is a summary of the error metrics discussed so far and how a select number of mathematically related:
+
+The formula for MAE, MSE, RMSE, and R2 (Source: Data Tech Notes)
+
+Compared to MSE, the value of RMSE is in the same units as the target feature and so can be considered more interpretable. Recall that MSE squares error, and thus the units are squared as well. For example, if your target variable is in meters, your MSE error will be in meters².
+
+Compared to MAE, since RMSE also squares the errors before taking the square root, it also weights larger errors more heavily. Depending on the use case at hand, this may or may not be the type of influence you desire to have on your underlying machine learning model.
+
+Does everything discussed above necessarily mean RMSE is the king of error metrics? Not quite, as taking the square root of the average of squared errors has some interesting complications:
+
+RMSE does not necessarily increase with the variance of the errors. RMSE increases with the variance of the frequency distribution of error magnitudes. (Source: Human in a Machine World)
+
+In other words, even when MAE is constant, RMSE will increase when the variance in error distribution frequency also increases. While maintaining the same MAE, RMSE will be greatest when all of the error results from a single observation such as seen below:
+
+Example of constant MAE and increasing RMSE (Source: Human in a Machine World)
+
+It is also possible for RMSE to remain constant despite MAE. It is this scenario which is potentially most misleading as analyzing only RMSE without considering MAE may lead one to believe there is no difference in model performance. Notice how in the examples below, despite case 4 having a greater variance in error, both cases have the same RMSE because they have the same frequency of variance in error:
+
+Example of differences in MAE despite constant RMSE (Source: Human in a Machine World)
+
+Finally, comparing RMSE between datasets with different numbers of samples can be difficult. As the number of observations increases, RMSE has a tendency to be increasily larger than MAE. This is because the more residuals are more likely to impacts the variance in error distribution frequency. As directly quoted from Human in a Machine World, note the following lower and upper bounds on RMSE with respect to MAE:
+
+[MAE] ≤ [RMSE]. The RMSE result will always be larger or equal to the MAE. If all of the errors have the same magnitude, then RMSE=MAE. [RMSE] ≤ [MAE * sqrt(n)], where n is the number of test samples. The difference between RMSE and MAE is greatest when all of the prediction error comes from a single test sample. The squared error then equals to [MAE² * n] for that single test sample and 0 for all other samples. Taking the square root, RMSE then equals to [MAE * sqrt(n)].
+
+MAPE
+
+MAPE measures accuracy as a percentage, and can be calculated as the average absolute percent error for each forecast value (Ft) minus actual values (At) divided by actual values:
+
+Formula for mean absolute percentage error
+
+Since MAPE is based on percentages, it can be useful to use when target predictions vary in magnitude. For example, when predicting the prices in different pieces in furniture, a metric such as MAE would weight an absolute error of $5 on a $50 lamp the same as an error of $5 on a $1000 couch. On the other hand, MAPE would more heavily penalize the same prediction on the lamp given the relative error size compared to the target value.
+
+A key disadvantage of MAPE however is that it returns near infinite / infinite values for target values which are near zero / zero. Furthermore, small values can heavily bais MAPE as seen in the example below:
+
+The impact of small values on MAPE (Source: Statworx)
+
+RMSLE
+
+The last error metric discussed in this post is RMSLE (Root mean squared log error). Specifically for this fast.ai lesson, it is the error metric which Jeremy uses when working through the Blue Book for Bulldozers Kaggle competition. As the name suggests, it is related to RMSE as it is the root of the average squared difference between log of the target and the log of the predicted outputs:
+
+RMSLE can be used when one does not want to target large residuals when the predicted and the actual values are also large numbers. In this regard, it is robust to outliers and also penalizes the underestimation of a value more severely compared to over estimation. Note that depending on the use case, this may be a key deciding factor to use or not use RMSLE, where if leaning towards under/over estimation is vital. As stated in this kaggle post:
+
+If both predicted and actual values are small: RMSE and RMSLE is same.
+
+If either predicted or the actual value is big: RMSE > RMSLE
+
+If both predicted and actual values are big: RMSE > RMSLE (RMSLE becomes almost negligible)
+
+Visualizing a Single Tree
+
+As covered in my first post in this series, a random forest consists of a user-defined number of decision trees. By analyzing a single tree, it is possible to develop insights such as which features are the most important (Note that in lesson #3, more robust methods to understand feature importance will be discussed).
+
+Specifically for the bluebook for bulldozers dataset used in this lesson, there are 400K observations, and Jeremy downsamples to 30K for model training:
+
+As a general rule of thumb, Jeremy emphasizes that any command which takes longer than 10 seconds is hard to work ‘interactively’ with
+
+To time the execution time of a single cell, the magic function %time can be typed before a command to print the total execution time.
+
+can be typed before a command to print the total execution time. To speed up the time it takes to train a decision tree/random forest, it is perfectly acceptable too appropriately downsample the dataset. When trying to understand relative feature importance, having extra decimals of accuracy will not impact this type of analysis
+
+Once the model is working correctly and the appropriate hyperparameters are tuned, the final model can be trained on the entire dataset.
+
+After preparing the data and fitting a RandomForestRegressor from scikit-learn, as single tree can be visualized using fast.ai’s custom function called draw_tree(). While this a very helpful wrapper function, the underlying functionality is provided by sklearn as seen in the source code from fast.ai below:
+
+Source code from fast.ai to draw a single tree
+
+Single decision tree trained on the Bluebook for Bulldozers dataset visualize
+
+To interpret the above visualization, note the following*:
+
+The first line indicates the binary split criteria
+
+samples at the root is 20,000 since that is what we specified when splitting the data.
+
+at the root is 20,000 since that is what we specified when splitting the data. Darker color indicates higher value
+
+value is average of the log of price, and if we built a model where we just used the average all the time, then the mean squared error mse would be 0.495
+
+is average of the log of price, and if we built a model where we just used the average all the time, then the mean squared error would be 0.495 The best single binary split we can make turns out to be Coupler_system ≤ 0.5 which will improve mse to 0.109 in false path; 0.414 in true path.
+
+*Source: Hiromi Suenaga
+
+In general, a decision tree is completed once a stopping condition is met as summarized below in official random forest sklearn documentation for DecisionTreeRegressor:
+
+Decision Tree Regressor Stopping criteria documentation from sklearn
+
+The Benefits of Bagging
+
+To improve performance, a Random forest is a method for bagging trees. More specifically, bagging is a type of ensembling method where the outputs from many ‘weak’ learners are combined.
+
+Each individual learner is trained on a different random subset of the data, where each learns different relationships in the data and all overfit in different ways and on different things. Indeed, all learners will have errors, however ideally all the errors are random, and so by averaging all outputs from the learners (which can technically be 10’s to 1000's), the random errors should ideally average out to zero.
+
+Understanding Predictions from Each Tree
+
+A key technique covered in this lesson extends the ability of scikit-learn’s predict method to obtain the output of the individual tress.
+
+While scikit-learn offers a very straightforward method for fitting a random forest to training data and then generating predictions using the classes fit and predict methods, only a vector of the final averaged prediction across all trees for each observation is returned.
+
+Essentially, by analyzing individual predictions based on specific input features, it can be seen which samples the trees have low variance across their outputs compared to samples where the trees have high variance in their outputs. In some ways, this can be thought of as a degree of confidence in the final answer returned. Note that this technique will be covered in detail in Lesson 3.
+
+The code to execute the above is shown below — note that 10 trees were fit to the training data which consisted of 120K observations.
+
+preds = np.stack([t.predict(X_valid) for t in m.estimators_]) preds[:,0], np.mean(preds[:,0]), y_valid[0] (array([ 9.21034, 8.9872 , 8.9872 , 8.9872 , 8.9872 , 9.21034, 8.92266, 9.21034, 9.21034, 8.9872 ]),
+
+9.0700003890739005,
+
+9.1049798563183568) preds.shape
+
+(10, 12000)
+
+As explained by Hiromi Suenaga:
+
+Each tree is stored in an attribute called estimators_ .
+
+. For each tree, we will call predict with our validation set.
+
+with our validation set. np.stack concatenates them together on a new axis, so the resulting preds has the shape of (10, 12000) (10 trees, 12000 validation set).
+
+concatenates them together on a new axis, so the resulting has the shape of (10 trees, 12000 validation set). The mean of 10 predictions for the first data is 9.07, and the actual value is 9.10. As you can see, none of the individual prediction is close to 9.10, but the mean ends up pretty good.
+
+It can be further seen that increasing the number of trees used in the final averaged output improves perfroance with diminishing returns:
+
+Plot of R² values given first i trees (source: Hiromi Suenaga)
+
+Jeremy notes that more trees slows it down, but with less trees you can still get the same insights. He mentions that he will start with 20–30 trees, tune parameters accordingly, and then near the end of a project use 1000 trees and ‘run overnight’ if necessary.
+
+Out-of-Bag Score
+
+A unique feature specific to Random Forests is the ability to generate an out-of-bag score, where for each individual tree, the observations which were not included in the bootstrapped sample can be used to generate predictions. A more formal definition is below:
+
+Out-of-bag (OOB) error, also called out-of-bag estimate, is a method of measuring the prediction error of random forests, boosted decision trees, and other machine learning models utilizing bootstrap aggregating (bagging) to sub-sample data samples used for training. OOB is the mean prediction error on each training sample xᵢ, using only the trees that did not have xᵢ in their bootstrap sample (source: Wikipedia)
+
+For regression trees, the OOB score is an estimate of the R²
+
+For classification trees, the OOB score is accuracy, the fraction of correctly classified observations.
+
+How many observations are used for each trees OOB score?
+
+The short answer, about 36.8 % of the total training data forms the OOB sample in an ideal case. Note the following proof which is summarized originally by Navnina Bhatia:
+
+If there are N rows in the training data set. Then, the probability of not picking a row in a random draw is:
+
+Using sampling-with-replacement the probability of not picking N rows in random draws is:
+
+…Which in the limit of large N becomes equal to:
+
+Note that when comparing the OOB score vs. the Validation score, the OOB tends to be lower since each row appears in less trees in the OOB samples than it does in the full set of trees. As a result, OOB may underestimate a models generalizability, however this is increasing mitigate when more trees are used.
+
+Subsampling
+
+To increase training speed, the original 400k samples were randomly downsampled to 30k. Bootstrap sampling on this set of 30k observations was then used to train each individual decision tree in the random forest.
+
+Instead of doing this however, it is also possible to to take a different random 30k sample of the original 400k for each decision tree. In other words, instead of generating 30k boostrap samples from the static downsampled set, randomly sample for a new 30k each time. Fast.ai has a function to do this called set_rf_samples , and another function to reset the number of samples to the entire set of via another function called reset_rf_samples. Source code for both can be seen below:
+
+Fast.ai source code for setting and bootstramped samples for random forest training
+
+Fast.ai source code for reseting the number of bootstramped samples back to defaults
+
+Hyperparameter Tuning
+
+When an RF from scikit-learn is trained, it will use default values provided no other user input. Often these default values are good, however they may not always optimize the intended error metric.
+
+One method to employ for hyperparameters parameter tuning is an exhaustive grid search, such as via GridSearchCV in scikit-learn as covered in the official documentation. While technically ever combination of every value for every hyperparameter can be tried in this fashion, Jeremey notes the following values which he typical experiments with:
+
+min_sample_leaf: 1, 3, 5, 10, or 25
+
+Number of samples in a node for it to be considered a leaf node (and generate a prediction)
+
+Note that values experiement with should be will be relative to the size of the overall dataset
+
+max_feature : 1, 0.5, log2, or sqrt
+
+The number of features to be considered at every split point
+
+The motivation here is the more uncorrelated trees are, the better the final performance of the overall model will be — forcing trees to use different features at differet split points help encource this behavior
+
+Thats all for this lesson! Checkout the next lesson in this series as Jeremy discusses techniques to handle large datasets and how to further interpret random forest models.

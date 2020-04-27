@@ -1,0 +1,47 @@
+Your Excel Skills Need Work
+
+Uncommon ways you can speed up your workflow, and make your worksheets more professional
+
+With so much time at home social distancing from the world, this is the perfect time to be learning new skills, sharpening existing skills, and getting rid of bad habits. Although understandably you may want to take a break from productivity in stressful times such as these, for those who want to learn, here are 4 tips to help bring your excel game to the new level. Give me a few minutes of your time, and you will leave this article with at least one new piece of knowledge. My skills are nowhere near perfection, and I am nothing but an Excel user with experience in speed and data visualization.
+
+Hear me out, and follow along.
+
+Only free tools were included, as not everyone has access to $20,000 per year subscriptions (excludes FactSet, CapitalIQ, and Bloomberg). Although the tools explained here are also included in these expensive subscription services, this is a cheap alternative to running an Excel productivity machine from your home. These free tools do have a freemium subscription model where you can choose to pay for, but that is up to your discretion. The ultimate goal is meant to increase your work speed and presentability of data.
+
+The less time that you spend on work, the more time you have with your family.
+
+Photo by Harley-Davidson on Unsplash
+
+For my personal workflow, I exclusively use Windows, but for macOS users, these tools and shortcuts could be beneficial as well. Let’s be real here though if you’re doing anything serious in Excel, you want to be using Windows, or at least macOS with Bootcamp.
+
+Macabacus
+
+Macabacus is an add-on tool for Microsoft Office which improves your presentation and financial modelling workflow. The Lite version is free and allows you to get most of the Excel benefits that you need.
+
+Macabacus Add-on Screenshot from my Excel
+
+Formatting and Making Data Presentable
+
+Just by looking at the ribbon, we can see there are a couple of interesting tools that we can use. My top tips for this add-on is auto-color (Ctrl + Alt + A) and auto-format units (Ctrl + Shift + Number). If we want a currency, we use Ctrl + Shift + 4, for percentages, we use Ctrl + Shift + 5 and for multiples, we use Ctrl + Shift + 8. This makes it so you can make your data follow a steady legend, and allow you to change units much faster than usual.
+
+Below, we see that we can change Revenue amounts to the Blue hardcode number, and also convert the amounts to the proper units. If you have a dataset of hundreds of rows, with many columns, these shortcuts will shave hours off your total workday.
+
+Example Showcasing the functionality of Macabacus Lite
+
+Premium Benefit: Checking Accuracy of Data
+
+If you have ever worked with a large dataset, with numerous calculations, you know that keeping track of what cells you’re using is extremely tedious and complicated. With the Premium version, you can use Ctrl + [ or Ctrl + ] to see the cells that are Precedents or Descendents of the selected cell, respectively.
+
+Excel Showing Macabacus Precedents
+
+As shown in the picture above, you can see that the value for 2015 EV/Sales of 20.0x is calculated using the Enterprise Value of $2,000 divided by Revenue of $100. When complicated calculations arise, you will be able to check all of the formulas, and also navigate to each segment of the large calculation using this tool.
+
+Quick Access Toolbar
+
+This is a built-in function for Excel, which allows you to assign your most used actions into simpler hotkeys. The essence of speed in Excel is using your mouse as little as possible, with the ultimate goal being completely mouse-free. The way you set this up is by going into Options > Quick Access Toolbar and customizing the right side shown below.
+
+My Personal Quick Access Toolbar Settings
+
+The toolbar makes it so when you use Alt + 1, 2, 3, 4, 5, 6, 7, 8, 9, you will be able to perform the action you assigned to the specific number. For me, Alt + 1 is assigned to Font Color, and instead of using Alt + H + F + C, I can just use Alt + 1. All of the other actions listed follow the same rule, so the best way to use this toolbar is by ensuring you include your most common actions.
+
+Sidenote here before continuing on, both of these tools are also useful for Microsoft Powerpoint.

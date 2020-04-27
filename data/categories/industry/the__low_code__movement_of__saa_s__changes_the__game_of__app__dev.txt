@@ -1,0 +1,55 @@
+In the past, to build up an elegant website from zero to one, we might have to master both frontend languages like HTML, JavaScript, CSS, and backend knowledge to establish a database. Although there were many powerful IDEs and tools like Dreamweaver in the market, it’s still a tough thing for a non-tech guy to launch a startup by himself from a home page.
+
+Nowadays, even if you didn’t get what I was talking about, you may have already shared your home-made sites with many friends. It’s not because the technology stack has changed a lot, but thanks to amazing code-less solutions like Weebly, Wix.com, Shopify, and so on.
+
+On the other hand, the barrier to develop a mobile app has become lower and lower, especially at the frontend. Wireframing and prototyping solutions such as Sketch, InVision, Adobe XD, Zeplin, have enhanced their integration features. Frontend developers can easily understand the logic behind the design, access parameters from the document, and don’t have to argue with PMs and designers all day long.
+
+One exciting trend above is more and more SaaS companies are born to help entrepreneurs who can design the product (app) but don’t have solid coding skills. Their design-driven solutions enable everyone to build up a market-ready app (website, mobile app, or game) with light-weight codes. This “low-code movement” can change the game of app dev industries.
+
+“Low-code” & “Semi-open Source”
+
+“Low-code” is not equal to “no-code”. It is a combination of more “no-code” and less “code”. As an entrepreneur & investor, I believe coding is efficient in most cases, and pure “design-driven” solutions may not be good choices sometimes. Both “the code” and “the codeless” are necessary, but the majority of work should be handled codelessly.
+
+One better approach is to keep all the functions customizable with codes, just like the low-level programming APIs introduced by Microsoft DirectX 12. Users can choose whether to use the interface/code mode to achieve maximum productivity.
+
+Hence, the “low-code” should be a two-way movement. On the one hand, heavy-code solutions can consider introducing more visualized interface-based methods; on the other hand, no-code solutions should enhance product flexibility by providing more programming APIs or other approaches. Many companies like Snowflake have already established their developer platforms and combined cloud solutions, whose semi-open source is a proven strategy to shape the product and user sustainability.
+
+“Low-code” features have been adapted in a few SaaS products. When using Slack and Notion, users can call functions with simple commands as they were typing codes.
+
+Gamification & “Work Flow Engine”
+
+The “low-code” is a process of gamification. Separation of rules (SaaS core infrastructures and functions) and data (objects and methods) from basic concepts like collision detection and software entity is the key, which means teams could grow and specialize.
+
+The game engine is the gamification product of games. The rise of game engines is the first wave of the low-code movement.
+
+The term “game engine” arose in the mid-1990s. Such was the popularity of Id Software’s Doom and Quake games that, rather than work from scratch like before, other developers licensed the core portions of the software and designed their own graphics, characters, weapons, and levels — the “game content” or “game assets”. Later games, such as id Software’s Quake III Arena and Epic Games’ 1998 Unreal, were designed with this approach in mind, with the engine and content developed separately.
+
+At the very least, reusable engines make developing game sequels faster and easier, which is a valuable advantage in the competitive video game industry. Modern game engines are some of the most complex applications written, often featuring dozens of finely tuned systems interacting to ensure a precisely controlled user experience. The continued evolution of game engines has created a strong separation between rendering, scripting, artwork, and level design. It is now common, for example, for a typical game development team to have several times as many artists as actual programmers.
+
+To build a low-code SaaS product is to create such an “engine” for workflows. For instance, if we are going to develop a very simple SaaS product to enable companies to pick a color, a low-code approach should provide both visualized “palettes” and code-based parameter boxes. What’s more, we should define what are unchangeable “rules” and what are changeable “data”. In this example, the goal to pick a color never changes, which is the “rule”; the method, as well as the gamut to choose a color, can be flexible, so some default choices should be provided in the interface mode, and more options should be able to be customized with codes.
+
+“Frontend as a Service”
+
+With the development of IaaS and PaaS industries, “Backend as a Service” companies like HashiCorp, Snowflake, Databricks are growing fas. At the same time, there is few “Frontend as a Service” or “Full-stack as a Service” solutions in the market.
+
+It’s not a secret that frontend developers have to build the app from zero to one with codes based on his understandings no matter how beautiful the interfaces on InVision are.
+
+As a user or designer, it’s straightforward to ignore that the logic to build an app with codes is very different from using Photoshop. To create an iOS app, developers may use MVC models to implement with Xcode. In many cases, they cannot input internal design or GitHub public resources directly; they have to draw every shape little by little with Swift. It can be much more overwhelmed than using Adobe Illustrator to drag a star. They may have to write thousands of lines just for one irregular shape or one 2s animation.
+
+Some frontend SaaS companies have started to think about potential solutions. ProtoPie is a pioneer on the designing end, who is trying to make the prototype look like a “real” app with animations. They are approaching the “visual limit” but still far away from solving the baseline problem to transform the design document into codes.
+
+For websites, some early-stage “Full-stack as a Service” companies like Webflow has been validated with profits and fast-growing ARR. These solutions are based on the development of Content Management Systems (CMS), which are software applications that can be used to manage the creation and modification of digital content. Establishing “App Management Systems” could be a way to build apps without coding.
+
+Nevertheless, the tech logic to build apps is not similar, and the developer community hasn’t shaped yet. In fact, there are some “codeless app builders” in the market, such as AppsBuilder. This framework does work; however, the downside is lacking flexibility compared with mature CMS solutions like WordPress. The user can only build simple model-based apps, and it may take a few years to develop basic features.
+
+In terms of deep learning methods and other infrastructure-level technologies, I still believe it is possible to transform Sketch files into codes with the help of low-code approaches, which means the process is semiautomatic. Frontend engineers can quickly get the final codes by modifying, adding, or removing some related parameters or functions. If it works, the age of “Frontend as a Service” will come.
+
+Baseline: Efficiency is Sexy
+
+For entrepreneurs who are considering to add low-code features to their existing or new products, one concern is about its ROIC. Actually, the target audience of low-code software is not just SMB and midmarket companies, which generally have lower average ACV and retention rates than large enterprises.
+
+Nowadays, the annual cost for a company to hire a junior developer can be over $100K in the US, and the number is fast climbing. Whereas developers may own excellent perks, the daily job of development can be stressful, and the work-life balance is deficient in many Asian countries. Besides, it’s not always easy for developers, PMs, designers to stay in one boat, which can cost a lot of time to negotiate.
+
+Many low-code product owners are ambitious, and their final goal is to enable most companies to hire less than ten software engineers in the future. If it comes true, IT companies will save millions of dollars every year and can focus more on a better experience. This will completely change the app dev industry and could be a trillion-dollar market, at least.
+
+If you’re interested in more gamification topics, please follow me @Noctus_Ma or email me at contact@noctusma.com. For entrepreneurs seeking investors in gamification sectors (SaaS, Gen Z lifestyle, gaming, next-gen mobility), please send your BP to contact@nopstein.com. Look forward to getting in touch!

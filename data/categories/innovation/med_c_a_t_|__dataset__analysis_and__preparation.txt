@@ -1,0 +1,41 @@
+MedCAT | Dataset Analysis and Preparation
+
+Plotting, statistics and preprocessing of the electronic health records (EHRs) from the MIMIC-III dataset.
+
+One of the most important steps when doing any kind of machine learning is to understand the dataset and to be sure that what we want to achieve is in fact possible. So, before continuing with our main goal of analysing the connection between age and diseases, we will first show some basic statistical information on the MIMIC-III dataset and prepare the EHRs for the next steps.
+
+Please Note: (1) To reproduce the results (images) in this tutorial you will need access to MIMIC-III, but as I know this can be bothersome, I’ve created two dummy CSV files available in the repository. These two CSV files emulate the two files we get from MIMIC-III using the SQL scripts below. This is not real data and can only be used to test MedCAT or to learn how to use it. (2) I will be showing plots and statistics from the MIMIC-III dataset.
+
+Accessing MIMIC-III
+
+It is not too difficult to get access to MIMIC-III, you can submit a request here and usually a couple of days later they will approve your request.
+
+Once you get access to MIMIC-III, you can download the full dataset from their website. Initially, the files are in CSV format, I’ve decided to import them into a PostgreSQL database to make the exploration phase a bit easier (you can do everything from the CSV files directly). Physionet provides a tutorial on how to import MIMIC-III into a PostgreSQL database, link. In my case, I had to slightly modify the scripts to make this work and run them without using Makefiles, still a fairly smooth process.
+
+Preparing the data for analysis
+
+The reason we have imported everything into PostgreSQL is so that we can easier view, filter and select what is needed from the dataset. MIMIC-III has a large number of tables and information, but we are interested in only two: noteevents and patients .
+
+noteevents — contains the written portion of a patients EHR. More on the noteevents table can be found on the MIMIC-III website. From this table we are only interested in 4 columns: subject_id (the patient identifier), chartdate (date when the note was created), category (what is the type of the note, e.g. Nursing) and text (the text portion of the note). The SQL script used to extract the needed information is bellow (use the save to CSV option, or Python to create a CSV):
+
+SELECT subject_id, chartdate, category, text FROM mimiciii.noteevents
+
+patients — contains basic structured information on patients. Again, more on the MIMIC-III website. From here, we will take three columns: subject_id (the patient identifier), gender (male or female), dob (date of birth). The SQL script:
+
+SELECT subject_id, gender, dob FROM mimiciii.patients
+
+Please Note: (1) dates in MIMIC-III are randomly shifted into the future (the good thing is, for one patient, all dates are shifted using the same random number). (2) There is a huge number of noteevents in MIMIC-III, the CSV is ~3.9GB.
+
+Basic Statistics on the Dataset
+
+Google Colab
+
+Statistics on the patients table
+
+Figure 1: Distribution of patients in MIMIC-III by gender.
+
+Later on, we will group patients based on gender to show some differences between female and male. Because of that, we want to check is our dataset balanced. In Figure 1, we can see that there are more male patients than female, but nothing significant (at least not for our use-case). In numbers, there are 46520 patients in total and from that 20399 are female, and 26121 are male. The number of patients in the noteevents table is slightly different; not all patients have clinical notes.
+
+Nothing else (useful) can be done given this table alone, let’s first check a couple of things in the noteevents table and then we’ll combine the two tables and plot statistics related to age.
+
+Statistics on the noteevents table

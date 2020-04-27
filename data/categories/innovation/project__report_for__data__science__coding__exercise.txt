@@ -1,0 +1,155 @@
+Project Report for Data Science Coding Exercise
+
+Sample project report for a data science take-home coding challenge problem
+
+I. Introduction
+
+The take-home challenge problem or coding exercise is the most important step in the data scientist interview process. This is generally a data science problem e.g. machine learning model, linear regression, classification problem, time series analysis, etc. Generally, the interview team will provide you with project directions and the dataset.
+
+Some coding challenge problems would specify that a formal project report be submitted together with a Jupyter notebook or R Script file. This article will provide some guidelines on how to write a formal project report for the take-home coding challenge problem.
+
+This article is organized as follows. In Section II, we describe the project statement and project objectives. In Section III, we describe a sample solution to the problem including the dataset, code, and outputs. In Section IV, we present a sample project report for the take-home challenge problem. A short summary concludes the article.
+
+II. Project Instructions
+
+In this problem, you will forecast the outcome of a portfolio of loans. Each loan is scheduled to be repaid over 3 years and is structured as follows:
+
+First, the borrower receives the funds. This event is called origination.
+
+The borrower then makes regular repayments, until one of the following happens:
+
+(i) The borrower stops making payments, typically due to financial hardship, before the end of the 3-year term. This event is called charge-off, and the loan is then said to have charged off.
+
+(ii) The borrower continues making repayments until 3 years after the origination date. At this point, the debt has been fully repaid.
+
+In the attached CSV, each row corresponds to a loan, and the columns are defined as follows:
+
+The column with header days since origination indicates the number of days that elapsed between origination and the date when the data was collected.
+
+For loans that charged off before the data was collected, the column with header days from origination to charge-off indicates the number of days that elapsed between origination and charge-off. For all other loans, this column is blank.
+
+Objective: We would like you to estimate what fraction of these loans will have charged off by the time all of their 3-year terms are finished. Please include a rigorous explanation of how you arrived at your answer, and include any code you used. You may make simplifying assumptions, but please state such assumptions explicitly. Feel free to present your answer in whatever format you prefer; in particular, PDF and Jupyter Notebook are both fine. Also, we expect that this project will not take more than 3–6 hours of your time.
+
+III. Project Dataset, Code, and Sample Outputs
+
+The dataset and suggested solution for this problem (including the code and outputs) can be downloaded from the following link:
+
+Monte Carlo Simulation of Loan Status
+
+Note: The suggested solution presented above is my version of the solution to the problem. Keep in mind that the solution to a data science or machine learning project is not unique. You are welcome to try out the problem yourself and come up with your own predictive model.
+
+IV. Project Report
+
+After completing the coding section of the project, it is time to put together a formal project report. Find below is a sample report for this project.
+
+Prediction of Loan Status Using Monte Carlo Simulation
+
+Abstract: Using the dataset provided, we built a simple model using Monte Carlo (MC) simulation for predicting the fraction of loans that will default after the 3-year duration of the loan. Our model revealed a 95% confidence interval of 14.8% +- 0.2% for Monte Carlo simulation of N = 1000 replicated copies of the dataset.
+
+Keywords: Loan status, loan origination, loan charge-off, Monte Carlo simulation, predictive analytics
+
+Introduction: Predicting the status of a loan is an important problem in risk assessment. A bank or financial organization has to be able to estimate the risk involved before granting a loan to a customer. Techniques of data science and predictive analytics can be used to predict the probability of loan default. In this project, we are provided with the loan_timing.csv dataset containing 50,000 data points. Each data point represents a loan, and two features are provided as follows:
+
+The column with header “ days since origination ” indicates the number of days that elapsed between origination and the date when the data was collected.
+
+” indicates the number of days that elapsed between origination and the date when the data was collected. For loans that charged off before the data was collected, the column with header “days from origination to charge-off” indicates the number of days that elapsed between origination and charge-off. For all other loans, this column is blank.
+
+Project Objective: The goal of this project is to use techniques of data science to estimate the fraction of these loans that will have charged off by the time all of their 3-year terms are finished.
+
+Exploratory Data Analysis: The dataset was important in R and calculations were performed using R. We plot the following figures:
+
+Figure 1: Histogram of days since origination for current loans.
+
+Figure 2: Histogram of days to charge-off for defaulted loans.
+
+Figure 3: Histogram of days since origination for defaulted loans.
+
+Figure 1 shows a histogram of current (active) loans, which to a good approximation, are uniformly distributed over the days since origination.
+
+In Figure 2, we see that the proportion of loans that charged off decreases with increasing days from origination to charge-off. This shows that younger loans have a higher probability of defaulting. It also shows that 100% of loans defaulted within 2 years (730 days) from origination date.
+
+Figure 3 shows the distribution of defaulted loans as a function of days since origination to the time when data about loan status was collected. The defaulted loans contain a large proportion (71%) of loans that are one year and older.
+
+We performed Monte Carlo simulations to study the relationship between days to charge-off and days since origination for the defaulted loans, and compared the results with the original sample data, as shown in Figures 4 and 5. Because there is randomness associated with the charge-off of a loan (stochastic process), we see that Monte Carlo simulation provides a reasonable approximation for the distribution of defaulted loans.
+
+Figure 4:Plot of days to charge-off vs. days since origination for defaulted loans.
+
+Figure 5: Monte Carlo simulation of days to charge-off vs. days since origination for defaulted loans.
+
+Model Selection: Our dataset has only 2 features or predictors, and surfers from the problem of prevalence: 93% of the loans have an active (current) status, while 7% have a default status. Use of Linear Regression for predicting fraction of loans that will have charged off after the 3 years loan duration would produce a model that is biased towards the active loans.
+
+Figures 4 and 5 indicate that the relationship between days to charge-off and days since origination for defaulted loans can be simulated using the Monte Carlo method. We therefore chose Monte Carlo simulation as our model for predicting the proportion of loans that will default.
+
+Predictions: Since we have demonstrated that the relationship between days to charge-off and days since origination in the first 2 years (i.e. 0 to 730 days) can be approximated using Monte Carlo simulation, we can use the same method to predict the fraction of loans that will charged off by the time all of their 3-year terms are finished.
+
+The total number of charged off loans in our dataset is 3,305. This means that there are 46,695 loans that are currently active. Of these active loans, a certain proportion will default over the 3-year period. To estimate the total fraction of defaulted loans, we simulated defaulted loans with charge-off and days since origination covering entire duration of loan (i.e. 0 to 1095 days), then by appropriate scaling, we computed the fraction of loans that will have charged off after the 3-year term i.e., 1095 days.
+
+By creating 1000 random trials, we obtained the following distribution for the fraction of defaulted loans over the 3-year term of the loan (see Figure 6):
+
+Figure 6: Histogram for fraction of charged off loans after 3-year term using N = 1000 samples.
+
+Based on our calculations, the 95% confidence interval for the fraction of loans that will have charged off after the 3-year loan duration is accordingly 14.8% +- 0.2%.
+
+Conclusions: We have presented a simple model based on Monte Carlo simulation for predicting the fraction of loans that will default at the end of the 3-year loan duration period. Different models could be used such as logistic regression, decision tree, etc. It would be a good idea to try these different approaches to see if the results are comparable to the Monte Carlo simulation results.
+
+Appendix: R Code for Performing Data Analysis
+
+# R CODE FOR PREDICTING LOAN STATUS
+
+#author: Benjamin O. Tayo
+
+#Date: 11/22/2018 # IMPORT NECESSARY LIBRARIES
+
+library(readr)
+
+library(tidyverse)
+
+library(broom)
+
+library(caret) # IMPORTATION OF DATASET
+
+df<-read_csv("loan_timing.csv",na="NA")
+
+names(df)=c("origination","chargeoff") #partition dataset into two: default (charged off ) and current
+
+index<-which(!(df$chargeoff=="NA"))
+
+default<-df%>%slice(index)
+
+current<-df%>%slice(-index) # EXPLORATORY DATA ANALYSIS # Figure 1: Histogram of days since origination for current loans current%>%ggplot(aes(origination))+geom_histogram(color="white",fill="skyblue")+ xlab('days since origination')+ylab('count')+ ggtitle("Histogram of days since origination for current loans")+ theme(plot.title = element_text(color="black", size=12, hjust=0.5, face="bold"),axis.title.x = element_text(color="black", size=12, face="bold"),axis.title.y = element_text(color="black", size=12, face="bold"),legend.title = element_blank()) # Figure 2: Histogram of days to charge-off for defaulted loans default%>%ggplot(aes(chargeoff))+geom_histogram(color="white",fill="skyblue")+ xlab('days to charge-off')+ylab('count')+ ggtitle("Histogram of days to charge-off for defaulted loans")+ theme(plot.title = element_text(color="black", size=12, hjust=0.5, face="bold"), axis.title.x = element_text(color="black", size=12, face="bold"), axis.title.y = element_text(color="black", size=12, face="bold"), legend.title = element_blank()) # Figure 3: Histogram of days since origination for defaulted loans default%>%ggplot(aes(origination))+geom_histogram(color="white",fill="skyblue")+ xlab('days since origination')+ylab('count')+ ggtitle("Histogram of days since origination for defaulted loans")+ theme(plot.title = element_text(color="black", size=12, hjust=0.5, face="bold"),axis.title.x = element_text(color="black", size=12, face="bold"),axis.title.y = element_text(color="black", size=12, face="bold"), legend.title = element_blank()) # Figure 4: Plot of days to charge-off vs. days since origination for defaulted loans default%>%ggplot(aes(origination,chargeoff))+geom_point()+ xlab('days since origination')+ylab('days to charge-off')+ ggtitle("days to charge-off vs. days since origination")+
+
+theme( plot.title = element_text(color="black", size=12, hjust=0.5, face="bold"), axis.title.x = element_text(color="black", size=12, face="bold"), axis.title.y = element_text(color="black", size=12, face="bold"),legend.title = element_blank()) # Figure 5: Monte Carlo Simulation of Defaulted Loans set.seed(2)
+
+N <- 3*365 # loan duration in days
+
+df_MC<-data.frame(u=round(runif(15500,0,N)),v=round(runif(15500,0,N)))
+
+df_MC<-df_MC%>%filter(v<=u)
+
+df_MC<-df_MC%>%filter(u<=730 & v<=730) #select loans within first 2 years df_MC[1:nrow(default),]%>%ggplot(aes(u,v))+geom_point()+ xlab('days since origination')+ylab('days to charge-off')+ ggtitle("MC simulation of days to charge-off vs. days since origination")+ theme(plot.title = element_text(color="black", size=12, hjust=0.5, face="bold"),axis.title.x = element_text(color="black", size=12, face="bold"),axis.title.y = element_text(color="black", size=12, face="bold"),legend.title = element_blank()) # Predicting fraction of these loans will have charged off by the time all of their 3-year terms are finished set.seed(2)
+
+B<-1000
+
+fraction<-replicate(B, {
+
+df2<-data.frame(u=round(runif(50000,0,N)),v=round(runif(50000,0,N))) df2<-df2%>%filter(v<=u)
+
+b2<-(df2%>%filter(u<=730 & v<=730))
+
+total<-(nrow(df2)/nrow(b2))*nrow(default)
+
+100.0*(total/50000.0)}) # Figure 6: Histogram for fraction of charged off loans after 3-year term using N = 1000 samples fdf<-data.frame(fraction=fraction)
+
+fdf%>%ggplot(aes(fraction))+geom_histogram(color="white",fill="skyblue")+ xlab('fraction of charged off loans after 3-year term')+ylab('count')+ ggtitle("Histogram of total fraction of charged off loans")+
+
+theme( plot.title = element_text(color="black", size=12, hjust=0.5, face="bold"),axis.title.x = element_text(color="black", size=12, face="bold"),axis.title.y = element_text(color="black", size=12, face="bold"),legend.title = element_blank()) # Calculate Confidence Interval for Percentage of Defaulted Loans After 3-year Term mean<-mean(fraction)
+
+sd<-sd(fraction)
+
+confidence_interval<-c(mean-2*sd, mean+2*sd)
+
+V. Summary
+
+In summary, we’ve described how a project report for a data science take-home challenge could be written. Some data scientist job interviews would require the applicant to submit a formal project report alongside a Jupyter notebook or R script file. The guidelines provided here could be used for preparing a formal project report for the take-home coding exercise.
+
+References

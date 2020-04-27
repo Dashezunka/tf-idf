@@ -1,0 +1,57 @@
+Whenever you want to build a Machine Learning model, you have a set of p-dimensional inputs to start from. However, not all of these inputs might be necessary to obtain the best predictive model. Moreover, using all of the p predictors might lead to an overfitting problem, especially if the number of observations n is not much greater than p.
+
+So how can you decide which inputs to include in your model? This task can be solved via variable selection. Generally speaking, variable selection is one of the methods used in Machine Learning to avoid overfitting and reduce the dimensionality of your task. Other methods are, namely, Principal Component Analysis, which uses as inputs lower-dimensional variables obtained as linear combinations of the original ones, and Shrinkage methods, which force some coefficients to get close to zero (Ridge) or even equal to zero (Lasso).
+
+However, in this article I’m going to focus only on variable selection for Linear Regression, explaining three approaches which can be used:
+
+Best Subset Selection
+
+Forward Stepwise Selection
+
+Backward Stepwise Selection
+
+So let’s start examining each of them. For each method, I will consider a very easy environment where we have only four predictors:
+
+Best Subset Selection
+
+This approach tries all the possible 2^p combinations of inputs with the following idea. It starts from the null model, containing only the intercept:
+
+Then, it trains 4 models, each with only one predictor:
+
+Finally, it picks the one with the lowest RSS or highest R² and saves it.
+
+Next, it trains other 6 models with all the possible combinations of couples of variables and then picks, again the one with the lowest RSS or highest R²:
+
+With the same fashion, for k=1,…,4, it trains each time (p k)’ (binomial coefficient) models and picks the best one (with the same criteria as before).
+
+Then, we are left with 4 selected models with, respectively, 1, 2, 3 and 4 variables. The final step is picking the best one using metrics as Cross-Validation or adjusted error metric (adjusted R², AIC, BIC…), in order to take into consideration the bias-variance trade-off.
+
+As mentioned above, this procedure implies the estimation of 2^p different models. In our case, with only 4 variables, it boils down to the estimation of 16 models, however, with hundreds of variables it could easily get hardly feasible.
+
+Forward Stepwise Selection
+
+With forward selection, we follow a similar procedure as before, with one important difference: we keep track of the selected model at each step and only add variables, one at the time, to that selected model, rather than estimate one new model every time.
+
+So we start again from the null model and repeat the first step above, that is training 4 models with 1 variable each and pick the best one:
+
+Now, instead of training 6 models, we keep the selected model and train 3 more models, looking for the one additional variable which leads to the lowest RSS or highest R².
+
+Again, at the end of the process, we will have 4 models to choose among, but the difference is that, this time, we only trained 10 models! In general, when we have p predictors, with forward selection we need to train p(p+1)/2 models rather than 2^p.
+
+Backward Stepwise Selection
+
+The idea of this approach is similar to the Forward Selection, but in reverse order. Indeed, rather than starting from the null model, we start from the full model and remove one variable at the time, keeping trace of the previously selected model.
+
+So, moving from the full model:
+
+We train four different models, each obtained by removing one of the 4 predictors. Then, we select the best one with the known criteria:
+
+From here, we train 3 models removing again one predictor at the time, but keeping fixed the model selected above:
+
+Finally, again, we will have 4 different models to choose among. Also in this case, we need to estimate the same number of models as in Forward selection, rather than 2^p.
+
+The main difference between Forward and Backward approach is that the former can deal with tasks where p>n (it simply adds a stopping rule when p=n), while the latter cannot, since the full model implies p>n.
+
+Conclusions
+
+Dimensionality reduction is pivotal in Machine Learning and Statistics in general: if correctly performed, it reduces the complexity of the problem yet keeping most of the information. Especially today, where we are often provided with Big Data characterized by large p, we need to rely on those techniques to extrapolate relevant, summarized information from our inputs.

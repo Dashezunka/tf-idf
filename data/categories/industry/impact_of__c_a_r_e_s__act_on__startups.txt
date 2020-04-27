@@ -1,0 +1,41 @@
+(2) What are the Affiliation Rules?
+
+I’ll skip the classic qualifiers like “these are highly complex rules” and “it’s a case-by-case analysis” and just get to the meat of the issue.
+
+Even if a startup has 5 employees, a single VC-like investor could cause that startup to be affiliated with that investor’s other portfolio companies. If even one of those companies has a large employee headcount, your 5-person team might be considered a 500+ person team in the eyes of the SBA.
+
+There are many ways your investor (and its portfolio companies) may be considered your affiliate under these rules. If you want to do a deep dive, I recommend reading the SBA Affiliation Compliance Guide.
+
+The most common scenarios for startups, though, will be affiliation based on stock ownership and affiliation based on common management.
+
+Affiliation Based on Stock Ownership
+
+There are three main ways affiliation can occur by stock ownership:
+
+(1) An Investor Owns or Control 50+% of Your Voting Stock
+
+This one is straightforward. If you have someone on your cap table that owns 50+%, you need to figure out whether there are any other companies that your investor has the power to control (using all these same affiliation rules) and count the number of employees at those companies.
+
+If you add them all together and get less than 500, you’re in the clear.
+
+At this point, some people may have the same question I did: what *exactly* do we mean by the “number of employees”? Does this count contractors and freelancers a company uses?
+
+The CARES Act defines “employee” in this context to mean “individuals employed on a full-time, part-time, or other basis.” Since the SBA generally uses the same criteria as the IRS to determine if someone is “employed” for Federal income tax purposes, this likely does NOT include independent contractors, freelancers, etc.
+
+(2) An Investor Owns Less Than 50%, But Owns a Large Block of Stock Compared to Others
+
+Suppose that you have an investor that owns 40% of your company (let’s call this investor “White Knight VC”) and the next largest investor owns 2%. In this case, the SBA will treat White Knight VC as your affiliate because it owns such a large block of stock compared to the rest of your shareholders. Therefore, every other company controlled by White Knight VC will also be considered an affiliate of your startup. If all the White Knight VC portfolio companies collectively have 500+ employees, then you (and the other founders in the portfolio) are theoretically out of luck on CARES Act relief.
+
+Let’s take another example. Suppose that two individuals (Bogle and Buffett) each own large blocks of your company stock. Buffett owns 47% and Bogle owns 33%. The SBA would say that Buffett owns a block of stock that is large compared to any other block, and therefore Buffett has the power to control your company. If Buffett also happens to own a large insurance company (say GEICO, for example), your company would be affiliated with GEICO and its 40,000 employees — making your company ineligible for relief under the CARES Act.
+
+(3) Multiple Minority Shareholders Own Approximately the Same Amount, But Collectively Own a Large Block Compared to Others
+
+Continuing from our examples above, let’s say that White Knight VC, Buffett, and Bogle each own 23% of your company, but no other shareholders own more than 5%. In this case, the SBA would say all three of White Knight VC, Buffett, and Bogle will be “presumed” to be affiliates of your company. This means that all of White Knight VC’s portfolio companies and any companies controlled by Buffett and Bogle would be affiliates of your company.
+
+Affiliation Based on Common Management
+
+If you have an investor who has the right to elect the majority of your Board and who also controls the Board of another business, then your company and the other business will likely be affiliates.
+
+For example, suppose that partners at White Knight VC occupy 3 of the 5 seats on your company’s board of directors. If controlling members of White Knight VC occupy 3 of the 5 seats at Unicorn Corp., which has 650 employees, your company would be affiliated with Unicorn Corp. because the controlling members of your board also control the Board of Unicorn Corp. And since Unicorn Corp. has 500+ employees, you would be ineligible for relief under the CARES Act.
+
+As you can see, these affiliation rules can lead to bad results for startups looking to take advantage of the CARES Act.

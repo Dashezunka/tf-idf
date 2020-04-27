@@ -1,0 +1,37 @@
+Let’s start with defining the base64 function interface for encoding and writing a first test. I am going to only implement base64 for strings and not actually for byte streams.
+
+So here is the first test. Our encoding function takes a &str and encodes the string.
+
+Separating the bits into groups of 6
+
+The first step is to regroup our bytes into groups of 6 bits. We start with 3 ascii characters since they have 24 bits in utf8 (Rust’s encoding) and we can regroup them into 4 base64 characters. So first, let’s convert the characters into bytes.
+
+To get our 4 base64 characters we need to apply bit masks to remove unwanted information and shift the characters into the correct positions.
+
+For the first group of 6 we just remove the last two bits and shift everything 2 bits to the right. (Actually, just shifting everything two bits to the right does the job as well… but I did not think of that when I wrote the code.)
+
+The second group consists of the last two bits of the first ascii character and the first 4 bits of the second ascii character. So we remove the first 6 bits of the first ascii character and shift them 4 places to the left. Then we remove the last 4 bits of the second ascii character, move them 4 places to the right and binary OR them together.
+
+The third group needs the last 4 bits of the second ascii character and the first two of the third ascii character. Just as above we remove the excess bits and merge the relevant information together.
+
+And finally the 3rd ascii character’s last 6 bits are the last base64 character. Since you have seen the code for the first three base64 character and the code is very simple, I will not add the code here.
+
+Converting the base64 characters to an actual base64 string
+
+The base64 characters now have to be converted into the characters which will be the base64 output string. Here BASE64_ALPHABET is a slice which codifies the base64 alphabet table displayed at the beginning of the article.
+
+And if we return base64_output we should have our first working test. 🎉
+
+Let’s add a second test to allow the string to be longer than 3 characters.
+
+To achieve this we need to loop over groups of 3 characters in our string and convert them to base64.
+
+And after each iteration we move our index forward by the length of encoded bytes, so 3.
+
+Encode strings with less than 3 bytes
+
+Up until now we have only encoded string with a multiple of 3 bytes. How can we encode 2 or even 1 byte? If we filled the missing characters with zeros the decoder would not be able to know if the last byte(s) were missing or if they actually are just 0 . (Remember that base64 is actually for any kind of byte stream and not just strings.)
+
+There is a clever solution. If we only encode 2 bytes, we need 3 base64 characters to contain all the bit information. So if we add a = as padding, the decoder can know that there were only 2 bytes encoded and not 3. Let’s add a test for that.
+
+So we can extract the 3 base64 characters and add the padding.

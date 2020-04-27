@@ -1,0 +1,77 @@
+I have been watching and talking about the intersection of privacy and coronavirus for a few weeks now. The commentary has been constant from all parts of the world and there seems to be no slowing down.
+
+The next head on the chopping block is Zoom. So, what is Zoom?
+
+What is Zoom?
+
+Zoom is one of the many options available that offer modern enterprise video communications. They boast to have ‘an easy, reliable cloud platform for video and audio conferencing, collaboration, chat and webinars across mobile devices, desktops, telephones, and room systems’. Sounds good right?
+
+Founded in 2011, Zoom is now a public company traded on the Nasdaq and based out of San Jose, California with an estimated valuation in the billions of dollars. Zoom offers several types of packages for individuals and businesses depending on their needs. Starting from a free plan for personal meetings going all the way up to large enterprise-ready plans.
+
+So, What’s the Big Problem?
+
+As the popularity of Zoom has increased during the forced shutdowns all over the world due to coronavirus, so has the spotlight on the service. More and more companies are sending their workers remote which means that to maintain somewhat efficient communications between colleagues, we need to rely on audio and video technologies. Humans crave face-to-face interactions and the beauty of technology is that it shows no borders in allowing this to take place.
+
+However, with any advancement in technology there comes tradeoffs. Many individuals rely on privacy when discussing sensitive topics online, this could range from legal and business discussions to consultations with medical experts about mental health or sexual abuse. It’s simple for these conversations to remain private in person, we just have to seclude ourselves in a physical space where no others are, but how do they take place online? Do we really want those conversations to be seen or heard by others?
+
+Many privacy advocates have pointed out the less than desirable aspects of how Zoom manages it’s users' data and privacy.
+
+My Data = Your Data?
+
+Firstly, Zoom does NOT employ End-To-End-Encryption (E2EE) for their video and audio services. E2EE is known as an industry-standard in terms of securing online communications so its omission here causes immediate concern. Zoom uses something known as transport encryption which protects your conversation from anyone spying on your Wi-Fi, but it won’t protect you from Zoom itself spying on your conversations. This is a big problem for privacy.
+
+Nobody reads those long privacy policies or terms of service documents for the services/products they use, but sometimes its actually wise to do so. If you’re too lazy to do it yourself you can use Terms of Service Didn’t Read. Unfortunately, they don’t have Zoom listed (yet) but it’s still a great resource nonetheless.
+
+Zoom’s privacy policy is riddled with shocking text. In its policy, the company claims the right to collect information from all Zoom session participants that includes names, usernames, physical addresses, email addresses, phone numbers, job information, credit card information, Facebook profile information, information about the computer and internet connection, and buying and browsing habits. WOAH! If that’s not concerning to you, then I don’t know what would be.
+
+What is Zoom doing with all of this information? They say it uses this information for ‘marketing purposes’ and to serve its users better (lol). Zoom insists they don’t ‘sell’ your data to anyone else but they do admit to sharing personal data with third party companies for ‘business purposes’. Business purposes sure is a loose term so who really knows what that means in real terms. I’d say it’s fairly safe to assume that the likes of Google, Facebook and just about anyone else with a healthy checkbook could be accessing this personal data.
+
+If the above was not already a massive kick in the privacy parts then this might just be the final blow. Zoom claims the right to give up all users information in “responding to a legally binding demand for information, such as a warrant issued by a law enforcement entity of competent jurisdiction, or as reasonably necessary to preserve Zoom’s legal rights.”
+
+What that really means is that Zoom will have to hand over all meeting participants' information to the government, if (when) they demand it. That leads to the question, are you comfortable with the government knowing all the information about the people on the call? I know I’m not. It’s not because I have something to hide, it’s the same reason why I don’t get changed out in the middle of the street — I value my privacy.
+
+What Are the Other Options?
+
+Okay, so if you’re like me and you’ve now lost all faith in using Zoom, don’t fear because there are some alternatives available that aren’t so ruthless with their invasion of your privacy.
+
+Jami — https://jami.net/
+
+Jami is a (FOSS) Free and Open-Source software released under the GNU General Public License. Jami allows for instant messaging and video calling whilst maintaining E2EE to ensure all communications are encrypted and nobody other than the sender and recipient is able to access the data. All messages are stored on local devices also removing the possibility for a third party to get access to any information. Jami is available on Linux, Microsoft Windows, OS X, iOS and Android.
+
+Features:
+
+Audio / Video Calls — Chat with your contacts with both audio and video capabilities.
+
+— Chat with your contacts with both audio and video capabilities. Screen Sharing — Share your screen with a work colleague to allow more fluid conversations.
+
+— Share your screen with a work colleague to allow more fluid conversations. Conferences — Join a session with multiple parties.
+
+— Join a session with multiple parties. Messaging — Enjoy secure and instant messaging.
+
+— Enjoy secure and instant messaging. Ad-Free — No advertising. Ever.
+
+— No advertising. Ever. Private & Secure — Jami uses E2EE to ensure only those with permission have access.
+
+Tox — https://tox.chat/
+
+Tox is an instant messaging and audio/video communications software. It is a (FOSS) Free and Open Source project that uses its own encryption protocol which has yet to be independently audited. Tox is developed by volunteer developers who spend their free time building the product, all believing in the idea behind the project. They accept no donations so you can be fairly confident that there is no direction being pushed by monetary incentives.
+
+Features:
+
+Instant Messaging — Chat instantly across the globe with Tox’s secure messages.
+
+— Chat instantly across the globe with Tox’s secure messages. Voice — Keep in touch with friends and family using Tox’s completely free and encrypted voice calls.
+
+— Keep in touch with friends and family using Tox’s completely free and encrypted voice calls. Video — Catch up face to face, over Tox’s secure video calls.
+
+— Catch up face to face, over Tox’s secure video calls. Screen sharing — Share your desktop with your friends with Tox’s screen sharing.
+
+— Share your desktop with your friends with Tox’s screen sharing. File sharing — Trade files, with no artificial limits or caps.
+
+— Trade files, with no artificial limits or caps. Groups — Chat, call, and share videos and files with friends and family in Tox’s group chats.
+
+Conclusion
+
+With the ongoing shift towards more internet-based remote work, we need to be mindful as individuals as to how the services and applications we use treat our digital footprint. Zoom is just one example of quite possibly hundreds and thousands of services we interact with on a daily basis that treat our privacy with little regard. Making changes as consumers are the best way we can affect any positive long term change. Look for alternatives to the most popular app for any given product and provide feedback where applicable. Together we can create change by having our voices heard — our future online privacy depends on it.
+
+Let me know your thoughts in the comments if you will still be using Zoom, why/why not?

@@ -1,0 +1,105 @@
+Crossing the Regulatory Chasm
+
+Why Crypto Tokens Will Eventually Necessitate a Reform of Existing Securities Laws
+
+No matter how you frame it, crypto protocol tokens are securities. Put another way, why would an investor want to hold financial instruments that have no economic or governance rights attached to them?
+
+This post explains why tokens are in fact always securities, but also why this really isn’t an issue in the longer-term.
+
+Back to familiar terminology
+
+This article purposefully avoids using crypto industry jargon (decentralization, DAOs, token economics, etc.) to highlight that crypto protocols apply the core concepts of company building, only they do it directly on the Internet.
+
+Today’s wide use of differing and complex terminology reflects the nascency of the crypto space. Once open-source contracts replace pen and paper agreements more widely, I believe that the current terminology around cryptocurrencies, digital currencies, digital assets, crypto assets, work tokens, and utility tokens will converge to a single term that describes an ownership right in an Internet-native company.
+
+Crypto protocols are Internet-native companies, and their ownership is expressed in tokens instead of shares.
+
+Open-source contracts are the building blocks of Internet-native companies
+
+It is worth noting that the 2008 genesis to the crypto movement — the Bitcoin whitepaper, published by a pseudonym called Satoshi Nakamoto — does not once refer to the term blockchain.
+
+The term was later developed as an abstraction to refer to a set of open-source contracts (smart contracts) that incentivize a group of stakeholders to provide and maintain an open-source service over the Internet. A necessary byproduct of such a service is a database that contains a record of all of the transactions that pertain to that service (blockchain).
+
+Open-source contracts use cryptography (for digital signatures), software logic (for eliminating loopholes), and economic incentives (for compensation) to function.
+
+Open-source contracts do not differ from traditional pen and paper contracts in terms of their substance. Both require signatures from authorized parties, should contain as few loopholes as possible (preferably none), and include parties that expect to be fairly compensated for their efforts.
+
+A company is an abstraction. It is the product of the contracts that incentivize its stakeholders (simplified: employees, owners, and customers) to act in accordance with the purpose of the company.
+
+Employees perform work against a salary — if the employee performs the work according to her employment agreement, she is compensated through the salary.
+
+Owners set the terms for and supervise the work of the employees, and inject capital to a common pool to help further the purpose of the company, all in exchange for an ownership share — if the owner performs her duties according to the shareholders’ agreement, she is compensated through the value appreciation of her ownership share.
+
+Customers purchase the service (or product) that is the result of the abovementioned supervised labor — if the customer pays the price set in the sales agreement, she is compensated with access to the service (or product).
+
+When there is purpose/incentive fit (PIT) between a company’s purpose and the parameters set to incentivize relevant stakeholders, great things can happen.
+
+Companies are a sum of the pen and paper contracts that govern the activities of their stakeholders.
+
+Contracts are a mobilizing force. Where pen and paper contracts primarily mobilize stakeholders locally, open-source contracts mobilize stakeholders globally.
+
+Internet-native companies are a sum of the open-source contracts that govern the activities of their stakeholders.
+
+When the mainstream talks about crypto protocols, they’re really referring to Internet-native companies — entities governed solely through open-source contracts.
+
+Since open-source contracts live on the Internet, they solicit participation from stakeholders from all over the world. Open-source contracts are also non-discriminatory — participation is based purely on merit.
+
+The scale of Internet-native companies is often mistakenly referred to as decentralization. A company naturally increases in scale when people outside the company find it financially attractive to start contributing to the company either in the form of an employee, owner or customer. The more contributors a company has, the more resilient it becomes against hostile takeovers or departures of existing shareholders.
+
+Internet-native companies are not by default any more decentralized than, say, a company like Google that has millions of shareholders.
+
+Bitcoin is the first and most simple form of an Internet-native company. View the Bitcoin open-source contracts at https://github.com/bitcoin/bitcoin.
+
+Both scale and permissionless participation are true for Bitcoin. Bitcoin is an Internet-native company, whose primary service is to provide users access to a censorship-resistant and global store-of-value asset.
+
+Augur is another prime — and more complex — example of an Internet-native company, whose primary service is to provide users access to global and permissionless creation and trading of derivatives.
+
+Augur is an Internet-native company that enables permissionless creation and trading of derivatives globally. View the Augur open-source contracts at https://github.com/AugurProject/augur.
+
+The process of forming an Internet-native company can, somewhat simplified, be explained as follows:
+
+Initially, the founders define the company purpose — ideally the Internet-native company aims to provide a service that has the potential to solicit global demand. Second, the founders code the open-source contracts that incentivize relevant stakeholders (employees, owners, and customers) to provide, maintain and use the service. A project’s whitepaper documents the technical specification for how the open-source contracts should be coded. Finally, once the open-source contracts are deployed and made public (hopefully after a security audit), anyone with an Internet connection can interact with them in the role of an employee, owner or customer.
+
+In this way, Internet-native companies can operate at an unprecedented scale compared to traditional companies, especially when they provide services that are fully digital. This newfound ability to pool global resources makes it possible for Internet-native companies to challenge current tech incumbents.
+
+Examples of different Internet-native companies and the digital services they provide.
+
+Internet-native companies achieve compliance through technology
+
+Internet-native companies lack a tether to the real world, they live natively on the Internet and without any physical headquarters. This lack of a legal presence quickly becomes a problem as no jurisdiction today acknowledges the Internet as its own jurisdiction.
+
+From a legal perspective, the situation is analogous to that of many other tech companies that have entered into heavily regulated industries using a novel tech-enabled business model.
+
+It’s not feasible to expect that the wording of existing laws could always successfully consider how novel technological approaches might provide an alternative and better way to regulate certain activities.
+
+Successful startups that enter into heavily regulated industries need to prove that their operations are aligned with the underlying goals of relevant legislation.
+
+Successful startups tend to achieve compliance through technology rather than through armies of lawyers. Startups do not want to be illegal. On the contrary, they want to and need to be compliant in order to be commercially viable.
+
+What up-and-coming startups often do is that they figure out what kind of behavior existing laws aim to promote. In the case of Uber, this means safe, accessible, and cost-efficient transportation.
+
+Then, they figure out how to use technology to promote those behaviors better than status quo rules and businesses can. For example, Uber’s use of real-time reputation scores for drivers and riders eventually triumphed the reputationally static taxi medallion system. Tech made transportation more safe, accessible, and cost-efficient.
+
+Internet-native companies are disrupting the financial markets (regulation) by following this exact playbook.
+
+Existing financial markets regulation aims to promote investor security, information symmetry, and market efficiency. The financial services provided by Internet-native companies are non-custodial, transparent in real-time, and enable global liquidity.
+
+The features of Internet-native companies and their tokens align with the goals of existing securities laws.
+
+In practice, this means that investors can obtain more information on early-stage Internet-native companies than today’s publicly listed companies — or at least this is the future we’re heading towards.
+
+For example, today’s accredited investor rules effectively prohibit a majority of investors from participating in the “high-risk, high-upside” startup market. These rules should become obsolete as the startup market eventually becomes more transparent than today’s public markets. A large part of today’s financial markets regulation predates the Internet era and is therefore also unlikely to be applicable to Internet-native companies as is.
+
+Internet-native capital markets should over time evolve into the most resilient, fair, and efficient capital markets we’ve ever seen.
+
+Compliance is achieved through technology.
+
+Internet-native companies are unstoppable
+
+Today, Bitcoin’s market capitalization is at approximately $120bn — yet, no one knows who the founder of Bitcoin is.
+
+Internet-native companies are often fully digital. If one jurisdiction takes a strong hold on them, they’ll just move elsewhere (or they’ll be developed in disguise like Bitcoin), only to be released to a global audience later on.
+
+Internet-native companies that provide open services level the playing field for entrepreneurs who build end-user applications. Competition in many industries will — for the very first time — occur across geographic and regulatory boundaries.
+
+This competition, combined with permissionless and global access over the Internet, will make for better and more consumer-friendly services than in the status quo — something that DeFi is already accomplishing for financial services.

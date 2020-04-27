@@ -1,0 +1,167 @@
+In this post, we’re going to walk through a few performance optimisations in React using examples from our web app at focaldata.
+
+However, before we get started it’s important to consider when it’s the right time to focus on optimisations. React is incredibly fast and it may well be better to spend time on building the product rather than preventing re-renders. Performance improvements also inject additional complexity into the application which may slow down other developers working on the code. In the words of Kent Dodds:
+
+MOST OF THE TIME YOU SHOULD NOT BOTHER OPTIMIZING UNNECESSARY RERENDERS. React is VERY fast and there are so many things I can think of for you to do with your time that would be better than optimizing things like this. In fact, the need to optimize stuff with [features such as useMemo and useCallback] is so rare that I’ve literally never needed to do it in the 3 years I worked on PayPal products and the even longer time that I’ve been working with React.
+
+Only if your application feels slow should you consider focusing on performance optimisations.
+
+What is re-rendering?
+
+When it is time to work on performance, developers often aim to reduce re-renders. But what does this mean?
+
+Updating the DOM is made up of three steps:
+
+The “render” stage is when React creates the elements React.createElement
+
+The “reconciliation” stage where React compares the previous elements and the new ones
+
+The “commit” stage where the DOM is updated if needed
+
+The render and reconciliation stages are very fast but the commit stage is usually the slowest part of the DOM update.
+
+Rather than focusing on preventing lightning-fast renders (that may not even update the DOM if there are no differences in the reconciliation stage), it is usually best to isolate the slow commits and work on resolving them.
+
+If we’re working on performance optimisations, we should have a clear idea about what is currently slow in the application. This may be clicking a button or typing into an input, for example. We can investigate which commits are slow by using the React Profiler tools. You’ll need to download the React dev tools, inspect the page and click on the Profiler. Here are two examples of performance improvements that we found at focaldata. It’s worth bearing in mind that React updates the DOM significantly faster in production compared with development. The following examples are in development.
+
+Using React Profiler to Identify Slow Commits
+
+On our internal application, we have a list of surveys. When the user clicks on the survey, there is a slight delay when loading the next page. Using the React Profiler we can click record, select a survey, stop the recording and then inspect the commits.
+
+As you can see in the graph, one component, Select, is taking 123ms to commit — significantly longer than all other components. We can see in the small diagram at the top right of the screenshot that there were 4 tall, yellow bars in the bar chart. In each of these, Select is the most expensive component (i.e. took the longest time to load) taking over 400ms to load in total. WindowedSelect is another expensive component. After searching for it in the codebase, I discovered that it’s an npm package in version 0.0.3-alpha that uses Select. Let’s upgrade the package to version 2.0.1 and run the profiler again.
+
+The Select component now takes only 2.5ms to load. The most expensive component is now withStyles(Chip) which takes 8.2ms — significantly less than the 123ms load time of Select. That’s a significant performance improvement without writing any code!
+
+Resolving Unnecessary Re-Rendering with useMemo
+
+In several parts of our application, we display a reusable table component to the user. While it renders relatively quickly, there is a slight delay when it loads, particularly in one section where it displays all of the files that belong to a user.
+
+Using the React Profiler, I recorded the process of landing on the page and clicking on the upload file button. The Profiler showed that the table component took 38ms to commit.
+
+The table component is mapping through the data to create table rows and then mapping through each row to create individual cells. This means that its performance is O(n^2) and, if it's looping through many files, the commit is inevitably slow.
+
+While the table will need to loop through lots of data, we can check to see if it is being re-rendered unnecessarily. To get a better understanding of the rendering process, we can use the WhyDidYouRender npm package and keep track of the renders with useRef. In the Table component, let’s add:
+
+import whyDidYouRender from '@welldone-software/why-did-you-render'
+
+whyDidYouRender(React, {
+
+onlyLogs: true,
+
+titleColor: 'green',
+
+diffNameColor: 'darkturquoise'
+
+}) const Table = ({ classes, columns, data, hover = false }) => {
+
+const renders = useRef(0)
+
+console.log('RENDERED TABLE!', renders.current++)
+
+... Table.whyDidYouRender = true
+
+The console logs show that the table component is rendering four times — 3 times unnecessarily. Re-rendering is triggered by updating state, the parent component rendering or the props changing. The WhyDidYouRender package states that the Table is being re-rendered because the props are changing… but inputs are the same so why is it re-rendering?
+
+const Files = ({ classes, data, match }) => {
+
+...
+
+useEffect(() => {
+
+if (data.filesByNickname) {
+
+const tableDataArr = data.filesByNickname.map(file => [
+
+file.name,
+
+moment(file.updatedAt).fromNow(),
+
+file.description,
+
+file.kind,
+
+file.bucketUrl
+
+])
+
+setTableData(tableDataArr)
+
+}
+
+}, [data])
+
+
+
+return (
+
+...
+
+<Table columns={ columns } data={ tableData } />
+
+...
+
+)}
+
+The reason for this is that in JavaScript, integers, strings and booleans have referential equality:
+
+true === true // true
+
+false === false // true
+
+1 === 1 // true
+
+'a' === 'a' // true
+
+However, objects, arrays (which are objects under the hood in JS) and functions point to a space in memory and do not have referential equality:
+
+{} === {} // false
+
+[] === [] // false
+
+() => {} === () => {} // false
+
+The Table component is re-rendering because we are passing in columns and data as props which are arrays/objects. This is why the props are technically changing even though the values of columns and data remain the same.
+
+To resolve the unnecessary re-renders, we can memoize the Table component, i.e. store data in the cache. Memoization is used to resolve referential equality issues and to cache computationally expensive functions.
+
+In React, we have a few memoization options available to us. useCallback will cache a callback function. This is helpful when we’re passing functions as props which don’t have referential equality. With useMemo we can memoize values so that they don’t need to be recalculated or we can wrap the component in React.memo() which is similar to Pure Component.
+
+On this occasion, we want to memoize a value: the Table component with the mapped data.
+
+const CreateTableData = data => {
+
+if (!data.filesByNickname) return null
+
+const tableDataArr = data.filesByNickname.map(file => [
+
+file.name,
+
+moment(file.updatedAt).fromNow(),
+
+file.description,
+
+file.kind,
+
+file.bucketUrl
+
+]) return tableDataArr
+
+} const Files = ({ classes, data, match }) => {
+
+const table = useMemo(
+
+() => <Table columns={columns} data={CreateTableData(data)} />,
+
+[data]
+
+) return ({table})
+
+}
+
+By extracting the logic into a separate component and calling it with useMemo, the table component is only being created when data is updated.
+
+We could include the CreateTableData function within the Files component but the function would still be created on every render. Creating functions is expensive in JavaScript, so it’s best to extract this so that it is only created when it is needed.
+
+We’ve saved 3 unnecessary re-renders of ~38ms, saving 100+ms in loading speed. However, useMemo does add complexity to the code. The tradeoff of speed vs code complexity is always important to consider before implementing performance improvements.
+
+Further Reading

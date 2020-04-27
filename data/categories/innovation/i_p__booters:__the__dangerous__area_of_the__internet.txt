@@ -1,0 +1,19 @@
+Obtaining IP Addresses
+
+The question of obtaining infrastructure is now answered, but how would people be able to gather IP addresses? The answer is quite simple. These IP stresser services provide not only infrastructure but also tools that can assist the customer in obtaining IP addresses, whether that be for a game server, website, or person. These services catered to all sorts of different audiences.
+
+Simply enter the target’s IP address, the port, how long you wanted the attack to last, which network protocol you want to use for your attack, and press Start. It was really that easy.
+
+Skype resolvers
+
+During this time on the internet, Skype was an extremely dominant chat service. And at the same time, there existed a security vulnerability that, due to the P2P nature of the application, allowed people to grab the IP address associated with a Skype account. This was originally discovered in 2012. People eventually ended up offering Skype resolver services, where users could enter a person’s Skype username and a back-end service would grab the victim’s IP address.
+
+One of the many Skype resolvers that were publically available
+
+These Skype resolver services ended up offering paid API subscription services that were primarily sold to IP stresser owners so that they could create their own Skype resolver page on their booter. The end goal for these booter owners was to assist the customer in obtaining their target’s IP address. What the craziest part of this all to me was for how long this vulnerability actually existed. It was not until early 2016 when Microsoft’s Skype team released a blog addressing the issue.
+
+IP grabbers
+
+Another popular way of grabbing people’s IP addresses was to use something quite literally called an IP grabber. Booter owners would offer this service, which creates a URL that looks legitimate. When anyone clicks on the link, their IP address is logged so that the customer can use it however they want.
+
+Typically, booter owners would utilize a redirect URL service such as TinyUrl to mask their IP grabber. Some, though, would go to the extent of buying similar domain names to popular websites, such as Imgur or Reddit, and let customers have access to IP grab through those domains. The primary purpose of these grabbers was to look like a normal URL so that users would click without thinking.

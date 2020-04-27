@@ -1,0 +1,275 @@
+Overview
+
+If you have tested some fabric samples, you probably notice some containers which are not defined in docker compose files but created when chaincode is being used. These are chaincode containers, in which chaincode is executed on request. This article we will try to explore how the chaincode containers are created during chaincode operation. Both Fabric v1.4 and v2.0 are examined, as both the chaincode operation and then handling chaincode containers are a bit different.
+
+Quick Review
+
+We begin with quick review on some concepts.
+
+Ledger and Transaction Operation
+
+Let’s begin with ledger in peer (or peer node). Each peer deployed in participating organization keeps a copy of ledger, which is composed of two parts. Blockchain is a chain of blocks, each of which contains transactions packed, ordered and broadcast by ordering service service. World state database keeps the latest state in key/value form. The world state is updated with the proposal response from those transactions.
+
+A simplified description of the flow from client invoking a chaincode function to a new block committed in peer is like this.
+
+Client sends proposal to selected peers for endorsement (a.k.a. endorsers or endorsing peers). These selected peers simulate the chaincode function and the result is in the format of Read Write Set (RWSet). They then return the proposal response plus peer’s signature as their endorsement. Upon receiving endorsement from those selected peers, client validates the proposal response. Client does not proceed if the result returned is inconsistent across the endorsers. When the validation is successful and endorsement received satisfies the endorsement policy, client constructs a transaction and sends it to ordering service. Ordering service collects all transactions. Upon validation, these transactions are ordered, packed into block and signed by an orderer. Ordering service then broadcast this new block to the channel members. All peers within this channel receive this block. Each peer first validates the block and the transactions inside the block. If everything is correct, the peer will commit the block to the blockchain, and update the world state with the RWSet included in each transaction. Peer then emits event to notify about the block commit. Client then knows the transaction is being processed and included in the blockchain.
+
+Peers’ Activities
+
+If we examine this flow from peer’s perspective, peer here performs two activities.
+
+Endorsement (Step 2 above): Selected peers receive the proposal from the client. This endorsing peers perform the chaincode simulation, and return the result as RWSet to client. Obviously, these peers first need to have the chaincode and later execute the chaincode in order to return the result. In Hyperledger Fabric design, the execution is done in Chaincode Container.
+
+Block commit (Step 6 above): All peers in the channel receive this newly created block. These peers do not perform chaincode execution to obtain result by themselves. Instead, they just pick up the RWSet from each transaction and update the world state database accordingly. Remember the RWSet is the result of endorsement, and the peers in the same channel simply accepts them. As a result, these peers can update their world state even though they do not have the chaincode.
+
+Chaincode Container
+
+With this analysis, we learn something about chaincode container. Chaincode container is where peer executes the chaincode functions upon client request. There are two scenarios when chaincode container is needed. The first is shown above: when a peer is requested to perform endorsement. The second is when querying a chaincode function which does not trigger any state change. Though endorsement is not performed, a chaincode container is needed to process this query. Besides these two scenarios, peers do not need a chaincode container.
+
+There is a one-to-one association between peer and chaincode container. When a chaincode container is needed, it is bound to one peer.
+
+Like other components in Hyperledger Fabric, chaincode container is also implemented as a docker container, and follows docker container lifecycle. Chaincode container begins with a chaincode container image being built, and then being instantiated when needed. Over the illustration, we will keep monitoring both the chaincode container images and chaincode container in different steps. From here we know how the fabric network is working.
+
+Chaincode Operation
+
+Chaincode operation is the process of deploying a well-developed chaincode onto a fabric network (channel) such that client application can invoke chaincode functions. Here is the summary between chaincode operation in v1.4 and v2.0, as we will examine both in the coming illustration.
+
+Fabric v1.4
+
+We will begin with the chaincode operation with Fabric v1.4. It is the process having been around for a couple of years. This is also serving as a base when we introduce Fabric v2.0.
+
+Step 1: Bring up First Network with no default chaincode and couchdb as world state
+
+cd fabric-samples/first-network
+
+./byfn.sh up -s couchdb -n
+
+We first see no chaincode containers (begin with dev-) before we deploy any chaincode in the network.
+
+Step 2: Install chaincode to selected peers
+
+Here we install sacc on peer0.org1.example.com and peer0.org2.example.com .
+
+# peer0.org1.example.com
+
+docker exec cli peer chaincode install -n mycc -v 1 -p github.com/chaincode/sacc
+
+docker exec -e # peer0.org2.example.comdocker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com /msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer chaincode install -n mycc -v 1 -p github.com/chaincode/sacc
+
+The installation process only acts on the peer. At this moment we see no chaincode container instantiated yet, and no chaincode container images are built yet.
+
+This is what we see after chaincode is installed in the two peers.
+
+Step 3: Instantiate chaincode to channel
+
+docker exec cli peer chaincode instantiate -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n mycc -v 1 -c '{"Args":["name","kc"]}' -P "AND ('Org1MSP.peer','Org2MSP.peer')"
+
+This command can be understood as,
+
+Chaincode: mycc version 1
+
+Target channel: mychannel
+
+Init function argument: [“name”, “kc”], as required in the chaincode
+
+Endorsement policy: requiring peer endorsement from both organizations
+
+While the response seems minimal, things are happening in the backend.
+
+First we take a look on the containers. We see one chaincode container running. From the name dev-peer0.org1.example.com-mycc-1 we know that this chaincode container is associated to peer0.org1.example.com, and to chaincode mycc version 1.
+
+Besides this chaincode container is instantiated from a docker image, which is also newly built.
+
+What happens behind is that, when the peer chaincode instantiate is issued, a chaincode container image is built and instantiated as a running container. This chaincode container is associated to peer0.org1.example.com as this is the CLI default setting. The Init() function with arguments is executed by this chaincode container, and this transaction is included in a new block, and committed by all peers.
+
+If we take a look on the world state (here we are using couchdb) of all four peers, we see the same content is found. Remember that the chaincode is only installed on peer0.org1.example.com, and chaincode container only appears in peer0.org1.example.com. This shows what we mentioned above: while endorsement is done on selected peers, all peers will commit the new block and update the ledger with the RWSet. The RWSet is simply the result of endorsement done previously: and the peers only apply it to their own world state database, as far as they trust the endorsement (and the whole fabric system!).
+
+Direct access to CouchDB of each peer and check the ledger state “name”
+
+Here is what happens after we instantiate chaincode.
+
+Step 4: Invoke chaincode function set()
+
+As endorsement policy requires, we need peers from both organizations. In this invoke command, we specify peer0.org1.example.com and peer0.org2.example.com (with --peerAddresses options and proper TLS CA specified) as endorsing peers.
+
+docker exec cli peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -C mychannel -n mycc -c '{"Args":["set","name","Peter"]}'
+
+This command can be understood as,
+
+Chaincode: mycc
+
+Target channel: mychannel
+
+Invoke with argument: [“set”, “name”, “Peter”]
+
+Endorsing peers selected: peer0.org1.example.com and peer0.org2.example.com
+
+It takes a while to process this invoke. We will see the reason behind.
+
+We first take a look on the containers. Now we see one more chaincode container running, and we learn that it is for peer0.org2.example.com .
+
+And similarly it is also from a newly built image.
+
+The chaincode invoke command requires both peer0.org1.example.com and peer0.org2.example.com to endorse the proposal. As chaincode is already installed in peer0.org2.example.com in (see Step 2), a chaincode container image for peer0.org2.example.com first built and the chaincode container is instantiated to perform this endorsement. This is why it takes some time to process this invoke.
+
+This happens when chaincode function is invoked.
+
+Step 5: Query from peers with Chaincode Container
+
+We first query chaincode on peers with chaincode container running.
+
+# peer0.org1.example.com
+
+docker exec cli peer chaincode query -C mychannel -n mycc -c '{"Args":["get","name"]}'
+
+docker exec -e # peer0.org2.example.comdocker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com /msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer chaincode query -C mychannel -n mycc -c '{"Args":["get","name"]}'
+
+The responses are also returned immediately. It is because the chaincode containers are already there to process this query.
+
+Step 6: Query from peer in which chaincode is not installed
+
+We query chaincode function on peer1.org2.example.com . As we recall this peer has no chaincode installed in Step 2.
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com /msp -e CORE_PEER_ADDRESS=peer1.org2.example.com:10051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt cli peer chaincode query -C mychannel -n mycc -c '{"Args":["get","name"]}'
+
+We receive an error showing that this peer does not have chaincode installed. Although the ledger contains the value (as seen in Step 3), it requires chaincode container to process this query.
+
+Now we install the chaincode back on peer1.org2.example.com .
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com /msp -e CORE_PEER_ADDRESS=peer1.org2.example.com:10051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt cli peer chaincode install -n mycc -v 1 -p github.com/chaincode/sacc
+
+The response is immediate. Per our experience we know that no chaincode container image is created yet for peer1.org2.example.com .
+
+No image built after chaincode is installed.
+
+Now we query the chaincode function again on peer1.org2.example.com . It takes some time to return the correct value.
+
+The time taken is again due to a new chaincode image is built and chaincode container instantiated for peer1.org2.example.com .
+
+Chaincode container and image are built when we query this peer.
+
+Here is a summary on what happens in this step. Note that the chaincode container images and chaincode container is triggered by the final “query chaincode function”. This is how Fabric v1.4 works.
+
+Fabric v1.4
+
+Here we finish the demonstration on Fabric v1.4.
+
+Fabric v2.0
+
+The chaincode operation is now handled by lifecycle chaincode in Fabric v2.0. You can see a comparison between the two releases in my previous article. Here we follow the same flow as above, and will highlight the difference.
+
+Step 1: Bring up First Network with no default chaincode and couchdb as world state
+
+cd fabric-samples/first-network
+
+./byfn.sh up -s couchdb -n
+
+We again first see no chaincode containers (begin with dev-) before we deploy any chaincode in the network.
+
+Step 2: Package chaincode source into a chaincode package file
+
+Before packaging, prepare the module dependency if not done before.
+
+cd fabric-sample/chaincode/sacc
+
+GO111MODULE=on go mod vendor
+
+cd fabric-sample/first-network docker exec cli peer lifecycle chaincode package sacc.tar.gz --path github.com/hyperledger/fabric-samples/chaincode/sacc/ --label sacc_1
+
+The result is a file sacc.tar.gz stored in CLI container, and will be used in installation (Step 3). Nothing happens on the peer and channel at this step. It is nothing more than a simple packaging process happening in the CLI container.
+
+Step 3: Install chaincode package to selected peers
+
+Here we install sacc.tar.gz this chaincode package on peer0.org1.example.com and peer0.org2.example.com .
+
+# peer0.org1.example.com
+
+docker exec cli peer lifecycle chaincode install sacc.tar.gz
+
+docker exec -e sacc.tar.gz # peer0.org2.example.comdocker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com /msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer lifecycle chaincode install
+
+We notice it takes some time to finish each installation. Here we check if any chaincode container images and chaincode containers created.
+
+We see two chaincode container images are built, one for each peer in which we install the chaincode package in this command. Now we know once we install the chaincode package, a chaincode container image is built immediately. This is different from Fabric v1.4 (compared step 2 in Fabric v1.4 session, and chaincode container images are not built until a chaincode function invoke is made). Although the chaincode container images are created, no chaincode containers are running yet. Therefore the chaincode is not useable at this moment.
+
+It is what we see after the chaincode package is installed on the two peers.
+
+Step 4: Approve chaincode definition for both org1 and org2
+
+# peer0.org1.example.com (for org1)
+
+docker exec cli peer lifecycle chaincode approveformyorg --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --channelID mychannel --name mycc --version 1 --init-required --sequence 1 --waitForEvent --package-id ${PACKAGE_ID}
+
+docker exec -e # peer0.org2.example.com (for org2)docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com /msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer lifecycle chaincode approveformyorg --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --channelID mychannel --name mycc --version 1 --init-required --sequence 1 --waitForEvent --package-id ${PACKAGE_ID}
+
+We can check that no chaincode containers are running yet, that is, chaincode is not useable yet.
+
+Step 5: Commit chaincode definition
+
+docker exec cli peer lifecycle chaincode commit -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt --channelID mychannel --name mycc --version 1 --sequence 1 --init-required
+
+And when we inspect the running containers, we now see the two chaincode containers there. And not surprisingly, they are instantiated from the images created when we install the chaincode package (Step 3 in this session).
+
+After chaincode commit, chaincode containers are instantiated from the images built before.
+
+Here is what happens after we commit chaincode definition.
+
+Several points to note. First, the two chaincode containers are instantiated immediately, versus only the one for peer0.org1.example.com was up and running in Step 3 of Fabric v1.4 session. Secondly, the container instantiation is very fast, as the images have been built during chaincode package installation (Step 3 in this session). These are the difference between v1.4 and v2.0.
+
+Step 6: Invoke Init() as required by chaincode
+
+As a requirement on SACC, we will invoke the Init() function with proper arguments (with --isInit flag).
+
+docker exec cli peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -C mychannel -n mycc --isInit -c '{"Args":["name","kc"]}'
+
+This is a standard chaincode invoke (authough it is on the special Init() function), and therefore we are specifying the two peers as endorsers: peer0.org1.example.com and peer0.org2.example.com . Since chaincode containers are already there to perform the endorsement, we see the invoke is finished very fast.
+
+As before, we will take a look on the ledger of each peer, and we see all ledger has the same content.
+
+Direct access to CouchDB of each peer and check the ledger state “name”
+
+Here is what happens after we invoke chaincode function.
+
+Step 7: Query from peers with Chaincode Container
+
+We first query chaincode on peers with chaincode container running.
+
+# peer0.org1.example.com
+
+docker exec cli peer chaincode query -C mychannel -n mycc -c '{"Args":["get","name"]}'
+
+docker exec -e # peer0.org2.example.comdocker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com /msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer chaincode query -C mychannel -n mycc -c '{"Args":["get","name"]}'
+
+As expected, we see response immediately.
+
+Step 8: Query from peer in which chaincode is not installed
+
+We query chaincode function on peer1.org2.example.com . As we recall this peer has no chaincode package installed in Step 3.
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com /msp -e CORE_PEER_ADDRESS=peer1.org2.example.com:10051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt cli peer chaincode query -C mychannel -n mycc -c '{"Args":["get","name"]}'
+
+Similar to what we saw in Fabric v1.4, this peer does not have chaincode package installed, and therefore the chaincode query fails, despite the fact that the ledger on this peer gets updated.
+
+Now we install the chaincode package back on peer1.org2.example.com , and take a look on the chaincode containers.
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com /msp -e CORE_PEER_ADDRESS=peer1.org2.example.com:10051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/tls/ca.crt cli peer lifecycle chaincode install sacc.tar.gz
+
+Again it takes some time as we did this in Step 3 in this session. It is because a chaincode container image is being built, and a chaincode container is also instantiated immediately.
+
+Chaincode container image is built and container is instantiated after chaincode is installed.
+
+So here we spot another difference here. After chaincode is committed, when the chaincode package is installed on a peer, the chaincode container image is built and the chaincode container is up and running immediately. That means this peer is now able to process chaincode invoke. As comparison, in Fabric v1.4, the chaincode installation is fast, and the chaincode container image is built only when a chaincode invoke (query) reaches the peer (see Step 6 in Fabric v1.4 session).
+
+Of no surprise, when we query chaincode in this peer, the response is back immediately, as the chaincode container is already running for this peer.
+
+Here is a summary on what happens in this step. The chaincode container image is built and chaincode container is brought up once chaincode package is installed in the peer. This is how Fabric v2.0 differs from v1.4.
+
+Fabric v2.0
+
+This ends our demonstration on Fabric v2.0.
+
+Here is a quick summary between Fabric v1.4 and v2.0.
+
+Summary
+
+In this article we focus on chaincode container, and see the role it plays in the overall fabric system. They are required when peer is to endorse proposal from client, or process query with chaincode functions. We also examined the difference how and when chaincode container images are built and chaincode containers are instantiated between Fabric v1.4 and v2.0. Hope this helps to know more about Hyperledger Fabric.
