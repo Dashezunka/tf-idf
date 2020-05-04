@@ -1,0 +1,39 @@
+Case: Spain
+
+I don’t live in Spain nor have someone close to me living there, but as it turns out it is a “hottest” place in Europe right now.
+
+In the moment of writing this article, we had cumulative data up to and including the 3rd of April, 2020. Up to this date, we had 119.199 confirmed cases in Spain. Let’s just quickly visualize the movement of the virus through time:
+
+And from here who knows how long will it be before the curve starts looking something like your average logistic curve.
+
+But we need additional information before jumping to conclusions — we’re also interested in the average growth rate from some time period — let’s say the last 7 days. This can be obtained by simply dividing today's number of confirmed cases by yesterdays — results in a number that should be close to 1.
+
+In a phase of exponential growth, this number would be constantly greater than 1 and is roughly 1.06 if we’re comparing April 2nd and April 3rd — meaning that on April 3rd Spain had roughly 6% more confirmed cases than the day before.
+
+Once Spain approaches the inflection point, we can expect the growth rate to be constantly around 1 and to go downhill from there.
+
+If you’re interested, here’s how Spain looks growth factor wise:
+
+We can clearly see that the factor is reducing, but who knows what will happen from here.
+
+Now let’s do a tiny bit of math.
+
+Calculated growth factor as an average of last 7 days growth factors is something we’re gonna use to prove just how important it is to stay at home, maintaining personal hygiene and avoid social gatherings. The average value of the growth factor is roughly 1.0888.
+
+It might not sound like a lot to you — but here’s why you’re wrong. If Spain is to have roughly the same daily growth of 8.88% in the following 30 days, the expected number of confirmed cases can be calculated as follows:
+
+Where:
+
+Xt: Number of confirmed cases today
+
+n: Number of days into the future
+
+α: Average growth rate
+
+Once we put in the numbers we get an alarming result:
+
+This means if no additional measures are taken to make people stay inside and growth rate remains roughly the same, in 30 days we can expect 1.53M people to be infected, just in Spain! Keep in mind that this is only if everything stays the same, which probably won’t happen.
+
+If, however, by following rules made by the government (or by implementing new, more strict rules) we manage to reduce the average growth rate to, let’s say, 1.05, the situation will drastically improve:
+
+Well, the number isn’t small by any means, but 515K sounds a lot better than 1.53M.

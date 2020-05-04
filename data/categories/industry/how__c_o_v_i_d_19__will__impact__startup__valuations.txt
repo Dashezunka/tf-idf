@@ -1,0 +1,21 @@
+Last week, I shared some opinions on what’s going to happen to the startup market over the next few quarters. But this week, I thought I’d get some data instead of just speculating (breaking all sorts of VC rules).
+
+Here are some observations on what will happen to venture deals over the next few quarters by looking at VC-backed deals before and after the 2000 dot-com crash and the 2008 global financial crisis.
+
+Early Stage Deals and Valuations
+
+The charts above show the number of Seed and Series A deals (blue bars), as well as their median post-money valuations (red lines), in the years before and after the 2000 and 2008 stock market crashes. The top row shows the 2000 dot-com crash, and the bottom row shows the 2008 financial crisis.
+
+Maybe unsurprisingly, the dot-com crash had a much more significant impact on startup fundraising than the global financial crisis. For example, the number of seed deals increased in both 2009 and 2010, and Series A valuations did not decrease significantly post-2008.
+
+Otherwise, it looks like historically, there has been a 25–30% drop in the number of early-stage deals after an economic downtown, and median valuations decrease 10–20% per year for several years post-crisis.
+
+🚀 Later Stage Deals and Valuations
+
+Later stage startups are more sensitive to the public markets because investors use public companies as comparables to set valuations, and that’s reflected in the historical data for Series C and D rounds.
+
+In 2001, the median valuation for later-stage rounds dropped 50%, and it continued dropping over 20% in 2002. The number of later-stage deals also dropped by 20–40% (seems like a 30% decline in a deal count is a magic number for some reason).
+
+The 2008 crash had a smaller impact on Series C and D deals. There was still a 25% decline in median valuations in the following year, but valuations recovered within two years to pre-crisis levels, likely driven by a broader market recovery.
+
+🦄 TL;DR: So What’s Going to Happen in 2020?

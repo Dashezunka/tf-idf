@@ -1,0 +1,471 @@
+The data scientists in our team need to run time consuming Python scripts very often. Depending on the repetition of the task, we decide whether to Dockerize it and run it on AWS or not. If a script needs to be run multiple times, we put effort in rewriting/restructuring the code and wrap it into a container, then deploy it to ECR and schedule it as a Fargate task, for example. If it’s a one-off, it turns out that it’s sometimes easier to run the scripts locally, with all additional disadvantages.
+
+Running (heavy) scripts locally eats memory and CPU, with the result that you can’t really do other things that demand a lot from your laptop while the script is running. A solution we used for a long time, was to spin up EC2 instances and run the scripts on that instances. In my opinion that doesn’t feel like a maintainable solution, but it was working and we didn’t have any other solution.
+
+Jupyter Notebooks
+
+The team uses Jupyter Notebooks a lot (locally). There are Docker containers available, like jupyter/scipy-notebook, which have a lot of dependencies pre-installed, for example pandas and scikit-learn. An idea we came up with, was to easily spin up a Docker container on AWS based on that image, which then could be used by a team member.
+
+So, we wanted to be able to spin up a Jupyter Notebook in the cloud without too much hassle, if possible even a separate instance for everyone, so dependencies, resources and files are not shared or mixed up. The notebooks should or should not have to interact with other AWS resources.
+
+I came across the wiki of the jupyterhub Git repository and there I found a page about Spawners. There is a FargateSpawner, but honestly I missed the documentation to get it to work properly.
+
+Terraform
+
+Terraform is a tool for building, changing, and versioning infrastructure safely and efficiently. Terraform can manage existing and popular service providers as well as custom in-house solutions. — Terraform
+
+The past few months we have been experimenting with Terraform a lot. We have an ideal situation in mind, where all our resources and infrastructure are set up and maintained as code through Terraform, but that’s still a long way off. Although it gave new perspective to the problem we were facing. After an hour or two working on Terraform files, I came with a working solution, which is currently being tested within our team!
+
+Terraform Script to Spin Up Notebooks
+
+I’ve set up a Git repository to share the scripts I’ve created. You can find that Git repository here and I will explain it along the way. I’ll not be providing the whole Terraform script in a single code snippet in this article, for that I want to refer to the Git repository. I will split the script in chunks and provide information per snippet .
+
+Prerequisites
+
+There are some prerequisites to get this to work (referring to the data blocks in the main.tf script). We already have the following services set up in AWS:
+
+An ECS cluster
+
+An application load balancer
+
+An hosted zone and domain within Route53
+
+If you do not have these things in place, you could choose to set them up through Terraform (would definitely suggest to do that elsewhere, in a place where you define and maintain your base architecture). But of course you can also set these up in the AWS console manually, like we did a while ago.
+
+I’ve used variables where possible. This is because we have multiple AWS environments and we want to be able to easily spin up the notebooks on these different environments. We also want to be able to tweak memory and CPU without having to change the terraform scripts. My vars.tfvars and vars.tf look like the following:
+
+vars.tfvars (replace everything in capitals and revisit other variable values):
+
+vpc_id = "VPC_ID_HERE"
+
+region = "REGION_HERE"
+
+profile_name ="PROFILE_NAME_HERE"
+
+ecs_cluster_name = "ECS_CLUSTER_NAME_HERE"
+
+loadbalancer_arn = "LOAD_BALANCER_ARN_HERE"
+
+hosted_zone_id = "ROUTE_53_HOSTED_ZONE_HERE"
+
+fargate_subnets = [
+
+"SUBNET_1_HERE",
+
+"SUBNET_2_HERE",
+
+"SUBNET_3_HERE"]
+
+jupyter_docker_tag = "latest"
+
+cpu = 1024
+
+memory = 2048
+
+domain = "ROUTE_53_DOMAIN_NAME_HERE"
+
+vars.tf
+
+variable "vpc_id" {}
+
+variable "region" {}
+
+variable "profile_name" {}
+
+variable "ecs_cluster_name" {}
+
+variable "loadbalancer_arn" {}
+
+variable "hosted_zone_id" {}
+
+variable "fargate_subnets" {
+
+type = list(string)
+
+}
+
+variable "token" {}
+
+variable "jupyter_docker_tag" {}
+
+variable "memory" {}
+
+variable "cpu" {}
+
+variable "domain" {}
+
+Using This Script
+
+First, install Terraform if you didn’t already. After installation you can run the following command within the folder in which you’ve saved main.tf, vars.tfvars and vars.tf (and after running terraform init ):
+
+terraform apply -var-file=vars.tfvars
+
+It will ask you for a token, which you can use to access the notebook, and will ask you for an approval to make the changes in your AWS cloud environment. After a few seconds, it will output a url you can use to access the environment. It may take a few minutes before the Docker image is really running and accessible, so don’t worry if you don’t get the response you expect right away. You’ll probably receive a HTTP 503 response the first few minutes.
+
+Tearing Down the Notebook
+
+When you’re done using the Jupyter environment, simply run the command below. Provide the same token you used while setting up the environment and don’t type ‘yes’ to approve the command. All created resources will be removed. You could choose to save the Jupyter notebook on your local machine first, if you want to run it again later.
+
+terraform destroy -var-file=vars.tfvars
+
+Down here I will further explain what’s in the repository and will be providing extra information per code snippet about what the script actually does.
+
+What Does This Script Do?
+
+I’ll want to inform you about what the script is doing, assuming you already have some Terraform experience or are willing to look it up yourself. With the data blocks, we’re retrieving information about AWS resources that are already in place. As you can see in the first data block, I want to retrieve information of the ECS cluster that already exists.
+
+data "aws_ecs_cluster" "ecs_cluster" {
+
+cluster_name = var.ecs_cluster_name
+
+}
+
+I’m creating a random string, which will be used by several resources later on. This random string is the key element in this script to allow multiple users to spin up notebooks at the same time.
+
+resource "random_string" "random_string" {
+
+length = 8
+
+special = false
+
+}
+
+We need to create a task execution role that has policies attached to it which allow us to write to CloudWatch for example. That policy is already provided by AWS (see the data “aws_iam_policy" “amazon_ecs...." block below, but we still need a role which has that policy attached to it.
+
+resource "aws_iam_role" "ecs_task_execution_role" {
+
+name = "ecsTaskExecutionRole-jupyter-${random_string.random_string.result}"
+
+assume_role_policy = <<ASSUME_ROLE_POLICY
+
+{
+
+"Version": "2012-10-17",
+
+"Statement": [
+
+{
+
+"Sid": "",
+
+"Effect": "Allow",
+
+"Principal": {
+
+"Service": "ecs-tasks.amazonaws.com"
+
+},
+
+"Action": "sts:AssumeRole"
+
+}
+
+]
+
+}
+
+ASSUME_ROLE_POLICY
+
+} data "aws_iam_policy" "amazon_ecs_task_execution_role_policy" {
+
+arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
+
+} resource "aws_iam_role_policy_attachment" "policy_role_attachment" {
+
+role = aws_iam_role.ecs_task_execution_role.name
+
+policy_arn = data.aws_iam_policy.amazon_ecs_task_execution_role_policy.arn
+
+}
+
+For logging purposes, I’m creating a CloudWatch Group, of course you can set this whatever you want.
+
+resource "aws_cloudwatch_log_group" "jupyter_ecs_log_group" {
+
+name = "/aws/ecs/jupyter-${random_string.random_string.result}"
+
+}
+
+Every Fargate or EC2 service/task on ECS needs a task definition that defines what Docker container to use, how many CPU and memory it needs et cetera. You can think of it as a blueprint. As you can see below, I specified the jupyter/datascience-notebook as the image. I also changed the entry point, so a custom token can be set, else it will generate a random token which is not very easy to retrieve from the system.
+
+resource "aws_ecs_task_definition" "jupyter_task_definition" {
+
+family = "jupyter-${random_string.random_string.result}"
+
+requires_compatibilities = [
+
+"FARGATE"]
+
+network_mode = "awsvpc"
+
+cpu = var.cpu
+
+memory = var.memory
+
+execution_role_arn = data.aws_iam_role.ecs_task_execution_role.arn
+
+
+
+container_definitions = <<TASK_DEFINITION
+
+[
+
+{
+
+"entryPoint": ["start-notebook.sh","--NotebookApp.token='${var.token}'"],
+
+"essential": true,
+
+"image": "registry.hub.docker.com/jupyter/datascience-notebook:${var.jupyter_docker_tag}",
+
+"name": "jupyter-${random_string.random_string.result}",
+
+"portMappings": [
+
+{
+
+"containerPort": 8888,
+
+"hostPort": 8888
+
+}
+
+],
+
+"logConfiguration": {
+
+"logDriver": "awslogs",
+
+"options": {
+
+"awslogs-region": "${var.region}",
+
+"awslogs-group": "${aws_cloudwatch_log_group.jupyter_ecs_log_group.name}",
+
+"awslogs-stream-prefix": "${random_string.random_string.result}"
+
+}
+
+}
+
+}
+
+]
+
+TASK_DEFINITION
+
+}
+
+Like I mentioned, we already had a load balancer with a HTTPS listener in place, so we want to retrieve information from it which we can use later on (along with the info of our VPC). You could also be using port 80 of course, but my advice is to use port 443.
+
+data "aws_vpc" "vpc" {
+
+id = var.vpc_id
+
+}
+
+
+
+data "aws_lb" "lb" {
+
+arn = var.loadbalancer_arn
+
+}
+
+
+
+data "aws_lb_listener" "lb_listener" {
+
+load_balancer_arn = var.loadbalancer_arn
+
+port = 443
+
+}
+
+This setup also needs a target group, the load balancer listener rule will be pointing to that target group. This target group will be used later on in the aws_ecs_service resource block.
+
+resource "aws_lb_target_group" "jupyter_target_group" {
+
+name = "jupyter-${random_string.random_string.result}"
+
+port = 80
+
+protocol = "HTTP"
+
+vpc_id = data.aws_vpc.vpc.id
+
+target_type = "ip"
+
+health_check {
+
+matcher = "200,302"
+
+}
+
+}
+
+We also need to expose port 8888 from our container to our load balancer. I exposed port 8888 to the security groups which are attached to the load balancer.
+
+resource "aws_security_group" "jupyter_security_group" {
+
+name = "jupyter_${random_string.random_string.result}"
+
+vpc_id = data.aws_vpc.vpc.id
+
+
+
+ingress {
+
+description = "Incoming 8888"
+
+from_port = 8888
+
+to_port = 8888
+
+protocol = "tcp"
+
+security_groups = data.aws_lb.lb.security_groups
+
+}
+
+
+
+egress {
+
+from_port = 0
+
+to_port = 0
+
+protocol = "-1"
+
+cidr_blocks = [
+
+"0.0.0.0/0"]
+
+}
+
+
+
+tags = {
+
+Name = "jupyter_${random_string.random_string.result}"
+
+}
+
+}
+
+With all these resources in place, we can finally define our ECS service.
+
+resource "aws_ecs_service" "jupyter_service" {
+
+name = "jupyter-${random_string.random_string.result}"
+
+cluster = data.aws_ecs_cluster.ecs_cluster.id
+
+task_definition = aws_ecs_task_definition.jupyter_task_definition.id
+
+desired_count = 1
+
+launch_type = "FARGATE"
+
+
+
+network_configuration {
+
+subnets = var.fargate_subnets
+
+security_groups = [
+
+aws_security_group.jupyter_security_group.id]
+
+}
+
+
+
+load_balancer {
+
+target_group_arn = aws_lb_target_group.jupyter_target_group.arn
+
+container_name = "jupyter-${random_string.random_string.result}"
+
+container_port = 8888
+
+}
+
+depends_on = [
+
+aws_lb_target_group.jupyter_target_group]
+
+}
+
+Then, add a forwarding rule in the load balancer. Assume we have the following domain: company.com , and the random string is 123 . It will forward to the Jupyter target group if the host-header is jupyter-123.company.com .
+
+resource "aws_lb_listener_rule" "jupyter_lb_listener_rule" {
+
+listener_arn = data.aws_lb_listener.lb_listener.arn
+
+priority = null
+
+
+
+action {
+
+type = "forward"
+
+target_group_arn = aws_lb_target_group.jupyter_target_group.arn
+
+}
+
+
+
+condition {
+
+field = "host-header"
+
+values = [
+
+"jupyter-${random_string.random_string.result}.${var.domain}"]
+
+}
+
+depends_on = [
+
+aws_lb_target_group.jupyter_target_group]
+
+}
+
+Then add that CNAME in Route53 which points to the load balancer. To continue on the previous example, the CNAME will be jupyter-123.company.com which will be pointing to our load balancer url.
+
+resource "aws_route53_record" "jupyter_cname" {
+
+zone_id = var.hosted_zone_id
+
+name = "jupyter-${random_string.random_string.result}.${var.domain}"
+
+type = "CNAME"
+
+records = [
+
+data.aws_lb.lb.dns_name]
+
+ttl = 300
+
+}
+
+Everything is in place now, and we of course want to know how to access the notebook, because some strings are randomly generated and we have set a token in the beginning. We can do this by an output variable.
+
+output "url" {
+
+value = "${aws_route53_record.jupyter_cname.name}?token=${var.token}"
+
+}
+
+Next Steps
+
+Currently the Jupyter Notebook cannot access other AWS resources. Therefore you have to provide a task role within the task definition. Also, when you want to access databases within your VPC, you have to add an inbound/ingress rule in the security group of your database, which allows incoming traffic from the security group attached to the ECS service.
+
+The state is set to local for now, so people that spin up the notebooks with this script, are also responsible for destroying them.
+
+Questions and Feedback
+
+If you have any questions or feedback regarding this article, don’t hesitate to contact me or leave a comment.

@@ -1,0 +1,155 @@
+Let’s do some basic Map-Reduce on AWS EMR, with the typical word count example, but using python and Hadoop streaming.
+
+Let’s be honest, Hadoop is getting old now as a framework…but Map-Reduce isn’t, because Map-Reduce is a paradigm — or a way to solve problems by splitting them into multiple sub-problems that can be attacked in parallel (that’s the Map step). Once the sub-problems have been solved, we can collect and aggregate the answers (that’s the Reduce step).
+
+A core component of the Hadoop framework, Map-Reduce is still relevant today and probably always will be, so it’s good to understand it and get some practice with it.
+
+1. Launch an EMR Cluster
+
+Very easy: simply type EMR in the AWS Management Console search bar, then click on Create Cluster in the next page:
+
+After you click on Create Cluster, you will be taken to a page where you can customize your cluster. Scroll down to the bottom of the page, until you see Hardware Configuration:
+
+There, you can change the type of instance your cluster will use, as well as the number of instances. For testing purposes, you can use an m4.large instance type, and leave the default 3 instances.
+
+Finally, make sure to use an EC2 key pair.
+
+That’s all there’s to it. Click on Create cluster, and your cluster will be ready in a few minutes.
+
+2. SSH into your master node
+
+First, you need to ssh into your master node.
+
+Once your cluster is ready, you will see something like this:
+
+From there, you’ll be able to grab the public DNS of your master node, and you will use that to SSH into it, with a command such as the following (using hadoop as username):
+
+ssh -i path\to\your\privatekey.pem hadoop@master-public-dns
+
+You should now be logged in as hadoop user in your master node.
+
+3. Download some data
+
+We will download a bunch of books from gutenberg.org.
+
+First let’s create a directory to save the books:
+
+mkdir books-input
+
+Then we write a short script to download a few dozen books with vim download_books.sh or nano download_books.sh :
+
+#!/bin/bash for i in {1340..1400}
+
+do
+
+wget "http://www.gutenberg.org/files/$i/$i.txt"
+
+done
+
+Save the script, then make sure it is executable: chmod +x download_books.sh . We can now start downloading the books (some of them won't be available in .txt format, that's fine):
+
+./download_books.sh
+
+Once the download is finished, you can list the files in the folder with:
+
+ls -lh books-input
+
+And you can check the total size of the folder (in this example 25MB):
+
+du -sh books-input
+
+We will write both the mapper and reducer in python, and they will both take their input from stdin and write their output to stdout .
+
+4. Write the Mapper
+
+The mapper will read every line of every book, split them into words, and output tuples (word, 1) for each word. The second element of these tuples (the 1 ) is really not that necessary, but the general idea of the Map step is to output a series of key-value pairs. These pairs are then sorted (or shuffled in Hadoop terminology) so that all the values pertaining to a given key end up in the same node before the Reduce step.
+
+So here’s the code for the mapper:
+
+#!/usr/bin/env python3 import sys
+
+import string for line in sys.stdin:
+
+line = line.strip()
+
+words = line.split()
+
+for w in words:
+
+table = w.maketrans('', '', string.punctuation)
+
+w = w.translate(table).lower()
+
+print(w, '\t', 1)
+
+A few remarks about this code:
+
+- the first line says that we want this file to be executable with python3
+
+- we remove punctuation characters from the words and make them all lower case
+
+Assuming this code is in a file called mapper.py , make this file executable with chmod +x mapper.py . You can then test it locally with something like:
+
+printf 'My name is Karim
+
+What is your name' | ./mapper.py
+
+In the command above, we print two lines and pipe that as input to the mapper script.
+
+The output is simply a series of (word, 1) tuples:
+
+Now we need to sum the counts for each word. Here’s the code for the Reduce step (saved in a reducer.py script):
+
+#!/usr/bin/env python3
+
+from collections import defaultdict
+
+import sys word_count = defaultdict(int) for line in sys.stdin:
+
+try:
+
+line = line.strip()
+
+word, count = line.split()
+
+count = int(count)
+
+except:
+
+continue word_count[word] += count for word, count in word_count.items():
+
+print(word, count)
+
+Here we use the very handy defaultdict to increment the count for each word. Remember that the input to this script will be the output of our mapper.py script. Again, make sure to make this file executable.
+
+Test your mapper+reducer locally:
+
+printf 'My name is Karim
+
+What is your name' | ./mapper.py | ./reducer.py
+
+Time to let Hadoop do it’s thing. First we need to put the data (the books) on HDFS:
+
+hdfs dfs -mkdir books-input hdfs dfs -put books-input/*.txt books-input
+
+Because we want to use Hadoop streaming, let’s locate the required jar file first:
+
+find /usr/lib/ -name *hadoop*streaming*.jar
+
+The one we’re looking for is /usr/lib/hadoop/hadoop-streaming.jar .
+
+So here we go:
+
+hadoop jar /usr/lib/hadoop/hadoop-streaming.jar -files mapper.py,reducer.py -mapper mapper.py -reducer reducer.py -in put books-input -output books-output
+
+There will be a bunch of map jobs starting, followed by a few reduce jobs. It’ll take about a minute to go through all the books.
+
+The output should now be located in HDFS folder books-output. You can copy it back on the master node with:
+
+hdfs dfs -get books-output/*
+
+This will put some part-0000x files in your user folder on the master node, which you can then open and inspect (with nano for example). You should see a list of distinct words, along with the count for that word accross all the books:
+
+Conclusion: We ran a simple word count on a few books worth of data (about 25MB). Although that doesn’t even get close to qualify as big data, the process would be exactly the same if we wanted to run it on ten thousand books.
+
+Next steps: using S3 to store our input, output, mapper and reducer; and submitting MapReduce streaming jobs to a running cluster from the console (as opposed to the command line).

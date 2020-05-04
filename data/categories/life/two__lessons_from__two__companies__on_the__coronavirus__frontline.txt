@@ -1,0 +1,51 @@
+Today I spoke to Senator Amy Klobuchar (and recorded it), the CEO of one of the biggest ventilator manufacturers, one governor and other states about how they get to the next stage, and an expert on capacity projection.
+
+It was great talking to Senator Klobuchar about how she handles politics at a time when policy is more important, and while her husband is out of the hospital on the mend from Covid-19. Very relatable. The fact that she agreed to be on the podcast for a “mini-episode” was nice of her. It was less filtered.
+
+You can listen to our conversation here.
+
+Yesterday I spent a lot effort trying to figure out how states were managing the challenge of finding ventilators. So today I arranged a call with the incoming CEO of @Medtronic, a major manufacturer of ventilators. Here are some of the things I learned:
+
+They have gone from 300/week of their big machine to get to 1000/week by June
+
+One challenge is they may be running low on many of the 765 unique parts needed for manufacturing
+
+They called NASA/JPL to get to work re-engineering to reduce parts to scale
+
+Because of their limit, they decided to start up a “pandemic machine” — lower cost, faster and easier to produce — and made a radical decision to put the plans online so others can produce
+
+Medtronic is offering to help as many as they could who want to use their plans — someone in India is ramping up to make many, a company in the Midwest is converting their factory
+
+So I asked the obvious question: How much do you charge for the open source plan? Answer: Nothing. And they will do the consulting and distribution for free. Good answer.
+
+How many can people make using their plans? Sounds like a few thousand/month beginning in June. Others said it’s not so simple but these guys are being helpful. I’m hearing a lot about price gouging. So I ask how Medtronic prices their ventilators. Have they raised the price since the outbreak? He said they took their lowest price they had ever sold the product for and made that the fixed price. All states, no increases.
+
+I asked whether they were still selling in other countries. He said yes but only based on need. And working to dedicate more new production to the US (he was more specific and explained the trade issues satisfactorily). Also they are giving away their demo units and refurbishing others’ old machines.
+
+As I mentioned yesterday, there are others coming on line with much more production even earlier (we hope). The number one thing we can do to make our ventilator supply go further is to #StayHome. I hope we end up with a glut.
+
+One other question I asked that was the hardest of all: How do you decide who to send the limited number of vents to? Especially since you don’t raise the price. I gave him a suggestion which he agreed with. But there’s no perfect way. He asked my ideas and I told him. That I appreciated. My strongest suggestion was full transparency. In short, I felt like they were taking the high road at every turn.
+
+Which is a contrast to 3M:
+
+I have some suggestions for Mike Roman at 3M, instead of throwing a fit:
+
+Report exactly how many N95 masks go to US hospitals or countries with shortages
+
+Report exactly how many masks are going to S Korea, Philippines, and non-medical sources
+
+Report on how many masks are being sold into the back market by profiteers
+
+Publicly name all 3M distributors and report on where those masks go
+
+Take responsibility for 3M licensed masks being marked up and sold, and report the frequency or amount publicly
+
+Eliminate middlemen who don’t speed up the process of getting N-95 masks where they need to be
+
+Provide an inventory of all warehouses and how many masks are in each location
+
+You have increased production. Thank you. Rather than telling us why you can’t increase further tell us what your bottlenecks are in raw materials OE production capacity so we can assist.
+
+Instead of telling us not to re-use your masks, tell the public the safest possible way to re-use them during a shortage. Lots of rumors and presumably you can assist
+
+Don’t view this as a “communication crisis.” Treat it like an actual crisis. Publish these metrics and answer questions from the public daily. This isn’t just about laws. It’s about what kind of people we are. I think you might learn no one in the country needs sticky notes.

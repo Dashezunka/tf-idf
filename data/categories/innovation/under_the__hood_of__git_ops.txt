@@ -1,0 +1,75 @@
+To quote the English writer Aldous Huxley, “Speed provides the one genuinely modern pleasure”, and how true could he be. Even in the realm of software, we talk about ‘velocity’. The fastest way of sending code from ideation to production, that is the dream. A dream that is slowly becoming a reality with the rise of DevOps and its ancillary practices such as the novel concept of GitOps.
+
+DevOps can be defined as a set of practices and cultural shifts to increase the rate at which we produce code while maintaining the reliability of the code. To go fast yet ensure nothing breaks. However, DevOps itself is quite a broad term and thus organizations and teams have been scrambling to materialize the idea of DevOps into their actual development practices. As a result, we have seen various practices come to emerge out of the core principles of DevOps such as ChatOps, DevSecOps, AIOps, and one of the newer practices termed, GitOps.
+
+The rise of GitOps comes from the industry’s relatively increased adoption of Kubernetes. As organizations and teams move towards Kubernetes, scaling your cluster management practices becomes imperative as teams grow. This is where GitOps comes into the picture as it aims to bring together Git plus Kubernetes with the objective of providing some form of the operating model to developers in their endeavors to deliver Kubernetes based infrastructure and applications. The practice is poised as a solution to continuous delivery when developing in Kubernetes and hence to increase the ‘velocity’ of those working with Kubernetes.
+
+On the surface, everything seems great, and it is. However, there are some issues with the practice if not implemented into practice properly. That is why it is vital for us to understand how GitOps actually works. It seems like the solution to all DevOps woes when working with Kubernetes, but how does one actually get up and running with it and ensure that all components switches are in place to detect when something goes wrong.
+
+The Cogs That Turn
+
+GitOps captures the core meaning of DevOps which is “you built it you ship it”. The basic concept is to trigger deployments of Kubernetes clusters from pull requests made by developers in the Git tool of their choice, and hence making Git the single source of truth.
+
+The idea is to replace push-based pipelines with pull-based pipelines bringing enabling developers to perform deployments directly with their pull-requests. This ideology is supported by a simple yet sophisticated infrastructure that kicks off a series of events in the deployment process once developers perform merges or open up pull requests.
+
+Once the pull request is opened, or merge performed, a GitOps operator then detects something has changed. This leads to another operator declaring the changes and deploys them to the cluster. The actual infrastructure to implement this varies on your preferred tool stack, but the mechanism is the same.
+
+For example, GitOps can be achieved with the following stack fo tools:
+
+Bitbucket as your Git VCS tool
+
+Docker to store your images
+
+Amazon S3 to store Helm charts
+
+AWS Lambda to pull the charts and commit to the cluster repo
+
+Weaveworks Flux to detect changes in the cluster repo and make the appropriate changes
+
+Basic GitOps Infrastructure
+
+The GitOps workflow that can thus be achieved is as follows:
+
+CI tools such as Bitbucket pipelines push docker images to hosting tools such as Quay. Cloud functions copy the configs and helm charts from the master storage bucket to master git repo. GitOps operators such as Weaveworks Flux then updates the cluster according to the config charts and pull helm charts by the Lambda function.
+
+In understanding the workflow, we soon realize how smooth and marvelous the working of the infrastructure is supported by the tech stack. Of course, each tool described in the tech stack has an alternative, and it is up to the user to choose the best tools that bring out the best in their teams and DevOps goals.
+
+For example, Jira functionality can easily be intertwined with Bitbucket considering that they are under the same Atlassian suite. Hence creating a pull request in Bitbucket can automatically lead to an issue in Jira being sent to a custom track ‘Deployment’. Thus streamlining your DevOps practices from ideation to release.
+
+Similarly, additional monitoring tools can be added to provide much-needed visibility when considering the possibilities of failure with a continuous delivery mechanism achieved via GitOps. For example, Thundra.io can be used to monitor the AWS Lambda functions triggered by S3 to ensure that no failures occur in committing the changes to cluster repos. Similarly, Thundra.io’s integration capabilities can be leveraged and alerts can be sent to alerting tools such as Opsgenie where the right on-call personnel can be notified for quick resolution of any issues that occur with the deployments triggered by pull requests.
+
+Therefore you can always add more cogs to your GitOps engine in an effort to enhance the reliability and convenience of using GitOps practices.
+
+Nevertheless, it can be seen that GitOps can be achieved with a myriad of tools available in the industry. The questions still remain, however, how does Kubernetes facilitate the continuous deployment process that is achieved under the veil of GitOps?
+
+The Kubernetes Convenience
+
+The reason why GitOps can be applied so fittingly is because of what Kubernetes deployments have to offer in terms of convergence, idempotence, determinism, and automation. To explain these in detail, Kubernetes has a powerful convergence mechanism as it will keep trying to morph cluster states until it succeeds, and the various applications of convergence will have the same result which will be determined by the desired state defined under the assurance of available resources. All of this will happen automatically and in a timely manner.
+
+Now that’s a lot of power squeezed into a couple of sentences, so it’s understandable if the information is hard to digest. After all, working with Kubernetes is not the easiest of tasks.
+
+The point is that there exists the Kubernetes orchestrator that will continuously try to apply the changes to the cluster until the cluster satisfies the desired state. This desired state may be a number of configurations updated made by a developer, SRE personnel, or just some random guy writing a blog. Long story short, the Kubernetes orchestrator actually continues to apply changes to the cluster state until it converges to the state defined by the configuration updates made. This applies to all Kubernetes resources and is extensible using the Custom Resource Definitions (CRDs) or Kubernetes.
+
+Therefore, with this knowledge, we can thus understand the lower-level working of the GitOps concept, independent of the tools described in the previous section.
+
+The entire GitOps process begins with defining the desired state within a Git repository and hence positioning Git as the single source of truth. Moreover, these changes which would be made in the form of commits are comparable with the cluster, thus marking whether the cluster has converged to the desired state or has currently diverged from it.
+
+When the two states, the desired state, and the actual state are not the same then it is the role of the convergence operator within Kubernetes to align the two states. This process is triggered by a ‘change’ alert arising to the difference in states. Practically the alert is derived from the commits to Git.
+
+As the convergence mechanism attempts to bring the two states in sync, ‘diff’ alerts may also be thrown to indicate that further convergence is still required. This thus means that all commits result in verifiable and idempotent changes to the cluster. Additionally, rollbacks are also possible, and in terms of the Kubernetes mechanism, they can be seen as further convergence to a previous state.
+
+Finally, as there are no more ‘diff’ alerts or if there is a ‘converged’ alert then the mechanism can conclude that the actual state has reached the desired state. These converged states can be practically set up with the use of callbacks or writeback events.
+
+In the end, what we see is that GitOps relies on concepts of IAC where the infrastructure is defined programmatically and the actual state of the infrastructure changes accordingly. Moreover what we also see is that the deployment is pull-based as compared to the traditional push-based deployments.
+
+Closing the Hood
+
+DevOps is a vast field and GitOps is simply an emerging practice out of the endeavors of the software industry to move towards more agile and reliable development practices. As trends in technology change, development practices must fit the available technology and GitOps is simply one example of how teams and organizations are pushing the limits to ensure the most optimal development practices.
+
+Acknowledging the importance of DevOps and its supplementary practices solutions are being crafted to tackle the pains in adopting the right practices. Weaveworks is such an example which provides operators such as Weaveworks Flux that enables GitOps for your clusters. Its place in the GitOps infrastructure has already been demonstrated above and, no doubt, Flux can be substituted by various other solutions such as Spinnaker depending on your preferences.
+
+Similarly, additional SaaS party tools exist to ensure the right amount of observability and incident management capabilities, as this is imperative considering the risks of continuous deployments. Adoption of best practices and tests providing comprehensive coverage of the system can mitigate these risks. Nevertheless the fact that there is always a possibility of things going wrong, and that there is a lot to lose when dealing with production environments, you can never go wrong in adding protective measures achievable with tools such as Thundra.io and Opsgenie.
+
+Overall we see GitOps as a practice that has leveraged the core power for Kubernetes to quicken the process from ideation to release. Kubernetes is a beast in terms of its capabilities, and taming it can mean making the container service the powerhouse of the software industry. Simply understanding how GitOps works makes one realize the immense benefits that can be achieved. However, as the age-old saying goes, with great power comes great responsibility. A quick search on the internet will present you with some horror stories of GitOps in production.
+
+Therefore, to ensure absolute success, it is crucial that we know how the cogs turn under the hood of GitOps.

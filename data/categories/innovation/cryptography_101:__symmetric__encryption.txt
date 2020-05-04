@@ -1,0 +1,105 @@
+This is the first post in a 3 part series on basics of cryptography. The series is outlined as follows:
+
+Symmetric Encryption Data Integrity & Authenticated Encryption Asymmetric Encryption with Public/Private Key Pairs
+
+Diving into the world of computer science can be a daunting task. Especially alone! In this blog series, I’d like to offer a high-level overview on the basics of cryptography for those looking to delve further into the topic who don’t necessarily know where to start. This overview is based specifically on my main takeaways from Stanford’s Cryptography I course as taught by Dan Boneh, available on Coursera.
+
+I decided to take this course since I am a blockchain developer who didn’t come from a traditional comp-sci background. I studied economics in college but veered more towards computer programming as I began my career. Ever since I began coding, I’ve been on a mission to get “closer to the computer” — to peel back the layers of abstraction I enjoyed as a web developer and understand what’s going on beneath the hood. Transitioning into cryptocurrency and distributed systems from web development has been a wild and wonderful step in that direction in many ways, not least of which was getting more familiar with the concepts of cryptography. However, I wanted a more solid foundation. Since it’s quite a vast field, I thought it was worth it to drop $70 to consume this information in a forum specially curated from Stanford University. You can also audit this course without handing in assignments for free. The wonders of the internet!
+
+Let’s begin.
+
+What is Cryptography?
+
+Essentially, cryptography is the practice of secure communication in the presence of potential third party adversaries. The concept of secure communication consists of 2 major points:
+
+Security against eavesdropping: this ensures data confidentiality. Security against data manipulation: this ensures data integrity meaning no one can manipulate data you’ve sent and deceive the recipient into accepting the manipulated data as valid.
+
+Data confidentiality is achieved through encryption, which can take two forms: symmetric and asymmetric.
+
+Symmetric encryption uses one single key that needs to be shared among all participants who are communicating.
+
+uses one single key that needs to be shared among all participants who are communicating. Asymmetric encryption uses personal keys. Each participant has their own public key and private key pair to encrypt and decrypt messages when communicating.
+
+(Note: This blogpost will talk about cryptography in the context of symmetric encryption. In a follow up post, we’ll dive into asymmetric encryption.)
+
+Data Encryption: Two types of Ciphers
+
+Encryption ensures data confidentiality and involves two important components:
+
+A secret key: In the context of symmetric encryption, we can assume our participants, Alice and Bob, have a shared secret key. A cipher: a set of algorithms, one for encryption and one for decryption.
+
+It’s important to note that the encryption and decryption algorithms are publicly known. The only thing kept secret is the key.
+
+Two types of ciphers are stream ciphers and block ciphers. A potential prerequisite for adequately understanding both of these ciphers is knowledge of bitwise operations (operations performed on bits). More specifically, the concept of exclusive-or (XOR). I found this blogpost to give a very clear explanation of bitwise operations. Or you can try to understand the concept of XOR using the picture below. Basically two bits are combined and if they are different (one 0 and one 1) they result in 1, and if they are the same, (both 0’s or both 1’s) they result in 0. From here on out, I’ll assume the reader understands the concept of XOR and that the universal notation for XOR is: ⊕
+
+Stream Cipher
+
+A stream cipher is a symmetric key cipher where the plaintext (in bytes form) is XOR’d bit by bit with the key (also in bytes form) to produce the encrypted ciphertext. The same process is used to decrypt the ciphertext. Given the nature of the XOR operation, if we XOR the ciphertext with the key, this results back with the original plaintext.
+
+An astute reader might realize from this description that the key (labeled in the above illustration as “Cipher stream”) and plaintext must have something very important in common. That’s right! The key and the plaintext must be the same length. This of course isn’t extremely practical.
+
+To make a stream cipher more practical, the idea of a pseudorandom generator is introduced. A pseudorandom generator is a deterministic procedure that takes an input and outputs an even longer pseudorandom result. Being a deterministic procedure means it will always return the same exact output if given the same input (i.e. “abc123” results in “8474f24e0d72e1b949ffd2…” every time). The word pseudorandom means that while the output is not actually random (since it is determined based on a particular input), it is in fact indistinguishable from a truly random string. In other words, given a sample of inputs and outputs, there are no clues as to which output corresponds to a particular input and vice versa, therefore it is pseudorandom. It’s possible to use the shared secret key as the input to produce an even longer pseudorandom key to act as the long key to be XOR’d with the equally long plaintext.
+
+This specific implementation of a stream cipher we’ve illustrated so far is called the “one-time-pad”. An extremely important feature of the one-time-pad is that the one-time-pad key can only be used ONE TIME. Once it is used a second time, the security of these messages is compromised.
+
+Pictured below is a slide from the course. PRG(K) denotes the pseudorandom sequence generated from our shared key K. The symbol ⊕ denotes XOR. c denotes ciphertext. m denotes message (or plaintext).
+
+Basically, this slide is saying that once the key is used twice, we can XOR the ciphertexts together, and that is exactly equal to XOR’ing the two plaintexts together. Since there is enough redundancy in English, a savvy attacker can use this information to recover the messages completely.
+
+To maintain one shared secret key, the concept of a nonce can be used to ensure we never repeat the one-time-pad key. A nonce is an arbitrary number that can be used just once in a cryptographic communication. When sending the ciphertext, the sender can also send a nonce over to be combined with the secret key to then use as the input to produce a distinct pseudorandom key for each encryption.
+
+(You may have noticed the slide above says Attack 1. As an aside, for those wondering what Attack 2 is, Attack 2 is the fact that while stream cipher offers data confidentiality, it does NOT provide data integrity as defined in the first section)
+
+Block Cipher
+
+The second type of cipher is a Block Cipher. A block cipher takes in a fixed-length input and iteratively encrypts the plaintext again and again using a different key (a “round key”) for each round and ultimately outputs a ciphertext of the same length. 3DES and AES are two examples of block ciphers which take an input of 48 bits and 128 bits respectively.
+
+The slide above shows the basic architecture for a block cipher. You can see that a key expansion mechanism is used to have a new key for every round. The plaintext, denoted (m) for message, gets encrypted again and again until finally the corresponding ciphertext (c) of the same length is returned.
+
+For the sake of brevity, I’ll cover AES in this blogpost. Although DES/3DES is historically significant, today AES is more widely used and accepted.
+
+AES is built as a Substitution Permutation Network. AES operates on a 128 bit block, equal to 16 bytes. As pictured above on the top left, we write the 16 bytes as a 4 by 4 matrix. This matrix serves as a data structure good for shuffling data around. In each round, the process is as follows:
+
+We XOR the round key, first (k0), with the current message Then we go through a substitution process where blocks of data are replaced with other blocks based on a given substitution table (pictured above (1) ByteSub). We go through a permutation layer where bits are permuted and shuffled around(pictured above (2) ShiftRow & (3) MixColumn). Then we repeat this process for 10 rounds.
+
+Pictured above, you’ll notice that the last round skips the Mix Column step, XOR’s the result with our final round key and outputs our resulting ciphertext. In order to decrypt, we simply reverse the process. The course offers a high level overview of this encryption process and encourages students to look deeper into it if it’s of interest to you. Therefore, I will leave the AES inner workings at this. I would recommend people look into the Fiestel Network procedure of 3DES for a fun compare and contrast of different block ciphers.
+
+In terms of hardware, since the launch of Intel Westmere, Intel has designed their processors with special instructions for AES optimization built right into their hardware and AMD followed suit shortly thereafter.
+
+Block Cipher Modes of Operation
+
+Unlike a stream cipher, a block cipher only takes a fixed-length input. Obviously we want to handle data that’s larger than 16 bytes at a time. So next it’s important to understand the modes of operation under which we can use block ciphers to encrypt large sets of data. To apply this block cipher to a large dataset, the first mode of operation that may come to mind is called “Electronic Code Book” (ECB). ECB simply divides the data into 16 byte blocks and performs AES encryption uniformly. It could even be done in parallel. Very fast! But it’s actually not very secure.
+
+It’s insecure because if a 16 byte message repeats itself, the ciphertext will also have repeated data. This divulges information about our data to a potential attacker. We can apply this vulnerability to the case in which we’re encrypting an image with ECB. As you can see below, it’s clear that our image is a headshot. In the heavily black area, we can see a silhouette via the dark hair and shirt.
+
+It is important that our encryption schemes are semantically secure. Semantic Security is the concept that if we have a ciphertext that corresponds to one of two different plaintexts, an adversary cannot guess with better probability than 1/2 which plaintext the ciphertext corresponds to. Clearly, ECB is not semantically secure. Our encrypted image gives us plenty of information to guess its corresponding plain image.
+
+ECB is an example of a one-time-key mode of operation (meaning, like the one-time-pad, a key can only be used once). Another more secure one-time-key mode of operation is deterministic counter mode. You are free to look into it on your own. I will move onto the secure modes of operation that enable many-time keys!
+
+Cipher Block Chaining (CBC) is a mode of operation that chains each 16-byte block of plaintext together through XOR’ing the ciphertext of the previous plaintext into our current plaintext before performing the block cipher encryption (i.e. AES). The below image clarifies this concept:
+
+We first start with a random IV. IV stands for initialization vector which can be defined as: the initial value used to start some iterated process. In the case of CBC, the IV must be random (hence unpredictable) hence it must be unique for each transaction. The first block of the ciphertext is simply the unencrypted random IV. To produce the rest of the ciphertext, first, the random IV is XOR’d with the first block of plaintext (m[0]). The result then gets encrypted with round key k to return the first block of encrypted ciphertext (c[0]). That ciphertext then gets XOR’d with the next block of plaintext (m[1]), the result is encrypted with round key k and returns the second block of encrypted ciphertext (c[1]). The process is continued until all blocks have been encrypted.
+
+To decrypt, we just reverse the process.
+
+An important component to CBC encryption is that the random IV is unpredictable. If the IV becomes predictable, then our encryption scheme becomes vulnerable to chosen plaintext attacks. Chosen Plaintext Attack (CPA) is an attack model which presumes that the attacker can obtain ciphertexts for arbitrary plaintexts, and use these to reveal information about encrypted messages. Hence, an unpredictable IV is needed to ensure CPA Security.
+
+Bear with me here as I try to explain how this attack would work: It’s possible to perform a chosen plaintext attack in the presence of predictable IV’s because of the nature of XOR. If you XOR the same value together (0101 ⊕ 0101) it will always equal 0, hence it cancels out. So if you suspect an observed ciphertext c[0] corresponds to a particular plaintext m[0] you can test your hypothesis with a predictable IV. If the plaintext in question was encrypted with IV1 such that c[0] = E(k, m[0] ⊕ IV1) you can submit a new plaintext to be encrypted and see if you get a matching result: c[0]. Since you can predict the IV will be IV2, you submit m[0] ⊕ IV1 ⊕ IV2. The CBC process will XOR this input with the next IV, IV2 such that: c[1] = E(k, m[0] ⊕ IV1 ⊕ IV2 ⊕ IV2) hence IV2 cancels out, and once again we’re encrypting E(k, IV1 ⊕ m[0]) which would result once again with c[0] and if this happens, we were able to guess what was previously encrypted with IV1.
+
+Really awesome job if you got through that — ^
+
+With that, I’d like to review one more block cipher mode of operation which will conclude the first blogpost in this 3 part series. If it’s been a big effort to make it this far, now might be a good time for a quick break before continuing!
+
+Ok, so we’ve reviewed ECB, CBC, and their vulnerabilities, but lastly, and probably most importantly I will introduce Randomized Counter Mode (CTR). This is the latest, most secure mode of operation, and it’s also more efficient than CBC.
+
+Randomized Counter Mode also takes a random IV. The IV serves a different purpose here though. Our key gets combined (e.g. via AES) with an iterated version our IV: above we keep adding 1 to our IV for each iteration, or else we’d get a repeated result. We do this until we have a pad as long as our plaintext message. Just like the one-time-pad stream cipher, we now XOR our plaintext message with our pseudorandom pad to result in a ciphertext. If your hardware has multiple AES engines, this is ultra efficient because it is parallelizable. In CBC, each ciphertext depended on the previous block of ciphertext so it was impossible to parallelize.
+
+We don’t even necessarily need a block cipher to combine our IV and key into a pseudorandom pad. Block ciphers must be reversible. If you look closely at the mechanics of randomized counter mode, you’ll notice that decryption doesn’t require us to reverse F(k, IV) . Given the nature of XOR, all we need to do is regenerate the same pseudorandom pad and XOR it with our ciphertext. Hence, in order to decrypt, we must repeat the operation, not reverse it.
+
+Abstractly speaking (so far I’ve avoided abstract concepts), that means that the procedure we use to combine our secret key and IV F(k, IV) must be a Pseudorandom Function (PRF) as opposed to a Pseudorandom Permutation (PRP). We’ve actually been applying these concepts throughout this blogpost. Both PRPs and PRFs are deterministic procedures that, given a particular input, result in a pseudorandom output. (i.e. AES, XOR). However a PRP is stricter in the sense that it must be reversible. In fact, the terms PRP and block cipher (such as AES) are often used synonymously. A PRF however does NOT need to be reversible. If you return back to previous slides displayed in this post, you’ll now understand the notation PRF and PRP.
+
+That concludes my overview of Symmetric Encryption! We covered stream ciphers and block ciphers. Then, since block ciphers can only be performed on about 16 bytes at a time, we covered the modes of operation used to perform block ciphers on large plaintexts. We also clarified the concepts of PRPs vs PRFs.
+
+If this was helpful, please check back for links to my followup posts. Feel free to leave a comment with thoughts, questions, or even edits. You can find me on twitter at @crypt0glitter.
+
+Thanks for reading 🌈

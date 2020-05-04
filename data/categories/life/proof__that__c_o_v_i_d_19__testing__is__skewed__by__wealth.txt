@@ -1,0 +1,41 @@
+New York City has the largest coronavirus outbreak in the United States, and one of the largest in the world, with over 20.5 percent of confirmed cases in the U.S. and over 5 percent of the global total (as of April 4). Testing for COVID-19 helps track the outbreak, and countries that quickly implemented mass testing, most notably South Korea, have been able to contain it better than the United States. But a close analysis of newly-released ZIP Code-level data from the NYC Department of Health shows that people in wealthier areas are more likely to get tested with lesser symptoms, which means the rate of positive tests paints a misleading picture of which neighborhoods have been hardest hit.
+
+Subway ridership in New York has fallen more slowly in low income than high income neighborhoods, indicating the effect of COVID-19 may be harsher in those areas because more people kept venturing out as the outbreak worsened (likely due to the nature of their work). But the new testing data suggests otherwise. At least at first.
+
+This map shows the number of positive tests per 1,000 residents in each ZIP Code, with darker colors indicating higher rates:
+
+While the highest rate of positives tests (11.63 per thousand) is in ZIP Code 11370 in East Elmhurst, one of the poorest neighborhoods in Queens (median income $37,574), some wealthy areas of Manhattan and Brooklyn have elevated levels. And dividing New York City by ZIP Code shows no correlation between median income and the proportion of a population that tested positive.
+
+But there’s a problem with this metric: access to testing varies. If you are wealthy, have health insurance, and a primary care doctor, your ability to get tested far outpaces people in lower income brackets who lack the same access to healthcare. Uninsured New Yorkers might rely solely on a public hospital where they would be tested only if they displayed severe symptoms and required hospitalization. By contrast, urgent care facilities utilized by wealthier New Yorkers might test patients with lesser symptoms.
+
+If that were the case, then the proportion of tests in higher income neighborhoods that come back positive should be lower. And indeed, it is (r=-0.50):
+
+As the following map shows, Queens and Brooklyn neighborhoods with lower median incomes tend to have a higher proportion of tests that came back positive compared to wealthier areas in Manhattan.
+
+This indicates that, given the disparities in testing, the rate of positive tests is not a good proxy for the rate of infection when comparing across income lines. There are probably more people with coronavirus in poorer neighborhoods than testing indicates, because in those areas, people with less severe symptoms are less likely to get tested.
+
+Since we can’t get the information we want from positive tests, I turned to NYC’s symptom surveillance website, which shares symptom counts from people visiting emergency rooms.
+
+As this chart shows, the overall number of visits to ERs with respiratory symptoms remained relatively steady throughout January and February, but started rising on March 8:
+
+ER visits for influenza-like symptoms show a similar pattern. As of April 1, the number of visits per day with respiratory or influenza-like symptoms was 3,873. The good news is this has trended down since March 25. But fewer walk-ins does not mean fewer people hospitalized, because many stay for a long time. So the number of patients in New York City hospitals continues to grow at an alarming rate, raising the risk that healthcare resources will become overwhelmed.
+
+Some caveats: First, these are ER visits, not confirmed coronavirus cases, so the stats include some visits for the flu and other respiratory issues. Second, the city gives ZIP Codes for only a subset of visits, and it’s not clear if there is bias in that sample. For example, if only a few hospitals reported ZIP Codes to the city, it could cause oversampling of some areas. Therefore, the rates in this data are likely higher in each neighborhood than the rates of COVID-19 alone, but since it’s reasonable to assume they’re higher in every neighborhood, the relative rankings provide value. Third, lower income New Yorkers are more likely to use ER visits for non-life-threatening conditions because they lack access to other healthcare options. So this could end up over-reporting cases in lower income communities.
+
+With those caveats, here is the map of ER visits with symptoms of influenza or respiratory issues per capita in each ZIP Code from March 8 through April 1:
+
+A quick glance seems to show that lower income areas have higher ER visit rates for respiratory symptoms over the last 3 weeks than higher income areas. However, as noted before, this could be because the ER plays a different role in healthcare in lower income communities. Analyzing the data seems to confirm that there is a relationship between median income in a Zip Code and the ER visit rate for respiratory symptoms (R=-0.51):
+
+Each dot represents one ZIP Code. The above scatterplot shows a relationship between income and the rate of visits, where no higher income communities have high rates. There are a few outliers, listed here:
+
+And here’s the most striking thing: There is no mathematical correlation between hospitalization rates and positive test rates. That adds to the evidence that positive test rate is not a good proxy for understanding COVID-19’s spread.
+
+To bring things full circle, let’s take a look at hospitalization rates compared to the reduction in subway ridership in each ZIP Code. Again, the theory is that neighborhoods that kept taking the subway in higher numbers might be at higher risk. The scatterplot below shows that to be the case (R=0.44):
+
+Given the caveats used to unpack this, it would be great to see the city release data on the number of patients who have been hospitalized in each ZIP Code — not just ER visits. That number would be the cleanest to understand the potential inequities associated with the pandemic. I applaud the Department of Health for releasing this data, but would love to see more.
+
+Overall, the available evidence suggests that people in different income brackets may be subject to different levels of coronavirus risk. Data from New York City shows that important metrics — such as number of confirmed cases and the ratio of positive to negative tests — are skewed by wealth. Testing data is still useful, but it’s painting a somewhat misleading picture.
+
+To fight COVID-19, we need to understand how it’s spreading, and recognize how the impact of the virus varies with economic inequality. And to accurately measure that, we need better data than positive tests alone.
+
+A version of this article first appeared in I Quant NY.

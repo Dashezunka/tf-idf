@@ -1,0 +1,99 @@
+Build a Twitter Bot for Coronavirus update
+
+In this article we will learn how to build a twitter bot that tweet coronavirus stats using Python and Tweepy.
+
+Photo by Yucel Moran on Unsplash
+
+Note from the editors: Towards Data Science is a Medium publication primarily based on the study of data science and machine learning. We are not health professionals or epidemiologists, and the opinions of this article should not be interpreted as professional advice. To learn more about the coronavirus pandemic, you can click here.
+
+Twitter provides an API through which users can interact with the platform. Tweepy is a python library that provides a way to access twitter API conveniently. It is a high level wrapper for the underlying API.
+
+If you want to go straight to the code, click here.
+
+Installation
+
+We will be using Python 3 for this project. The first thing we need is tweepy. Let’s install that using pip.
+
+pip install tweepy
+
+Linux and Mac user may have to use pip3 instead of pip which is used by Python 2
+
+Twitter API
+
+In order to access twitter API we need to have a twitter account. Go ahead and create one if you haven’t. Make sure you have verified your email and phone number in order to use the API.
+
+Then head over to the developer page and click on Apply at the top left or go to the apply page directly. Then click on “Apply for a developer account”. Select an appropriate option according to your need and answer the questions by clicking Next. Twitter will ask for basic information like how are you going to use the API, which country are you from, etc. Once everything is complete, you may have to wait for a day or 2 to get verified.
+
+Once the verification is complete, go to the apps page and create an app. Give your app a name (make sure it is unique), add description and a website url. At the bottom, you will have to describe in detail how you are going to use the app. Then press create.
+
+Twitter App
+
+Once you are in your app page as shown in the image. Go to “Keys and tokens”. Generate Access token and Access token secret. Copy the keys to some text file when the keys are displayed.
+
+Now create a file config.py and add all 4 keys as shown below.
+
+config.py
+
+Now create another file twitter_bot.py in the same folder where config.py is and add the following codes.
+
+twitter_bot.py
+
+Now run the file using the command
+
+python twitter_bot.py
+
+The code is pretty straightforward. We are importing the tweepy library and all the keys required. Then we are creating an api object by passing our keys. If it is successful, “Authentication Successful” will be printed, else “Error while authenticating API” will be printed. I hope you get the authentication correct. Go and check your twitter account, you will see a tweet.
+
+Scraping Coronavirus Stats
+
+I found this website https://www.worldometers.info/coronavirus/ which shows the total number of people affected, deaths and recovered. We will scrape data from this page, create a tweet and tweet it from our account.
+
+Let’s install requests and lxml libraries.
+
+pip install requests lxml
+
+requests is used to send HTTP requests to the web page and lxml is used to parse the returned HTML content using Xpath. If you are new to Xpath, I will link some of the resources below to learn more about it. BTW you can also use BeautifulSoup to parse HTML instead of lxml.
+
+All these dependencies will be in the requirements.txt file in the github repo. You can simply install all at once using the command
+
+pip install -r requirements.txt
+
+Open https://www.worldometers.info/coronavirus/, right click on the number shown right below “Coronavirus Cases:” and click Inspect.
+
+Inspect HTML
+
+The data is inside a span tag which is inside a div with class maincounter-number. If you inspect the deaths and recovered sections, you will see the structure is the same. Let’s open the python shell and see if we can get the data. In your cmd/terminal, type python.
+
+
+
+>>> from lxml import html
+
+>>> response = requests.get('
+
+>>> doc = html.fromstring(response.content)
+
+>>> doc.xpath('//div[
+
+['805,377 ', '39,469', '172,436'] >>> import requests>>> from lxml import html>>> response = requests.get(' https://www.worldometers.info/coronavirus/' >>> doc = html.fromstring(response.content)>>> doc.xpath('//div[ @class ="maincounter-number"]/span/text()')['805,377 ', '39,469', '172,436']
+
+Here we are sending requests to our target page and parsing the returned HTML. if you look at the last line, the xpath is self explanatory. It says, find all the div with class maincounter-number and extract the text of span element inside that div. Here we have 3 matching elements, hence 3 values are printed.
+
+Now we can implement the same logic in our script. Open twitter_bot.py, create a function called create_tweet() and add the scraping codes in there right below our import statement.
+
+We are creating a tweet using Python’s f string. I have added some relevant hashtags but feel free to format the tweet as you need. Don’t forget to give credits to worldometers.
+
+After adding everything our final code should look like this.
+
+Now run you code from terminal/cmd.
+
+python twitter_bot.py
+
+Then check your twitter account, you will see a tweet like this
+
+Tweet by visualizenoworg
+
+You can add more functionality if you want to the script such as tweeting from an infinite loop waiting every X minutes. Or schedule this script to run from cron every Y minutes. You can create an entirely different bot that posts the latest news from your account. The possibilities are endless. Also make sure to check for rate limits.
+
+Twitter API allows you to interact with the app, collect data, analyze tweets and many more. For more information, you can check out twitter’s official documentation.
+
+Resources

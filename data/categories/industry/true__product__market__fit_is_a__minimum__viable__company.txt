@@ -1,0 +1,111 @@
+Hi, I’m Ann. I was one of the first investors in Lyft, Refinery29, and Xamarin. I have been on the Midas List for the past 3 years and was recently named on The New York Times’ list of The Top 20 Venture Capitalists worldwide. In 2008, I co-founded Floodgate, one of the first seed-stage VC funds in Silicon Valley.
+
+When Mike Maples and I founded Floodgate, I was teaching Lean Startup at Stanford with Steve Blank. Steve had an innate sense for incorporating the scientific method into the artistry of startups. As such, we centered the class around entrepreneurial experimentation, honing in on one critical lesson: founders must develop insights and customers before focusing on growth. This, we taught our students, is the key to achieving the coveted product/market fit.
+
+For the past 11 years, I’ve invested at the inception phase of startups. We’ve seen startups go wildly right (Lyft, Refinery29, Twitch, Xamarin) and wildly wrong. When I reflect on the failures, the root cause inevitably stems from misconceptions around the nature of product-market fit. Founders are blindly searching for growth because they see that as the proof of product-market fit when in fact they should be focused on insight and customer development first as that is more likely where product market fit will be found.
+
+The Magic of Product-Market Fit
+
+Most successful entrepreneurs and VCs agree that product-market fit is the defining moment of an early stage startup. Getting to product-market fit allows you to succeed even if you are not optimized on other fronts.
+
+Most entrepreneurs conceptualize product-market fit as reaching the point where some subset of customers love their product’s features. At Floodgate, we forensically analyzed companies that died and realized that this conceptualization is wrong, as many of these companies had features that customers loved, and yet still did not succeed. Some of these companies even had multiple beloved features! What we learned through this process is that having customers love the product is merely a part of product-market fit, not the whole thing. This raises the question: what were they lacking?
+
+Before attempting to scale your minimum viable product, you should focus on cultivating your minimum viable company. Nail down your value proposition, find your place in the broader ecosystem, and craft a business model that adds up. Nail it and then scale it. In other words, true product-market fit is actually the magical moment where three elements click together:
+
+Value propositions
+
+Ecosystem
+
+Business model
+
+As you can tell, great product features constitute just one-half of one-third of the whole puzzle. Moving into “growth mode” while missing any of these elements is building your company on an unsound foundation.
+
+Value Propositions
+
+Most often, I see founders describe their product as sets of features or technological breakthroughs. Features, however, aren’t the product — they’re merely enablers of value propositions: promises of how the product will drastically improve a customer’s life.
+
+These value propositions must be extraordinarily compelling. To succeed, a startup must be at least a 10x improvement for their customer on some dimension. Without a 10x advantage, there may be a slow increase in customer satisfaction, but there’s no spike of delight. A company without a spike of delight doesn’t stand a chance in enticing customers.
+
+10x advantages in early days can seem borderline crazy because products built by startups appeal to a relatively small but rabid group of customers. In the early days, Airbnb targeted locations around events that spiked demand for hotels. In those instances, Airbnb’s distinct 10x advantage was that they offered a place to stay for a fraction of the cost. Square made it possible for everyone from an artist charging thousands of dollars for their work to a farmer taking payment at a farmer’s market to take credit card payments on their phone. Tesla’s 10x advantage was that it was the first electric car that offered slick design along with crazy acceleration (literally called Insanity Mode). Tesla also offered the autopilot as an option that seemingly turned the car into a relatively reliable self-driving car causing some drivers to notoriously take naps as their cars hurtled down highways.
+
+But is this enough? Optimistic, future-focused entrepreneurs often concentrate on these moments of delight. However, to reach product-market fit, a startup must also consider the implicit costs to a customer that come along with any new product, including money (e.g. the product’s price), time (onboarding/changing habits), and effort (learning to use your product).
+
+A founder recently pitched me a company that would require users to install hardware in their car and download an app before seeing any benefit. This is a large level of customer investment. For the company to succeed, the value proposition needs to be compelling and immediately obvious upon installation.
+
+Before achieving product-market fit, a product’s promises of value — and its followthrough — must outweigh the costs, as quickly as possible.
+
+For example, most mobile games allow users to play right away (before signing up or paying), providing significant delight before requesting user investment:
+
+Lyft’s cumulative delight overcame a customer’s investment within the customer’s first ride:
+
+A rider was first delighted when expecting a long lag time after ordering the car… then realizing it will arrive in only 3 minutes!
+
+The second delight was fist-bumping the driver — it felt like a friend coming to pick you up.
+
+The third delight was the interior of the car — it’s not a grungy, smelly cab, but a normal car your friend might own.
+
+The fourth delight was the ambiance (music, water) and chatting with the friendly driver.
+
+The fifth delight was the price, much less expensive than a cab ride.
+
+A week into the Lyft launch, one of our associates ran into my office with his eyes wide, shouting, “You have NO idea what you have on your hands. I’ve taken 6 Lyfts this week alone and it’s a GAME CHANGER!” Delight is seeing your customer’s pupils dilate because they’re so ecstatic about your 10x change.
+
+Seeing a product as merely a bundle of features disregards the inherent blockers your product must bypass to succeed. Your product is an entire customer experience, and successful companies view it as such.
+
+If you’re unsure whether you have a strong value proposition, look at your word of mouth. Word of mouth is organic growth, or growth you can’t buy. When you have strong organic growth, you can be confident you have a strong value proposition. Ultimately I find this metric to be the most predictive of whether or not the product will drastically improve customers’ lives. Additional metrics I pay attention to include NPS (Net Promoter Score) as well as Sean Ellis’ PM Fit metric measuring the percentage of users who would be “very disappointed” if they could no longer use your product (ideally it’s greater than 40%).
+
+Ecosystem
+
+Startups deliver a product to more than just their customer; they deliver it into an ecosystem. Promoters, detractors, brokers, salespeople, marketing channels, and integrators all influence your customers. Each ecosystem distributes money and information in unique ways. To create a successful company, a founder must clearly comprehend the value they add, who they threaten, and the methods by which their product becomes known.
+
+To reach product-market fit, you need to anticipate how your product will be received by the ecosystem as a whole. Healthcare is a great example, as its ecosystem includes:
+
+Payers
+
+Providers
+
+Insurance brokers
+
+Health tech companies
+
+Patients
+
+A startup that failed to recognize the power of insurance companies could satisfy patients, but never get off the ground. We also see many startups that claim they will tackle AI in healthcare without any idea how they will get access to the patient data on which they can train their algorithms. While the healthcare ecosystem is particularly fragmented, most ecosystems operate with more than two parties, be they middlemen, regulatory oversight, or otherwise.
+
+Even if a product is valuable to one group, failing to consider the behavior of another could kill the product. Lyft, for example, requires more than a healthy relationship between drivers and passengers. It requires an understanding of insurance, the economics of car ownership, and the government regulations around ride-sharing. Ignoring any of these critical pieces of the ecosystem would jeopardize the very existence of the company.
+
+The ecosystem also requires a recognition of both the information flow (how knowledge about your product spreads) and the dollar flow (how you extract profits). These two flows dictate how prospective clients become paying customers.
+
+For example, in the gaming ecosystem, you have a pretty complex industry and power dynamics that are constantly shifting. Dollar flow within the gaming environment seems simple (gamers pay for games, and viewers engage with brands who sponsor professional players of popular games), but there are many more people and companies that contribute to the flow. Before a game is even released, there is a massive amount of spending on asset creation, level design, back-end development, quality assurance, and competitive balancing to reach the increasingly high bar for a video game MVP. So when gamers pay for their games, they’re not just paying the publisher or developer. Part of the game’s retail price is also taken by the marketplace where it was bought (e.g., Steam). The rest of that revenue goes back towards the publisher, which may also run a league for the game (e.g., Overwatch League from Activision Blizzard). Beyond the game itself, there are now professional gamers who play in leagues and stream for their own followings on platforms like Twitch and YouTube. Last, there are social apps like Discord that enable gamers to communicate with one another.
+
+Within a complex space like this, it’s important to fully understand where your business is going to capture value, and how all stakeholders are going to react to that change in the flow. For example, we’ve seen startups that help gamers improve by plugging into a game’s API. Even if gamers love this product, there is the potential that a publisher decides that this creates unfair dynamics in their game play or they worry this creates a closer relationship with the gamer. As a result, it’s quite possible that the publisher will revoke your API access.
+
+Each industry has its own nuances. Ignore them at your own peril.
+
+Business Model
+
+Business model is much more than the price a customer pays for your product. It includes your product packaging, the cost of goods sold, and how you get your product to customers.
+
+We have seen many founders try to leave the question of pricing until a later time. They say that they want to get in front of customers first and figure out pricing later. But pricing alone is an important question. What is included in various pricing packages, what the packages are called, and how much is being charged can influence whether a customer buys and how much they choose to spend.
+
+In one company we had two product packages that were identical. One was called professional at $1000/month and the other enterprise $3000+/month. The only difference was a service level agreement on how quickly you could access customer service when you had a problem. Interestingly, customer service was so well run that there was actually no real difference between the response time for professional or enterprise. To large organizations where the up time was critical, they were fine paying the extra $2–3000 a month to receive that guarantee that someone would call them back quickly for any open questions or problems. For this company, customer service would not have been considered a core product but clearly this drove revenue and margins for the business and was an important factor for customers.
+
+The relationship between price and cost is also critical to understand. This is the basis for margin which often determines how a company might be valued. A dollar of revenue for an e-commerce business can be 5–10x less valuable than a dollar of revenue for a SaaS business when it comes to company valuation. This is because a SaaS business typically can sustain 75–80% gross margins while an e-commerce business typically is around a 20–50% gross margin business. E-commerce businesses are much more operationally complex with higher customer churn than the typical SaaS business.
+
+Price and cost also form the basis for unit economics. It can be easy to mistake the enthusiasm of an end customer for a great deal for product-market fit. After all, who wouldn’t love to purchase a dollar for $0.80? Too often, companies commit to scaling a business purely on the hope that at scale, their unit economics might fix themselves. Take for example a food delivery service. Suppose that a customer places a $30 order including fees and tip. Restaurants are paid out roughly $20. Delivery person gets paid about $7. Transaction fees are around $1.50 leaving $1.50 in profit for the food delivery service. The only parts of the business that potentially scale are the pricing pressure the delivery company can place on restaurants (but these businesses themselves are low margin) and the density of deliveries a person can do in one run (but this can likely be accomplished only in pretty specific markets with high existing residential and restaurant density). It’s no wonder that some of these businesses need to claim a part of the tips as a part of their revenue flow. The model may not work otherwise.
+
+Your business model is the backbone of your company. We like seeing how business models interact with the other components of your company as early as possible to set the context for the business’ valuation and future growth potential.
+
+True Product-Market Fit is a Minimum Viable Company
+
+True product-market fit requires more than a valuable minimum viable product. It requires a minimum viable company. Each individual element does not exist in a vacuum. All three elements of product value, business model, and ecosystem must work in concert together.
+
+People must value your product and be willing to pay for it. Your pricing, in turn, will determine how your product is packaged (freemium vs free to pay vs enterprise sales)
+
+Your business model and pricing must fit within your ecosystem. You must also be able to generate enough sales volume and revenue to sustain your business
+
+Your product must satisfy the needs of the ecosystem and the ecosystem in turn needs to accept your product.
+
+So founders take heed…
+
+Founders who can tune out the latest tweet cycle on what is needed for a Series A and can, instead, focus on the nature of their own business will find that product market fit is more predictable and therefore discoverable. On the other hand, founders who focus first on growth without knowing the basic ingredients of their minimum viable company are more likely to fuel an addictive and destructive cycle around fake growth of their business.

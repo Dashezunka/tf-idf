@@ -1,0 +1,97 @@
+My next step from the Ethereal Programming Language.
+
+Recently, a couple months ago in fact, I started working on the Feral programming language. Now, if you have read my previous articles, right now you’re probably like: “Dude! Another language?! What’s wrong with you!”. And come to think of it, you’re probably right. I seem to be obsessed with programming languages, but that’s perhaps for another article. Right now, I can’t wait to share about the Feral Programing Language!
+
+Sample Feral Code — Bubble Sort! (the best sorting algorithm!! (just kidding))
+
+Some Background
+
+I started working on Feral about 2-3 months ago. I really enjoy creating languages, so I thought why not! This time around though, I focused a lot more on the syntax of the language than the last time (Ethereal). I wanted to make a language that’s not just pleasant to use, but also minimalistic, could be picked up in like, a day, and didn’t sacrifice usability or readability while not being overly verbose (cough Java cough). That was (and still is) the foundation of Feral — a language which is fun to script in!
+
+I also wanted to play around with some ideas like first-class support for modules and functions — i.e., modules and functions can be passed around in the form of variables! Now, I know that this is nothing revolutionary, but come on! It’s pretty cool and fascinating! 😁
+
+Armed with all the ideas, motivation, and well, a borderline obsession towards creating languages, I started working on Feral — the minimalistic, interpreted, procedural programming language.
+
+Therefore, off I went to my trusty whiteboard and code editor and started scribbling down the syntax of the language and sample programs, all the while, making it better and something that I felt would be really enjoyable to use. That’s when Feral was born! By the way, I gave it the name Feral because:
+
+It’s a lovely word! It’s wild — Fast, and powerful!
+
+The Language
+
+Remember, I said that Feral is minimalistic? Well, I meant it! Feral does not contain any special syntax for structures, enumerations, maps/dictionaries, or even vectors/lists. Hell, there is no special syntax for even importing other source files.
+
+Do note that I said it didn’t contain special syntax for those things. I did not say that it doesn’t support them. Feral does support all of those concepts. However, instead of relying on special syntax on the language side, it provides functions with which the same functionality is created while having far less core compiler codebase.
+
+Feral contains an import() function which allows the user to import other Feral sources, instead of relying on an import keyword that most other languages have. Similarly, structures are created using lang.struct() function and enumerations are created using lang.enum() function.
+
+Feral also has first-class support for modules and functions! And not just that, even structures are first-class citizens in Feral (in a way, we’ll see how, below).
+
+In Feral, the modules (cool way of saying “other feral sources”) are loaded as follows:
+
+Importing the standard io module in Feral
+
+Basically, io is now a variable which can be passed to functions, returned from functions, reassigned to another value, basically, it has all the functionality of any other variable!
+
+Similarly, to create a structure (not an instance/object of structure), the lang.struct() function is used as follows:
+
+Importing ‘lang’ module and calling struct() function in it — creating a new structure
+
+Finally, just call my_struct as a function to create an instance of that struct. Fascinating, right?!
+
+Even functions themselves are Feral values which can be assigned to variables and passed around to other functions (callbacks). So, say you want to make a sort function and pass the sorting comparison mechanism separately, as a function itself? Check! (Although, for the love of everything holy, please don’t overuse callbacks, ever!)
+
+In Feral, as with many other interpreted languages, one can write functions and types in C++ (host language) as C++ runtime loaded modules, or as Feral functions themselves. The simple thought for deciding which one to use is to only go the C++ route if the function requires high performance, otherwise Feral functions will satisfy most of the cases.
+
+Currently, there is also a Curl module under progress. For example, to download a file using Feral (and its Curl module), the code goes as below:
+
+Feral code for using Curl to download a file — It’s so adorable and cute isn’t it?! 🥺❤️
+
+I am working on the documentation of the language right now (5 chapters are complete) and will start uploading it soon enough.
+
+Syntax Highlighting
+
+I don’t know about you, but I most certainly can’t live without it. I need my language syntax to be highlighted by colors after all, otherwise it would look too dull and boring!!
+
+Keeping that in mind, I have also created simple syntax highlighting extensions for Visual Studio Code and Vim (links at the bottom).
+
+Technical Details
+
+This is an article of a programming language, what fun would it be if there were no technical details!
+
+Since Feral is an interpreted language, it required a host language which would be, ideally, natively compiled. For me, C++(11) was a no brainer here since it is natively compiled, outrageously fast, and I love to use it (I dare you to sway me to another language!).
+
+As a matter of fact, the only issue I have with writing C++ code is regarding the build system — I spent a lot of time trying to understand how to get my work done with CMakeLists. I don’t hate CMake, but it can get annoying to get its configuration right. Alas, it does work pretty well and is ubiquitously available, so CMake it was!
+
+For the language implementation itself, the Lexer was nothing special, the parser on the other hand, I am quite happy with what it has become. This time around (unlike Ethereal), I actually made a Recursive-Descent Parser, and the code looks so beautiful and clean! I definitely recommend it if it works for your language syntax.
+
+A small part of Feral’s expression parsing — Recursive Descent Parser
+
+No, I don’t use tools like yacc, or bison — I like being in total control of the codebase, plus for me, yacc/bison would have taken a lot more time to understand and then put into use.
+
+The compiler/VM uses libgmp and libmpfr library for working with arbitrary sized numbers. This totally eliminates the need to package a separate library for working with big numbers. Aside from system libraries, these are the only external libraries required for installing and using the Feral programming language.
+
+But my oh my, the real fun was in writing the Virtual Machine. Since there was always the goal in mind of the language being minimalistic, the number of VM instructions would have to be low too. As of now, Feral contains a total of 22 VM instructions through which any Feral program is executed. I think that’s sufficiently low.
+
+The VM itself is stack-based, therefore each instruction is quite simple — an operation, and an operand (which is optional).
+
+Currently, VM consists of the following instructions.
+
+Feral VM Opcodes
+
+As of yet, to be honest, the VM is most certainly not quite optimized. I am working on that, but it’s definitely not agonizingly slow — by a long shot!
+
+Conclusion
+
+Well, this is a very short introduction, as well as the main things I feel to be interesting about it. As the development continues, the language is becoming more and more stable, and frankly, I am incredibly excited about working with it and using it.
+
+Hope you all find the article and language interesting/exciting! Comment your thoughts on them and do check out Feral. Feedback’s always welcome and most appreciated! But that’s it for today.
+
+Until next time everyone! ❤️❤️
+
+Links:
+
+Feral Language Organization: https://github.com/Feral-Lang
+
+Feral Compiler/VM: https://github.com/Feral-Lang/Feral
+
+Ethereal Language: https://github.com/Electrux/Ethereal

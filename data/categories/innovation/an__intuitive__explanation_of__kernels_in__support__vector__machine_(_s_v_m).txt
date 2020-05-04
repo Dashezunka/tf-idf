@@ -1,0 +1,29 @@
+Simple Example:
+
+We have a 3-dimensional vector x = (x1, x2, x3). We define this operation f(x) as such: f(x) = (x1x1, x1x2, x1x3, x2x1, x2x2, x2x3, x3x1, x3x2, x3x3). In other words, it wants to multiply every pairs in x, and produce a 9-dimensional vector.
+
+Let’s plug it in some numbers and make it more intuitive! Suppose x = (1, 2, 3); y = (4, 5, 6). Then:
+
+f(x) = (1, 2, 3, 2, 4, 6, 3, 6, 9)
+
+f(y) = (16, 20, 24, 20, 25, 30, 24, 30, 36)
+
+Now, for some reason, we actually don’t care about f(x) and f(y). We just want to know the dot product, <f(x), f(y)>. As a reminder, dot product means that the 1st dimension of f(x) times the 1st dimension of f(y), the 2nd of f(x) times the 2nd dimension of f(y), … the 9-th dimension of f(x) times the 9-th dimension of f(y) and we add them all up. So:
+
+<f(x), f(y)> = 16 + 40 + 72 + 40 + 100+ 180 + 72 + 180 + 324 = 1024
+
+A lot of algebra! Mainly because f is a mapping from 3-dimensional to 9 dimensional space. Even though the the final answer is just one number, we had to “balloon” in the middle to go through all these tedious calculations in the 9-dimensional space before we can condense down to the single number.
+
+What if I tell you there is a short cut?
+
+I claim that the “kernel”, K(x, y ) = (<x, y>)², achieves the same effect. That is, we do the dot product on x and y instead of f(x) and f(y), and then square it.
+
+Let’s test it out:
+
+Reminder: x = (1, 2, 3); y = (4, 5, 6).
+
+<x, y> = x1y1 + x2y2 + x3y3 = 1 x 4 + 2 x 5 + 3 x 6 = 32
+
+K(x, y) = (<x, y>)²= 32² = 1024
+
+Voila, same result. But this calculation is much easier because we only operate in the 3-dimensional space. We never set foot in the 9-dimensional space!

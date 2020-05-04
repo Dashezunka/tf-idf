@@ -1,0 +1,57 @@
+Setup
+
+Let’s generate a Rails API. From the terminal, run the following command:
+
+rails new jwt-rails-api-app --database=postgresql --api
+
+The flag --database=postgresql is included to indicate that PostgreSQL is to be utilized as the database instead of SQLite, and the flag --api is included to indicate that this application is to be set up as an API and to avoid generating the views and view helpers since they are not necessary for an API.
+
+Open the newly generated folder and open Gemfile . We need to include a few gems as part of the setup.
+
+The first is to uncomment/include:
+
+gem 'bcrypt'
+
+Bcrypt will manage hashing the passwords for the user.
+
+The second is to uncomment/include:
+
+gem 'rack-cors'
+
+This allows the Cross-Origin Resource Sharing (CORS) in the API. CORS prevents API calls from unknown origins.
+
+And finally, include:
+
+gem 'jwt'
+
+From the terminal, run bundle install to install the three gems in the application.
+
+Next, navigate to config/initializers/cors.rb and uncomment the following and also replace “example.com” with an asterisk.
+
+CORS
+
+Now, navigate to config/routes.rb . We will define the routes accessible for this application.
+
+For this guide, we will only focus on the routes that handle login, signing up a user, and auto-login. We will define a couple of custom routes to handle the login and auto-login.
+
+Routes
+
+For this guide, we will only focus on generating the controller and model for the User . Ideally, the same approach can be taken for others.
+
+Let’s begin with generating the model for User . We want the following properties for a User instance, :username , :password , and :age .
+
+rails g model User username:string password_digest:string age:integer
+
+Just a few things to note. With :password , if bcrypt is implemented, it is expecting a property of password_digest to hash the password.
+
+Important: To ensure this feature is implemented, define the user macro, has_secure_password , in the User model. And finally, generate the User controller with:
+
+rails g controller Users
+
+The model, controller, and routes for User are now set. Now, let’s run:
+
+rails db:create && rails db:migrate
+
+For test purposes, we can create one User instance in the db/seeds.rb file.
+
+user = User.create(username: "reizl", password: "sample", age: 27)

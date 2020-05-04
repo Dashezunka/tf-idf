@@ -1,0 +1,231 @@
+Overview
+
+One improvement in Fabric v2.0 is that chaincode governance gets decentralized. Each organization has a better control on the chaincode to be deployed in the fabric network. According to the fabric documentation, It is possible that “chaincode packages do not need to be identical across channel members”. An example of using this is that an organization can extend the chaincode to include some additional validation. In this article we try to come up with a demonstration showing how both organizations can have a different set of chaincode, and how to use this feature to include an additional validation required by an organization. As common in my articles, we use v1.4 as a comparison with what is new in v2.0.
+
+Background
+
+Lifecycle chaincode
+
+Fabric v2.0 introduces lifecycle chaincode, which is a process of deploying chaincode to a fabric network. In prior releases, one member organization can instantiate the chaincode in the channel. Lifecycle chaincode include steps which member organizations can explicitly participate into the chaincode deployment.
+
+Here is a quick summary about lifecycle chaincode in v2.0. You can see more detail in fabric documentation, or refer to some of my previous articles touching on this topic (link, link).
+
+Package chaincode Install chaincode package on selected peers in each organization Approve chaincode definition for each organization Commit chaincode definition to channel when lifecycle endorsement policy is satisfied
+
+As we see, organization now can act on step 1–3, namely, having their own chaincode, install it into their own peers, and make approval on the chaincode definition. Only after these steps, chaincode can be committed to a channel and ready for use.
+
+Requirement
+
+We may first be puzzled with the purpose: how come different organizations can have their own chaincodes. At the end of the day, when consortium agrees to build a fabric-based blockchain network and run an application on it, it has a certain “consensus” that they follow a same set of business logic, and same set of results are expected after the chaincode are invoked.
+
+Therefore, one requirement of this case is that the result (proposal response from endorsers) after chaincode invoke should remain the same. Otherwise it is meaningless that these organizations remain in a consortium.
+
+With this requirement satisfied, this feature allows organization to add some business requirement according to their business need. As far as this does not change the business logic at large, this provides a means of flexibility when dealing with chaincode in a consortium.
+
+One suggested use case in the fabric documentation is to allow organization include additional validation in the chaincode. And in this article we are demonstrating this use case. Note that this demonstration may not have business value. Nevertheless, we can monitor how things work and we can apply this idea in real business cases.
+
+Demonstration Setup
+
+First Network
+
+We will use First Network as the fabric network. Here I omit the detail about First Network setup. In short we just bring up the First Network setup without using the default chaincode. Then we deploy other chaincodes.
+
+Chaincode
+
+We will use SACC chaincode for demonstration. SACC provides a simple storage of a key/value pair in the ledger. For example, we can set something like “name”:”Peter” , or “age”:”30" , etc.
+
+For demonstration purpose, based on SACC we build another chaincode sacc-check . In sacc-check , we add a condition check such that the it returns error if the key is “age” . This is to simulate that some keys are not allowed to use in some organizations.
+
+Here is the original SACC chaincode
+
+Here is the sacc-check chaincode (lines 68–70 added)
+
+Lifecycle Process
+
+Here is the lifecycle process for this demonstration.
+
+Note that sacc comes with Init portion of chaincode. To simplify the lifecycle we skip this part by not specifying --init-required option when approving and committing chaincode. This does not impact our demonstration as we will invoke set after we commit the chaincode.
+
+Demonstration: on Fabric v1.4
+
+Here we first apply this in v1.4, and see what happens if we install different chaincodes for different organizations.
+
+Step 1: Bring up a Fabric Host and prepare sacc-check chaincode
+
+cd fabric-samples/chaincode
+
+cp -r sacc sacc-check
+
+cd sacc-check
+
+Edit sacc-check/sacc.go to include the key checking code.
+
+Step 2: Bring up First Network without default chaincode
+
+cd fabric-samples/first-network
+
+./byfn.sh up -n
+
+Wait until the script is executed with a big END sign.
+
+Step 3: Install chaincode to peers of each organization
+
+For demonstration, we install different chaincode to different peers, such that sacc on peer0.org1.example.com , and sacc-check on peer0.org2.example.com .
+
+# peer0.org1.example.com
+
+docker exec cli peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/sacc # peer0.org2.example.com
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer chaincode install -n mycc -v 1.0 -p github.com/chaincode/sacc-check
+
+To check the chaincode installed in each peer.
+
+# peer0.org1.example.com
+
+docker exec cli peer chaincode list --installed # peer0.org2.example.com
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer chaincode list --installed
+
+Note the different chaincodes (Path and ID) installed in the two peers, despite that we are using the same chaincode name and version.
+
+Step 4: Instantiate chaincode
+
+Now we instantiate this chaincode. We refer the installed chaincode by name and version.
+
+docker exec cli peer chaincode instantiate -o orderer.example.com:7050 --tls true --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem -C mychannel -n mycc -v 1.0 -c '{"Args": ["name","kc"]}' -P "AND('Org1MSP.member','Org2MSP.member')"
+
+Check chaincode status of instantiation
+
+docker exec cli peer chaincode list --instantiated -C mychannel
+
+Step 5: Query chaincode from both peers
+
+# peer0.org1.example.com
+
+docker exec cli peer chaincode query -C mychannel -n mycc -c '{"Args":["query","name"]}' # peer0.org2.example.com
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer chaincode query -C mychannel -n mycc -c '{"Args":["query","name"]}'
+
+We see the error here: chaincode fingerprint mismatch for mycc:1.0. It is because we have deployed different chaincodes for different organizations.
+
+It is how prior releases work: we cannot use different chaincodes for different organizations.
+
+Demonstration: on Fabric v2.0
+
+Now we do similar thing on v2.0.
+
+Step 1: Bring up a Fabric Host and prepare sacc-check chaincode
+
+cd fabric-samples/chaincode
+
+cp -r sacc sacc-check
+
+cd sacc-check
+
+Edit sacc-check/sacc.go to include the key checking code.
+
+Load the modules for both sacc and sacc-check if not done before.
+
+cd chaincode/sacc
+
+GO111MODULE=on go mod vendor
+
+cd ../sacc-check
+
+GO111MODULE=on go mod vendor
+
+After this we will see vendor directory created.
+
+Step 2: Bring up First Network without default chaincode
+
+cd fabric-samples/first-network
+
+./byfn.sh up -n
+
+Wait until the script is executed with a big END sign.
+
+Step 3: Package chaincode
+
+As we are using CLI container, we will package the two chaincodes into two package files, and both are now stored in CLI container, and we will specify which to be used in next step.
+
+docker exec cli peer lifecycle chaincode package sacc.tar.gz --path github.com/hyperledger/fabric-samples/chaincode/sacc/ --label sacc_1 docker exec cli peer lifecycle chaincode package sacc-check.tar.gz --path github.com/hyperledger/fabric-samples/chaincode/sacc-check/ --label sacc_1 docker exec cli ls
+
+Step 4: Install chaincode package to peers of each organization
+
+For demonstration, we install different chaincode package to different peers, such that sacc.tar.gz on peer0.org1.example.com , and sacc-check.tar.gz on peer0.org2.example.com .
+
+# peer0.org1.example.com
+
+docker exec cli peer lifecycle chaincode install sacc.tar.gz # peer0.org2.example.com
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer lifecycle chaincode install sacc-check.tar.gz
+
+To check the chaincode installed in each peer.
+
+# peer0.org1.example.com
+
+docker exec cli peer lifecycle chaincode queryinstalled # peer0.org2.example.com
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer lifecycle chaincode queryinstalled
+
+Note that their package IDs are different.
+
+Step 5: Approve chaincode definition for each organization
+
+Chaincode definition is the same for both organizations. The only difference is on the package ID specified.
+
+For Org1
+
+docker exec cli peer lifecycle chaincode approveformyorg --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --channelID mychannel --name mycc --version 1 --sequence 1 --waitForEvent --package-id <packageID>
+
+For Org2
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer lifecycle chaincode approveformyorg --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --channelID mychannel --name mycc --version 1 --sequence 1 --waitForEvent --package-id <packageID>
+
+Check the commit readiness for this chaincode definition.
+
+docker exec cli peer lifecycle chaincode checkcommitreadiness --channelID mychannel --name mycc --version 1 --sequence 1 --output json
+
+We see the approvals are made, despite the fact that different chaincode packages were used.
+
+Step 6: Commit chaincode definition
+
+docker exec cli peer lifecycle chaincode commit -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt --channelID mychannel --name mycc --version 1 --sequence 1
+
+Check the commit.
+
+docker exec cli peer lifecycle chaincode querycommitted --channelID mychannel --name mycc --output json
+
+Now the chaincode is ready for use.
+
+Step 7: Invoke set() with “name”
+
+docker exec cli peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -C mychannel -n mycc -c '{"Args":["set","name","kc"]}'
+
+And we query from both peers.
+
+# peer0.org1.example.com
+
+docker exec cli peer chaincode query -C mychannel -n mycc -c '{"Args":["query","name"]}' # peer0.org2.example.com
+
+docker exec -e CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp -e CORE_PEER_ADDRESS=peer0.org2.example.com:9051 -e CORE_PEER_LOCALMSPID="Org2MSP" -e CORE_PEER_TLS_ROOTCERT_FILE=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt cli peer chaincode query -C mychannel -n mycc -c '{"Args":["query","name"]}'
+
+We immediately see the difference. In v1.4 (step 5 in previous session), the query failed. Now we can make query on chaincode despite the fact that different chaincodes are installed in these two peers.
+
+Step 8: Invoke set() with “age”
+
+Now we see if the validation works in Org2 works. We invoke set() with key “age” .
+
+docker exec cli peer chaincode invoke -o orderer.example.com:7050 --tls --cafile /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem --peerAddresses peer0.org1.example.com:7051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/tls/ca.crt --peerAddresses peer0.org2.example.com:9051 --tlsRootCertFiles /opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/tls/ca.crt -C mychannel -n mycc -c '{"Args":["set","age","30"]}'
+
+As we can see this fails, and the reason “Unable to set age” is exactly what we code in the chaincode. Org2 successfully implements additional validation in its chaincode.
+
+Summary
+
+From this demonstration we see that Fabric v2.0 allows different chaincode to be installed and approved for different organizations. This is a way to decentralize the chaincode operation, to ensure that member organization can explicitly agree on the chaincode and the endorsement policy. While the big business logic is agreed by consortium, individual organization can apply additional measures on the chaincode to reflect some organization-specific requirement.
+
+Note that if the chaincode modification causes fundamental change on business logic, it may yield to totally different endorsing result from different organizations, and the blockchain application will simply not function any more. Client will not proceed the transactions if different endorsement results are received.
+
+We also need to consider the endorsement policy of application chaincode. In this example we are using default endorsement policy, which is majority. Since we have two organizations here, majority means 2 out of 2. If we have three organizations, then 2 out of 3 can satisfy the policy. There is chance that Org1 and Org3 have endorsed the proposal while Org2, with a modified chaincode, have not. In this case, the transaction is successful, a new block still arrives in all peers, but this may lead to undesired result. As a result, always do better planning if organizations wish to add codes. If possible, it is still desired to include those codes in the chaincode, and maintain the same chaincode across organizations.
+
+Finally, as said before, the demonstration may not make much business sense. Nevertheless, it provides a reference when we encounter real need in any business networks.

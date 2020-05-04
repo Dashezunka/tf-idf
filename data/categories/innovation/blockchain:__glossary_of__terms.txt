@@ -1,0 +1,55 @@
+This article is the introduction to a series of writings offered from Valmas Associates, that will be dealing with blockchain technology, its applications to everyday life, the legal challenges they present for governments and existing societal structures as well as an outline of the regulatory instruments developing in response.
+
+Blockchain technology & DLT are destined to have an increasingly central part in our social and economic lives in the coming years. We begin with an introduction of the basic terms that may help the reader acquire a deeper understanding of the mechanics of blockchain and blockchain technologies (cryptocurrency, distributed ledger technology, smart contracts, tokenized assets etc.).
+
+GLOSSARY OF TERMS:
+
+Altcoin: The term altcoins refers to all cryptocurrencies other than Bitcoin.
+
+Bitcoin (₿) (BTC): Bitcoin is a digital currency (also called cryptocurrency) launched in 2009, that is not backed by any nation’s central bank or government. Bitcoins can be traded for goods or services with vendors who accept Bitcoins as payment. Bitcoin-to-Bitcoin transactions are made by digitally exchanging anonymous, heavily encrypted hash codes across a peer-to-peer (P2P) network (blockchain). The P2P network (blockchain) monitors and verifies the transfer of Bitcoins between users. Each user’s Bitcoins are stored in a program called a digital wallet, which holds one public sending and one public receiving address, as well as a private key known only to the user.
+
+Blockchain: A blockchain is a is a shared and synchronised digital database (ledger) containing a growing list of records, called blocks, that are linked using cryptography. Each block contains a cryptographic hash of the previous block, a timestamp, and transaction data. By design, a blockchain is resistant to modification of the data it contains. It is “an open, distributed ledger that can record transactions between two parties efficiently and in a verifiable and permanent way” (Iansiti, Marco; Lakhani, Karim R., January 2017, The Truth About Blockchain, Harvard Business Review. Harvard University, accessed on the 17th of March 2020, https://hbr.org/2017/01/the-truth-about-blockchain). Once recorded, the data in any given block cannot be altered retroactively without alteration of all subsequent blocks, which requires consensus of the network majority. Recorded data is stored on multiple nodes i.e. computers that store a local version of the database. Blockchain is the key to implementing Distributed Ledger Technology (DLT).
+
+Blockchain Consensus mechanism: Blockchain consensus mechanism is the body of rules (algorithms) and a fault tolerant mechanism, by virtue of which, each node in a network validates or rejects any proposed change to the blockchain it administers. One of its uses is record-keeping. There are different types of consensus mechanism algorithms working under different sets of rules (e.g. see below proof of work (POW), proof of stake (POS).
+
+Cryptocurrency: A digital currency in which encryption techniques and hashing algorithms are used to regulate the generation of units of currency and verify the transfer of funds, operating independently of a central bank. Cryptocurrencies achieve this by using a decentralized control based on blockchain technology. Bitcoin was the first cryptocurrency followed by thousands of altcoins (variants or other cryptocurrencies).
+
+Distributed Ledger Technology (DLT) (shared ledger): It is a technology used for sharing an electronic ledger between multiple participants (nodes, devices) in such a way as to ensure that the ledger is secure, tamper-proof, and that all of the parties hold an identical copy of the ledger simultaneously (so long as the ledger is updated through the network and current). One iteration of a distributed ledger design is the blockchain system and it can be either public or private.
+
+Distributed consensus: It is a collective agreement by various computers (nodes) (e.g. a ledger of transactions) in a network (P2P) that is electronically shared in identical form by these participants (eliminating the requirement for a central authority to deter dishonest participants).
+
+Hashing algorithm: A hashing algorithm is a cryptographic hash function. It is a mathematical algorithm that maps data of arbitrary size to a hash of a fixed size. Unlike encryption, it is designed to be a one-way function, infeasible to invert. This enables verification of information without sharing: if the hash of certain data is recorded on a blockchain,one can verify they have the same data by comparing the hash, without ever seeing the original source data held by the other party.
+
+Hash pointer: The hash function is also used in blockchains to tie each link of the chain to the previous one: Hash pointers can be used to build a linked list, which is also called a blockchain. The hash stored in the hash pointer is the hash of the whole data of the previous block, which also includes the hash pointer to the block before that one. Because any change in the input changes the output, any change to the previous block would result in a different hash pointer, and so on with each successive block, which is what makes blockchain tamper-proof.
+
+Node: Blockchains are maintained by a network of devices (computers, laptops or servers) called nodes, which are authorised to store a copy of the blockchain and whose purpose is to validate and implement updates to the blockchain. Nodes are connected to each other constantly exchanging the latest blockchain data thus staying up to date. In a nutshell they validate transactions and accept or reject them, they store block transactions, they broadcast the transaction history to other nodes which in turn need to update on transaction history.
+
+Peer to Peer (P2P): In a P2P network, the peers are computer systems which are connected to each other via the Internet. Files can be shared directly between systems on the network without the need of a central server. In other words, each computer on a P2P network becomes a file server as well as a client.
+
+Public ledgers & blockchains: They are open to the public i.e. everyone can use them, access them.
+
+Private ledgers & blockchains: They are not open to the public (yet the public may be given access).
+
+PLEASE NOTE: The distinction between public and private is about the right of access, use of the network.
+
+Permissioned ledgers & blockchains: A permissioned blockchain (ledger) is one where only certain authorised parties are allowed to act as a node and administer the ledger. In these blockchain types, a control layer runs on top of the blockchain that governs the actions performed by the allowed participants.
+
+Permissionless ledgers & blockchains: Permissionless blockchains allows any participant to act as a node i.e. to participate and do transactions or even participate in the consensus method. Bitcoin and Ethereum are two examples of permissionless (public) blockchains.
+
+PLEASE NOTE: The distinction between permissioned and permissionless blockchain is about who can run nodes in the network. Both Public & Private Blockchains can be either permissioned or permissionless.
+
+Private key: In public key cryptography, the private key, also known as a secret key, is a unique piece of data that is kept secret and enables the holder to encrypt a message or decrypt any message that has been encrypted with the corresponding public key.
+
+Proof of Work (POW): The proof of work (POW) is a common consensus algorithm used by the most popular cryptocurrency networks like Bitcoin. It requires a participant node to prove that the work done and submitted by them qualifies them to receive the right to add new transactions to the blockchain. However, this whole mining mechanism of bitcoin needs high energy consumption and longer processing time.
+
+Proof of Stake (POS): The proof of stake (POS) is a common consensus algorithm but it has the benefit of being a low-cost and low-energy consuming alternative to the POW algorithm. It involves allocation of responsibility in maintaining the public ledger to a participant node in proportion to the number of virtual currency tokens held by that node.
+
+Public key: In public key cryptography, the public key is a unique piece of data that can be disseminated widely to everyone and will enable, in turn, anyone to encrypt a message. However, they will not be able to decrypt it.
+
+SHA-256: There are different hashing algorithms used for various cryptocurrencies such as SHA-256, Ethash, Scrypt, Equihash, Cryptonight, X11. SHA-256 stands for “Secure Hash Algorithm”. It generates a 256 bit (32 byte) signature for a text string. Its block processing time is generally around seven minutes and requires hash rates at giga hashes per second. This mining algorithm is used by Bitcoin.
+
+Smart contract: A smart contract is a computer protocol intended to digitally facilitate, verify, or enforce the negotiation or performance of a contract. Smart Contracts are an innovative, self-executing agreement between two anonymous parties, namely, the buyer, and the seller, without the need of any central authority or legal guidance. Thus, the emergence of blockchain technologies has given rise to a new generation of electronic contracts that are based on distributed ledger technologies and are executed by a network of nodes. Smart contracts already have uses e.g. in the healthcare industry.
+
+Tamper-proof: This term describes a data structure that cannot be interfered with or changed without this becoming obvious to the administrator of the structure. In the case of blockchain, this is achieved by the chain structure of successive blocks, where tampering with any individual block creates a mismatch with all subsequent blocks.
+
+Tokenized asset: The tokenization of assets refers to the process of issuing a blockchain token (specifically, a security token) that digitally represents a real world asset — in many ways similar to the traditional process of securitization. Thus, that real world assert is represented by a token on an electronic ledger, i.e. a blockchain.

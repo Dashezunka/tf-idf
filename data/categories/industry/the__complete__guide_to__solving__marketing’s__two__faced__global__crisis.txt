@@ -1,0 +1,39 @@
+Crisis II: Customer Experience (CX) and its Management (CXM)
+
+Marketing has been in crisis since the emergence of digital technology nearly three decades ago. For the purpose of this post, I’ll define this second crisis as:
+
+“the consistent inability of (mostly) marketers to design and deliver experiences consumers and customers want, need, and expect.”
+
+Crisis II has two dimensions:
+
+1. Customer Experience (CX, experiences organizations design and deliver;
+
+2. Customer Experience Management (CXM), how brands operationalize and manage CX.
+
+Crisis II is both remarkable, e.g. people’s expectations change faster than brands can keep pace, and remarkably consistent, e.g. the gap between how consumers perceive experiences and how brand marketing designs and delivers them continues to widen:
+
+Forrester Research, November 18, 2019, Melissa Parrish — https://go.forrester.com/blogs/marketers-moment-of-truth-and-how-to-move-forward/
+
+Despite NPS, CES, CSAT, and hosts of home-grown and in-house metrics brands have deployed to stack rank customer behavior feedback and help organizations deliver better experiences, people continue to expect more than most brands deliver. And despite stacks of SMMS, CMS, DEP, XM, CRM, and a myriad of other point solutions and enterprise platforms, the CX/CXM gap gets wider. Crisis II just gets worse:
+
+New research suggests that CX has and will remain a more important consideration for customers than price or product for many customer segments and personas, e.g. Gen Z. That same research is validated by a 2019 report that finds more than 75% of consumers consider OR switch to a brand competitor after just one bad experience.
+
+In “The Future of Organizations,” Forrester Research indicates Crisis II is even more acute:
+
+(CX, and CXM) “…will be at the core of how adaptive firms position themselves for the future — CX will be the defining expression of purpose and brand, as market dynamism continues to reshape the business landscape.”
+
+Machine learning, AI, quantum computing, new data privacy regimes, and a host of other emerging technologies and regimes portend that people will likely continue to move faster than business and enterprise; consumer expectations will likely shift even more rapidly, making it even more challenging for marketers to meet and exceed customer expectations.
+
+It’s a dual-headed monster
+
+Here’s the (not so) fun part. Think about Crisis II in the context of Crisis I. Marketers are in a crisis and in crisis. One made worse by the other, in an instant. People are scared, uncertain about the future; marketers are unsure about what people want and expect, even less certain about CX and CXM than ever. How are customer expectations shifting moment-to-moment? What should brand experiences look like when the pandemic subsides? How should brand executives and their marketing teams deal with this level of uncertainty?
+
+Every corporate executive is now in the process of considering any and all possible futures and, at the same time, managing minute-to-minute, day-to-day, week-to-week. Marketers have to re-think brand meaning or redesign brand purpose, if they even had one, for a future they can’t clearly envision.
+
+Here’s how complex things look today: let’s say social distancing becomes a new normal. How will automobile marketers modify the actual process of buying cars? Does it mean the end of test-drives, because shoppers don’t want to touch a steering wheel someone infected may have just touched? You’re the CMO of L Brands; how will your store managers and associates keep racks and stacks of merchandise germ-free as shoppers return to J Crew? Does it mean the end of try-on before buying? Do physical retailers need to inventory hand sanitizer or face masks for employees and customers?
+
+Sadly, so many marketers can’t stop themselves from shifting messaging to align with sentiments around urgency, safety, community, and humanity in the face of COVID. During last night’s “60 Minutes,” 18 of 20 brand ads, from global auto manufacturers and Walmart to local credit unions here in Colorado, leveraged the crisis, promoting new pricing, financing and payment plan options, or simply that they’re donating to local healthcare providers and response teams.
+
+Brand marketers are giving in to the urge, compelling as it is, to do something, anything, to keep revenue flowing in and the brand top-of-mind in the moment:
+
+People don’t care that McDonald’s recreated its logo — moved the arches apart — to illustrate their commitment to social distancing. Rather, it’s more likely that people want confirmation that every Big Mac is germ-free, that hourly workers change protective gear and wash their hands after touching anything and everything. We can’t be sure what the new normal will be, but this is how people might perceive it. CX, and CXM, is in for a massive disruption.

@@ -1,0 +1,79 @@
+ERC-721 Ethermon Game
+
+First of all, let’s outline some assumptions about each Ethermon:
+
+Each is owned by someone.
+
+They start at level one.
+
+You battle other Pokemon.
+
+You gain levels by battling.
+
+We also need some logic around the battles. For simplicity, let’s assume that if one Ethermon attacks another, the winner will be determined by which Ethermon is the higher level. If the levels are the same, the attacker wins. Winners of battles go two levels up, losers go one level up.
+
+Project creation
+
+Please note, we’re going to use the Truffle Suite in this walkthrough.
+
+Start by creating a new folder and initializing the Truffle project.
+
+mkdir ethermon
+
+cd ethermon/
+
+truffle init
+
+Use OpenZeppelin
+
+To use OpenZeppelin, we need to import the library via npm. Let’s initialize npm, then get the correct version of OpenZeppelin. We’re using the latest stable version, which at time of writing is version 2.5.0 . Make sure you have Solidity compiler version 0.5.5 .
+
+npm init
+
+npm install @openzeppelin/contracts@2.5.0 --save
+
+Extend ERC-721
+
+In our contracts/ folder, let’s create a new file called Ethermon.sol . To include all of the functionality written for us in the OpenZeppelin code, we need to import and extend ERC721.sol .
+
+Figure 1 shows us what Ethermon.sol should look like at this point:
+
+Figure 1: Ethermon.sol
+
+We ensure our contract compiles properly by running truffle compile . Next up, let’s write our migration script so we can deploy it to our local Blockchain. Create a new migration file in migrations/ called 2_deploy_contracts.js . Paste in the contents of Figure 2.
+
+Figure 2: 2_deploy_contracts.js
+
+Ensure that your truffle-config.js is set up correctly for your local Blockchain. You can test this by running truffle test .
+
+Write Ethermon logic
+
+We need the Ethermon contract to be able to:
+
+Create new monsters. Assign monsters to their owners. Let owners battle their monsters against other monsters.
+
+Let’s begin by tackling step 1. We need our Ethermon contract to store an array of all the monsters in existence. That monster data needs to store a few pieces of information, like name and level, so we’re going to use a struct.
+
+Figure 3 shows what our contract should look like at this stage.
+
+Figure 3: Creating new monsters
+
+Our Monster struct is defined on line 7 and our array on line 12. We’ve also added a gameOwner variable to store the address that deployed the Ethermon contract. Line 19 shows the definition of our createNewMonster() function.
+
+Firstly, it checks that the function was called by the owner of the game. Then it generates an ID using the number of monsters in existence, pushes a new monster to our array, and finally uses _safeMint() to assign the monster ID to the owner of it. This covers steps 1 and 2.
+
+_safeMint() is a function provided to us by the ERC-721 contract that ours extends from. It safely assigns the ID to an address by checking that the ID does not already exist.
+
+As it stands, we’re able to create new monsters and assign them to owners. On to step 3: battle logic.
+
+Battle logic
+
+As mentioned earlier, our battle logic determines how many levels a monster goes up. The higher-level monster wins and goes up two levels, the loser goes up one. If they are the same level, the attacker wins. Figure 4 shows what our contract looks like when we add the code for battles.
+
+Figure 4: Ethermon.sol with Battle function added
+
+Line 19 now shows the battle function logic. Currently, anyone can call battle() . However, we need to limit the function so only the owner of the attacking monster can initiate a battle. For this, we can add a modifier that utilizes the ownerOf() function in ERC721.sol . Figure 5 shows us what that looks like.
+
+There we have it! A very basic but working monster battling game built using ERC-721.
+
+We can create new monsters and assign owners. From there, owners of monsters can fight others to level-up their monsters.

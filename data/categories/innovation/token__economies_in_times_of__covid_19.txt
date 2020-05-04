@@ -1,0 +1,51 @@
+With the coronavirus (COVID-19) pandemic disrupting global supply chains, closing borders, and forcing people to stay at home, we find ourselves standing on the brink of a new economic downturn that’s potentially worse than 2008 — a rare, unpredictable event with severe consequences known as a “black swan”.
+
+However, the biggest problem is not just the disease’s danger to health, but also consumer confidence. Infected people can have no symptoms and still spread the disease while they travel or socialise. This allows it to spread fast, causing fear and uncertainty. When people are afraid, they avoid unnecessary risks. That causes the economy to enter a natural downturn. Hence, our enemy is not just the virus, but fear and uncertainty.
+
+None of these things will go away on their own. If people worry about their income security, they become nervous, resulting in stockpiling, looting, or riots. During a crisis, employers face similar concerns about reduced income which could eat up their liquidity. This drives them to reduce costs by laying off staff, cutting expenses or closing down unprofitable ventures.
+
+The entire global supply chain is also in danger. The global supply chain relies on credit and payment guarantees, a functioning international payment system, and a predictable scheme of supply and demand. The spread of the coronavirus causes these individual links in the chain to become fragile, and the lack of guarantees or uncertainty about demand can break this chain. In such a scenario, we face shortages of essential goods (such as food and medical supplies) and a surplus of non-essentials (such as luxury goods), which will need to be temporarily stored away.
+
+Governments, which live on tax income and from borrowing or even printing money, aren’t immune either. They worry about a drain on capital and unhappiness from a potentially large number of unemployed people. Governments cannot cut costs easily as it would be counterproductive on all levels, because their income comes from services and jobs which keep people calm.
+
+So they do the only thing they can do. To stimulate the economy, governments encourage businesses and individuals to spend. Companies receive subsidies to keep their staff. Individuals receive money from different governmental funds and insurances. Essentially, money is thrown from helicopters using newly printed money from central banks.
+
+This conjuring of money out of thin air is unsustainable and will backfire sooner or later. The amount of money can be increased but value cannot. And if this crisis lasts as long as experts fear — 6 to 9 months or longer — then the value that backs the money would have decreased significantly, triggering widespread inflation rendering all savings practically worthless.
+
+If the status quo is kept, the economy could face worse consequences. And its cause wouldn’t be Covid-19, but the measures governments took to battle fear and uncertainty. Unfortunately, there is no consensus about what the strategy should be. If debate is started about a globally coordinated approach it is likely to continue into next year. Furthermore, we are talking about the difficulty of changing structures that have been in place for decades or even centuries. But, clearly, we have to change course. We need to battle fear and uncertainty without killing our future. How?
+
+First, guarantees must be established. People want assurance that there will be jobs, supplies and money to pay employees and contractors in the foreseeable future. The assurance has to be long enough to break the chain of fear, even during a crisis.
+
+Second, while goods and services are accounted for in global currencies, the local values differ widely. This needs to change into a system that is more consistent. Thanks to globalization,those currencies fluctuate and do not accurately reflect local value. In other words, US$1 in a developed economy like Switzerland buys much less food than US$1 in a developing country, while the price of an iPhone is more or less the same around the world. The biggest impact can be felt in poor countries.
+
+Third, there is a need to balance industrial capacity. We’ve spent a lot of energy and resources on things that are not needed during this crisis. There is a surplus of industrial capacity for luxury goods such as cars and electronics, but a temporary shortage of medical supplies and electronics we need to work from home such as webcams, microphones, notebooks, screens.
+
+All three issues are linked to values in one way or another. And these values are accounted for in one of the major world currencies. While this is okay on a large scale, it becomes critical in a small ecosystem of families struggling to survive.
+
+All currencies in the world today are issued by governments, for various reasons such as ease of logistics and protection from fraud. But what if there was another way to determine value apart from currency?
+
+Enter blockchain. While much of the focus has been on bitcoin and other network tokens from the technology’s early days, blockchain’s greatest advantage is in creating unforgeable units of account for any specific value we decide. Tokens can be used for anything: A claim for resources or a share of profit for intellectual property or revenue. It can represent work that is done or a claim for some asset backed by something in safe storage. There is no limit to the imagination, and this is the essence of it.
+
+Blockchain prevents forgery and so-called double spending. This brings a private token on the same level as a currency issued by the government. But it should not replace currencies, just augment their purpose.
+
+Using blockchain has a lot of advantages especially when it comes to auditing. Take a look at the following scenarios below. Without blockchain, these are much harder to track and audit and much harder to execute. They require tremendous amounts of paperwork, whereas blockchain allows us to do it with a few keystrokes.
+
+In our hypothetical scenarios below, tokens play a major role in battling the impact of COVID-19. Governments need money during a crisis to stimulate the economy and insure companies and individuals against losses. I would propose the following steps:
+
+1) An organization (central bank or global committee) issues tokens with monetary value. The best would be a basket of global currencies. They can be redeemed any time from this organization in real money. But for the time being they are just tokenized.
+
+2) Countries or governments tokenize resources and use them as backing for the tokenized money. Resources can be anything. Natural resources such as gold, copper, iron. Or even mining rights or water rights. Governments can buy back the resource tokens at ZERO interest any time. This step is important as it prevents the entire chain of value from deteriorating due to a lack of backing. Governments will naturally try to avoid losing resources, so they have an incentive to carefully invest the granted funding.
+
+3) Individuals tokenize their worktime. Within limits this means that anyone who holds the token can claim work from that person. This is no different to what we have right now anyway, with our workplaces and the benefit of working for just a single employer. As we are talking about a crisis where people would be happy to have some work at all, working and being paid is definitely better than not being paid. There is a clear maximum what amount of worktime an individual can tokenize. You can’t doublespend your time and work 40 hours a day. And blockchain can make sure there is no fraud.
+
+4) Companies tokenize their industrial or service output. This can be the capacity of their machines, the service hours of their employees or something similar. They can either tokenize all or just those in excess, which they cannot sell to their customers. To make the measure work, they would tokenize their capacity for 12 months in advance. Also, there is a clear maximum with what can be tokenized. Startups would be a special circumstance, as they don’t yet have a working product or earnings. In this scenario, these companies can tokenize their IP or their work hours as service output.
+
+5) Governments buy excess industrial or service tokens from companies and have the right to put their industrial or service capacity to use to create essential goods during the crisis. A company will naturally try to avoid having to change too much in its processes or equipment setup. So, they have the right to buy back their tokens at ZERO interest any time in case they find another buyer or customer.
+
+6) Companies buy the workforce tokens of their employees. Without the pressure of having to do lay-offs, companies would want to keep their employees.
+
+Such a system uses tokens to augment existing monetary and fiscal policies by using the best parts of both worlds. It has built-in incentives for all parties to do the best with their core values and not squander it. At the same time, it introduces enough of an insurance that fear and uncertainty are minimized.
+
+In the worst case, if the economy does not recover, the tokenized system could take over and replace the unbalanced global currency system by introducing local currencies backed by industrial capacities, worktime and natural resources. At best, these tokens will co-exists with money as a standardized unit of account.
+
+However, faced with this unprecedented crisis, we should consider bold measures such as the one presented above and use all means we have at hand to change course before it is too late.

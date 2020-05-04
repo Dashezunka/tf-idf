@@ -1,0 +1,41 @@
+Around three years ago, powerful ransomware began spreading across the world and jeopardizing the healthcare sector. ‘WannaCry’ spread like wildfire, encrypting several computers worldwide in a matter of hours. Hospitals across the UK declared a “major incident” after they were knocked offline by the malware. Government facilities and private companies were also hit.
+
+Now with the COVID-19 pandemic situation, we are forced to become more dependent on the Internet with desperate measures and imposition of social distancing. This dependency further creates vulnerability, and also malicious attempts to exploit this sudden, unplanned societal shift. Yet again, there is a danger looming at us. And this time, we cannot afford to go offline.
+
+Yet again exposed the concerns of public health and cybersecurity, generating sobering reminder of the underlying problems that we face as a society.
+
+Global Proliferation of Cybercrime during the COVID19 Pandemic
+
+Earlier this month, there was an increase cyberattack across the health care sector in Europe.
+
+In the Czech Republic, Brno University Hospital, which is a major COVID-19 testing hub, had suffered an attack. That incident disrupted the functioning of the institution, the health care sector, supply chain networks, and also caused surgery postponements.
+
+Similarly, even in the United Kingdom, the Hammersmith Medicines Research (HMR), which is performing trails on COVID-19 vaccines, was hacked. The personal data of thousands of former patients were leaked online after the company failed to pay the ransom amount. Also, according to the French cybersecurity agency, the Paris AP-HP hospital was targeted. However, the cyber-attack was unable to do any damage.
+
+Similar incidents were reported by law enforcement across the developed part of the world. However, in many other places, due to lack of procedures and laws, the cybercrime activities are not reported and thereby bringing up an urgent need to establish an orderly framework, regulations, and procedures to deal with this grim scenario.
+
+The Burgeoning Cybercrime Industry
+
+Cybercrime itself is a fast-growing industry and increased with the current COVID19 pandemic situation. It is estimated that the cybercrime economy is worth $1.5 trillion, and new criminal platforms are booming. The cybercrime economy is reported to be “self-sufficient” and blurs the line of legality.
+
+Ursula von der Leyen, president of the European Commission, has warned that cybercrime in the European Union has increased due to the coronavirus outbreak. Cybercriminals are taking advantage of the increasing amount of time that people spend online due to new measures taken by member states to stop the spread of the virus. Also, according to the commission, the European network of Computer Security Incident Response Teams (CSIRTs), which raised the level of alert, urging for cyber resilience measures during this period.
+
+Cyber threats at the time of this pandemic
+
+“The pandemic has opened up a business opportunity for predatory criminals. Authorities around the world seized nearly 34 000 counterfeit surgical masks, making them the most commonly sold medical product online. Law enforcement officers identified more than 2 000 links to products related to COVID-19.”
+
+Law enforcement officials report that criminals are, among other things, selling fake COVID-19 cures online, posing as intergovernmental or governmental health organizations in phishing emails, and inserting malware into online resources tracking the pandemic. This COVID-19-related spike underscores that policy efforts to “flatten the curve” on cybercrime have not succeeded.
+
+Also, the World Health Organization (WHO) recently warned about suspicious email messages attempting to take advantage of the COVID-19 emergency by stealing money and sensitive information from the public.
+
+As the economic activities are getting disrupted, cybercriminals are getting active in exploring the vulnerabilities of cyberspace to “earn a living.”
+
+With an unprecedented number of employees suddenly working remotely, cybersecurity and data privacy programs are unable to counter. An extraordinary number of people are confined to their homes, accessing the Internet for both work and entertainment. Psychologically, many are anxious about COVID-19 and want to do something to help. For cybercriminals, this is the opportunity of a lifetime. For others who want to help, there is a need to get familiar with cyber hygiene practices and social engineering tactics.
+
+Is government surveillance the only way forward?
+
+In some countries such as China, Taiwan, Israel, and South Korea, the success in countering the COVID19 pandemic is due to the increased government surveillance. These countries are using technology, monitoring and big data analytics in the fight against COVID-19, and the success has encouraged other governments, such as the United Kingdom, to explore this strategy.
+
+This development connects to ongoing legal, ethical, and technological concerns about the cybersecurity of government databases and the privacy protections needed when governments collect and use personal information to monitor behavior.
+
+There is undoubtedly a need for evaluation of the use of this tactic Post-pandemic. There is a requirement to access whether and how synergies created by more integration of big data and digital technologies. Also, the damage done by COVID-19 might provide incentives for governments and public health experts to overlook cybersecurity and privacy concerns in favor of technological capabilities that promise results in preventing and controlling life-and-death emergencies.

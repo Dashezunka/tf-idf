@@ -1,0 +1,13 @@
+Tokens and Cookies
+
+If we are going to develop an API-Rest, we recommend the use of JWT (JsonWebToken) instead of cookies since APIs are also used today by much simpler HTTP clients than traditional web browsers that do not support cookies natively.
+
+In case our application requires the use of cookies for session management, to ensure that cookies do not open the application for attacks, do not use the default session cookie name and set the cookie security options correctly.
+
+For Node.js, there are two main cookie session modules:
+
+The main difference between the two modules is how they save session data from cookies. The express-session middleware stores session data on the server. It only stores the session ID in the cookie itself — not the session data.
+
+The cookie-session middleware, on the other hand, implements cookie-based storage: It serializes the entire session in the cookie rather than just a session key.
+
+Here’s an example of renaming the session cookie with express-session:

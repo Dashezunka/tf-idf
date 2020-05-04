@@ -1,0 +1,33 @@
+(Tex Vector/Shutterstock)
+
+Big data drives our world, from the macro to the micro — from global economies and market trends to the news stories that show on our LinkedIn and Twitter feeds each morning. Economies of the 21st century are information economies, and increasing amounts of data, along with the enhanced ability to process and analyze its meaning, is the hidden fabric helping to build better financial, government and social systems.
+
+The importance of Big Data and what we do with it is now center stage. In the case of the international fight against the COVID-19 pandemic, a key problem is that our data just isn’t big enough, and to get larger data sets, maintaining privacy becomes a delicate balance. Governments are struggling to find privacy-law compliant ways to enable health and data scientists to access real-time knowledge on the spread of the virus, and it’s a problem that has grown as the severity of the pandemic has increased.
+
+Particularly over the past week, global experts have had to face that our ability to track, predict and respond to the virus is weakened by our lack of understanding of key facts — including identifying active carriers, estimating antigen levels, and determining the scope of the still-uninfected. Researchers confront further challenges in gathering the data, streamlining it into a usable format, and sharing it in a timely and private way across sectors and geography.
+
+Data Capture
+
+A few weeks into the pandemic, data aggregate sites like ArcGIS (Global), Anodot (US) and Covid Tracking (US) have provided up-to-date public information and in some cases, a submission portal for data on the spread of the virus. Data most often originates at the government level through public health agencies and research institutions, but challenges to medical system access during the shutdown and a relative scarcity of real-time information has led researchers to search for other data capture methods.
+
+The emergence of Big Data means that a vast amount of information on internet, social media and smartphone users is already being processed and analyzed by companies and governments around the world. However, the use of this information for unauthorized purposed poses a serious privacy challenge, particularly with stringent privacy laws like the European Union’s General Data Protection Regulation (GDPR), which is already loosening in response to the pandemic.
+
+Debates are ongoing about the ethics of using phone location data to monitor the spread of COVID-19 or the movements of confirmed cases. New solutions have been proposed for pandemic data capture like MIT Lab’s app that notifies users if they came in contact with someone known to be infected, or the UK’s Kings College Covid Symptom Tracker. With government-mandated apps unlikely to be accepted, these voluntary and opt-in solutions let people contribute to the crisis efforts by mobilizing their own data as a resource.
+
+And they may be more accurate than predicted. What apps with user-submitted symptomatology lack in verification, they make up for in scale — hundreds of millions of people all voluntarily providing basic health details should (hopefully) create enough of a sample size to significantly improve data accuracy. In addition to symptom or diagnosis information, app users could opt-in to share their phone’s GIS locations for more accurate mapping.
+
+Another issue facing pandemic researchers comes after the data is captured — how to share it in a structured, secure format. Across the globe, thousands of academic institutions, public health agencies and research facilities are all working on the same problem — and to build stronger models, they may need to access and share privacy-protected health data like electronic health records (EHRs). In many cases, departments within the same organization confront these privacy and coordination challenges when sharing EHRs, leading to systemic inefficiencies and lengthy delays.
+
+Big Data and Blockchain
+
+Blockchain’s cryptographically secured architecture gives Big Data a big privacy boost, ensuring that the database contents have not been altered. It simplifies distribution, since the decentralized nature of the network allows information to be instantly shared with authorized users who host nodes. In a blockchain system for pandemic data capture, this would allow thousands of organizations to read and add to an international data pool structured in an organized, readily usable format, leading to better predictions and faster decisions.
+
+Some companies are already merging the two technologies — an MIT spinoff called Endor is claiming to have invented the ‘Google for predictive analytics’ using the Etherium blockchain platform and its own AI models. The company says it can process encrypted data without the need for decryption, and use it to provide automated AI predictions. With no data science expertise required, this type of technology would have definite utility with sensitive data during pandemics.
+
+Privacy Protection
+
+When it comes to sharing more sensitive information like patient care records, developing a system of governance and protocols for data gathering and analysis is crucial. Even in times of crisis, privacy and security need to be maintained, as much as possible, in the face of an urgent need for life-saving information.
+
+Emerging blockchain applications like MTCB’s free, open-source platform show how the technology is ideal for privacy protection when sharing access to EHRs. Blockchain offers the same protection for voluntary app-submitted data, which can be securely stored and shared without the risk of database breaches that could leak personal information, damage public trust and reduce usage. Using streamlined, low-cost digital payments on blockchain, governments could even incentivize voluntary app use by compensating users for their time and data sharing.
+
+The solutions of the future are emerging from the knowledge and understanding we’re gaining from the challenges of managing our current crisis. Big Data is the weapon of today in identifying and stopping the spread of COVID-19 — and with its security, transparency and ability to enhance analytics, blockchain has the power to help build the effective pandemic response systems of tomorrow.

@@ -1,0 +1,47 @@
+We are going to write a function called arrFill that will accept an integer ( n ) as an argument.
+
+You are given an integer that is greater than or equal to one. The goal of the function is to output an array of positive numbers from 1 to n (inclusive).
+
+let n = 4;
+
+// output [1, 2, 3, 4]
+
+While we can approach this problem with a for-loop and populate the array inside the loop. We can try another approach using the map() method.
+
+Before we use the map method, we’ll need the create an array and pre-populate it. We’ll start by using Array.fill to set up an array with n slots and populate it with zeros.
+
+new Array(n).fill(0)
+
+Now we have a random array and that has a length of n . Next, we’ll use the map method to populate the array from 1 to n.
+
+Inside our callback function, our array has nothing but zeros so we can’t really do anything with the numbers in the array. We can do something with the array index of each number. Since we want to count from 1 to n, we’ll populate the array with the array index ( index + 1 to account for zero-indexing).
+
+We’ll assign our new array to a variable called arr.
+
+let arr = new Array(n).fill(0).map(function(num, index) {
+
+return index + 1;
+
+});
+
+Then, we can return our array.
+
+return arr;
+
+Here is the rest of the function:
+
+function arrFill(n) {
+
+let arr = new Array(n).fill(0).map(function(num, index) {
+
+return index + 1;
+
+});
+
+
+
+return arr;
+
+}
+
+There is nothing wrong with using for-loops to pre-populate an array. This is just another way to pre-populate an array with numbers from 1 to n that doesn’t involve using a standard JavaScript loop.

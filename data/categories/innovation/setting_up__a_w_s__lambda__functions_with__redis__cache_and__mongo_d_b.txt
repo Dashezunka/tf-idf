@@ -1,0 +1,791 @@
+Caching is one of the most effective techniques or strategies to optimise application performance and user experience. It can be implemented both on the frontend and on the backend. Frontend caching involves storing response data (data returned from requests) on the client side which results in faster navigation and reduces the the number requests sent to the backend. Backend caching can dramatically increase the read performance of an application and can be used with any type of database.
+
+In this post, I’ll be focusing on the latter and demonstrating how to make use of Redis as our caching layer and MongoDB as our database. Before we jump straight into it, let’s start by understanding the problem so that we can better understand the solution that a caching server would provide.
+
+Prerequisites:
+
+Indexing in MongoDB
+
+When Mongo receives a query, it is sent to the Index. The Index is an efficient data structure for looking up sets of records inside a MongoDB collection. They are efficient because they allow us to not have to look at every single record inside the collection to figure out the one we’re trying to find. Indexes like this are what make Mongo very quick. Lookups of records occur very quickly — so we don’t have to worry too much about performance.
+
+However, whenever an index is created for a Mongo collection, an Index targets an individual property that exists on these records in the collection. Indexes are flexible and can be modified or tailored to look at multiple fields together or to consider different properties.
+
+If we have an index specifically for the _id property of a document, that means if we ask for a document with a specific _id, the index will easily find it. This operation is very quick to execute.
+
+What happens if we issue a query for a document with a specific property other than the _id? Let’s say we want to find a dog by its breed instead of _id. If an index for this property does not exist then we won’t have the fast lookup of data inside our collection. In this case, Mongo would revert to looking through each record to find a property match. This process is known as a full collection scan. A collection scan, as the name implies, means you have to look
+
+at every single record inside of a given collection — this is relatively extremely expensive operation to carry out. In reality, we may write queries that don’t have an index available and this can lead to performance concerns.
+
+There are two ways to solve this problem:
+
+Add multiple indexes for a given collection — this allows us to lookup certain documents based on certain properties or fields that have an index. However, whenever we add indexes to a collection, that has an impact on our ability to write to that collection performantly. For every index we add to a collection, it takes longer to write to that collection. Furthermore, every time we add more indexes, that consumes more disk space and more memory. Also, figuring out the indexes you will need ahead of time might be tricky and time consuming.
+
+Setup a cache server — we’ll explore this option below.
+
+Caching Layer
+
+In our Lambda functions, we’re going to be making use of Mongoose. Mongoose is an Object Data Modeling (ODM) library for MongoDB and Node.js. It manages relationships between data, provides schema validation, and is used to translate between objects in code and the representation of those objects in MongoDB. Between Mongoose and MongoDB, we add a cache server. Any time Mongoose issues a query, it’s first going to go to the cache server. The cache server checks if the exact query has been issued before. If it hasn’t, then the cache server will forward the request to the db which will execute the query. The result of the query is then returned to the cache server which stores the result.The cache server maintains a record of queries that are issued and the responses that come back from them. The response is then sent over to Mongoose. If future queries are sent and the cache server has a record of it, it wont send them forward to MongoDB, it will return the stored response. The cache layer is only every used for read operations. Anytime we write some amount of data we need to make sure we clear any data stored on the cache server that is related to the record that we just wrote or updated.
+
+Redis Instance
+
+As you may have guessed by now, our caching server is going to be a Redis instance. Redis is an in-memory data store. You can think of it as a tiny database that runs in the memory of your machine and allows you to read
+
+and write data very quickly. It operates only in memory, so once it gets turned off or restarted, all of the data that resided in it, is instantly deleted. You can use a redis library to connect to an instance (redis://127.0.0.1:6379). We’ll be using the Node Redis library in our Lambda funcitons.
+
+Cache Keys
+
+We want query keys that are consistent but unique between query executions.
+
+Key => query
+
+Value => result of query
+
+We need to have a key that is consistent and unique between executions,
+
+so we need to look at the query itself that we’re making and try to identify some value
+
+inside of it that is consistent and unique.
+
+Whichever user makes this request will always have a unique id:
+
+const dogs = await Dog.find({ user: req.user.id })
+
+In this case, req.user.id is both consistent and unique.
+
+Another variable inside the query to make a note of is the collection
+
+that we’re making the query over, in this case Dog collection.
+
+Key => user id
+
+Value => dogs owned by that user
+
+Create SLS Project for Lambda Functions
+
+Our AWS Lambda service will be a set of cloud functions that manipulate a collection of users in MongoDB.
+
+$ sls create --template aws-nodejs --path sls-users-api
+
+This will generate boilerplate code that you can get rid of from the the get-go. In case you don’t have a package.json file, you can go ahead and create one in the switching to your project directory and running the following command:
+
+$ npm init -y
+
+Install Dependencies
+
+Once that’s done, you can install the following dependencies:
+
+$ npm i --save moment mongoose redis
+
+$ npm i -D prettier serverless-dotenv-plugin serverless-offline
+
+Go ahead and add the following two scripts to the package.json file:
+
+"start": "sls offline start"
+
+"lint": "prettier --write '**/*.js'"
+
+The first script will be start up the serverless-offline plugin so we can emulate AWS Lambda and API Gateway locally. The second script is totally optional but nice to have so that our code looks pretty 😉.
+
+Your package.json file should then look something like this:
+
+{
+
+"name": "sls-users-api",
+
+"version": "1.0.0",
+
+"description": "",
+
+"main": "handler.js",
+
+"dependencies": {
+
+"moment": "^2.24.0",
+
+"mongoose": "^5.9.7",
+
+"redis": "^3.0.2"
+
+},
+
+"devDependencies": {
+
+"prettier": "^2.0.2",
+
+"serverless-dotenv-plugin": "^2.3.2",
+
+"serverless-offline": "^6.1.3"
+
+},
+
+"scripts": {
+
+"start": "sls offline start",
+
+"lint": "prettier --write '**/*.js'",
+
+"test": "echo \"Error: no test specified\" && exit 1"
+
+},
+
+"keywords": [],
+
+"author": "Luke Mwila",
+
+"license": "ISC"
+
+}
+
+Serverless Configuration
+
+Let’s turn our attention to the serverless.yml file. I’ll start by setting the region to eu-west-1 , but you can go ahead and select a different region that best suits you.
+
+You’ll notice that we installed a plugin called serverless-dotenv-plugin . Configuring this plugin will allow us to preload environment variables into serverless. We’re going to have variables stored in a .env file that we want loaded into our lambda functions.
+
+Also, we are going to configure the serverless-offline plugin we installed earlier that will emulate AWS Lambda and API Gateway as follows:
+
+plugins:
+
+- serverless-dotenv-plugin
+
+- serverless-offline
+
+After that, I’ll set some custom variables, and most importantly, the handler functions that will be used to generate the API endpoints. Our serverless.yml file will look like this:
+
+service: sls-cms-users provider:
+
+name: aws
+
+runtime: nodejs12.x
+
+region: eu-west-1
+
+memorySize: 128
+
+timeout: 3
+
+
+
+plugins:
+
+- serverless-dotenv-plugin
+
+- serverless-offline custom:
+
+allowedHeaders:
+
+- Accept
+
+- Content-Type
+
+- Content-Length
+
+- Authorization
+
+stage: ${opt:stage, self:provider.stage} functions:
+
+create-user:
+
+handler: api/v1/create-user.handler
+
+description: POST /api/v1/users
+
+events:
+
+- http:
+
+path: api/v1/users
+
+method: post
+
+cors:
+
+origin: '*'
+
+headers: ${self:custom.allowedHeaders} get-users:
+
+handler: api/v1/get-users.handler
+
+description: GET /api/v1/users
+
+events:
+
+- http:
+
+path: api/v1/users
+
+method: get
+
+cors:
+
+origin: '*'
+
+headers: ${self:custom.allowedHeaders} get-user:
+
+handler: api/v1/get-user.handler
+
+description: GET /api/v1/users/{userId}
+
+events:
+
+- http:
+
+path: api/v1/users/{userId}
+
+method: get
+
+request:
+
+parameters:
+
+paths:
+
+userId: true
+
+cors:
+
+origin: '*'
+
+headers: ${self:custom.allowedHeaders} update-user:
+
+handler: api/v1/update-user.handler
+
+description: PUT /api/v1/users/{userId}
+
+events:
+
+- http:
+
+path: api/v1/users/{userId}
+
+method: put
+
+request:
+
+parameters:
+
+paths:
+
+userId: true
+
+cors:
+
+origin: '*'
+
+headers: ${self:custom.allowedHeaders} delete-user:
+
+handler: api/v1/delete-user.handler
+
+description: DELETE /api/v1/users/{userId}
+
+events:
+
+- http:
+
+path: api/v1/users/{userId}
+
+method: delete
+
+request:
+
+parameters:
+
+paths:
+
+userId: true
+
+cors:
+
+origin: '*'
+
+headers: ${self:custom.allowedHeaders}
+
+Root Folder Structure
+
+Before going any further, you should know that the folder structure I am working with for my serverless project is as follows:
+
+├── api/v1/
+
+├── config/
+
+├── .serverless.yml
+
+├── .prettierrc
+
+└── .env
+
+Feel free to structure it as you please. Below are the configurations for both prettier and my environment variables.
+
+.env
+
+USERS_DB=mongodb://localhost:27017/users-db
+
+REDIS_URL=redis://127.0.0.1:6379
+
+REDIS_AUTH=MySupposedlySecureRedisPassword@2020?
+
+.prettierrc
+
+{
+
+"trailingComma": "es5",
+
+"tabWidth": 2,
+
+"semi": true,
+
+"singleQuote": true
+
+}
+
+API Folder Structure
+
+Inside our config folder, we’ll add a db.js file that will create the connection to our MongoDB database.
+
+db.js
+
+const mongoose = require('mongoose'); const db = process.env.USERS_DB; const connectDB = async () => {
+
+try {
+
+await mongoose.connect(db);
+
+console.log('MongoDB connected...');
+
+} catch (err) {
+
+console.log(err.message);
+
+// Exit process with failure
+
+process.exit(1);
+
+}
+
+}; module.exports = { connectDB };
+
+Inside the api/v1/ folder, I have the following structure:
+
+├── models/
+
+├── services/
+
+├── create-user.js
+
+├── delete-user.js
+
+├── get-user.js
+
+├── get-users.js
+
+├── update-user.js
+
+└── utils.js
+
+User Model
+
+If you’ve got experience with the backend side of a MEAN or MERN stack, then this part will be relatively straightforward for you. Models are higher-order constructors that take a schema and create an instance of a document equivalent to records in a relational database. Inside the models folder, create the following User model.
+
+User.js
+
+const { Schema, model } = require('mongoose'); const UserSchema = new Schema({
+
+cognitoId: {
+
+type: String,
+
+required: true,
+
+},
+
+email: {
+
+type: String,
+
+required: true,
+
+},
+
+firstName: {
+
+type: String,
+
+},
+
+lastName: {
+
+type: String,
+
+},
+
+phoneNumber: {
+
+type: String,
+
+},
+
+dob: {
+
+type: String,
+
+},
+
+timestamp: {
+
+type: Number,
+
+},
+
+gender: {
+
+type: String,
+
+},
+
+createdAt: {
+
+type: String,
+
+},
+
+updatedAt: {
+
+type: String,
+
+},
+
+}); const User = model('users', UserSchema);
+
+module.exports = User;
+
+Intercepting Mongoose Queries to check Cache
+
+Alright, this is where it get’s interesting. Sorry it took so long to get to this part. Inside the service folder, we’re going to create a file called cache.js. Mongoose uses classical prototypal inheritance. We want to hook into the exec function and add in custom caching logic. We want to hook into the exec function and add in custom caching logic. In this file, we’re going to store a reference to the original exec function from Mongoose where we’ll intercept it before it hits the MongoDB database. We will then override the exec function to check whether we already have a stored response in our cache for the particular query being made. If we do find the response for that query, we’ll return it from the cache, otherwise we’ll proceed to fetch from the database and store the result in the cache. Most of the credit for this particular approach goes to Stephen Grider.
+
+I have added a lot of comments to the function to help understand exactly what is going on every step of the way.
+
+cache.js
+
+const mongoose = require('mongoose');
+
+const redis = require('redis');
+
+const util = require('util');
+
+const redisUrl = process.env.REDIS_URL;
+
+const client = redis.createClient(redisUrl); client.auth(process.env.REDIS_AUTH);
+
+client.hget = util.promisify(client.hget); // This stores a reference to the original exec function
+
+const exec = mongoose.Query.prototype.exec; mongoose.Query.prototype.cache = function (options = {}) {
+
+// this is equal to the query instance
+
+this.useCache = true;
+
+// cache key for top level property
+
+this.hashKey = JSON.stringify(options.key || 'default');
+
+// to make this a chainable function call, return this
+
+return this;
+
+}; // Override the exec function
+
+mongoose.Query.prototype.exec = async function () {
+
+// if useCache is not set to true, then don't run any of the logic below
+
+if (!this.useCache) {
+
+return exec.apply(this, arguments);
+
+} // Run the following before any query is executed by Mongo
+
+const key = JSON.stringify(
+
+Object.assign({}, this.getQuery(), {
+
+collection: this.mongooseCollection.name,
+
+})
+
+); // See if we have a value for 'key' in redis
+
+const cacheValue = await client.hget(this.hashKey, key); // If we do, return the cached value
+
+if (cacheValue) { const document = JSON.parse(cacheValue);
+
+// Anything that comes out of Redis is in JSON form
+
+// so we need to parse it
+
+// and then return a Mongoose model instance // this.model represents the model that this query is attached to
+
+// we can create a new instance of it
+
+return Array.isArray(document)
+
+? document.map((doc) => {
+
+// Hyrdate values
+
+return new this.model(doc);
+
+})
+
+: new this.model(document);
+
+}
+
+// Otherwise, issue the query and store the result in redis
+
+const result = await exec.apply(this, arguments);
+
+// Set cache expiration
+
+client.hset(this.hashKey, key, JSON.stringify(result)); return result;
+
+}; module.exports = {
+
+clearHash(hashKey) {
+
+client.del(JSON.stringify(hashKey));
+
+},
+
+};
+
+Handler Functions
+
+We can now implement our handler functions and make use of the cache service we just created above. As you would expect, we will only make use of the cache service in the query functions. However, we will clear the key for particular items stored in the cache when they have been either updated or deleted.
+
+create-user.js
+
+/**
+
+* Route: POST /api/v1/user
+
+*/
+
+const mongoose = require('mongoose');
+
+const moment = require('moment');
+
+const User = require('./models/User');
+
+const util = require('./utils');
+
+const { connectDB } = require('../../config/db'); ('use strict'); module.exports.handler = async (event) => {
+
+try {
+
+const userProps = JSON.parse(event.body); const response = await connectDB().then(async () => {
+
+const user = await User.create({
+
+...userProps,
+
+createdAt: moment().toISOString(),
+
+updatedAt: moment().toISOString(),
+
+timestamp: moment().unix(),
+
+}); console.log(`Successfully created user in db with id ${user._id}`); return {
+
+statusCode: 201,
+
+headers: util.getResponseHeaders(),
+
+body: JSON.stringify(user),
+
+};
+
+}); mongoose.connection.close(); return response; } catch (err) {
+
+console.log('Encountered an error:', err); return {
+
+statusCode: err.statusCode ? err.statusCode : 500,
+
+headers: util.getResponseHeaders(),
+
+body: JSON.stringify({
+
+error: err.name ? err.name : 'Exception',
+
+message: err.message ? err.message : 'Unknown error',
+
+}),
+
+};
+
+}
+
+};
+
+delete-user.js
+
+/**
+
+* Route: DELETE /api/v1/user/{userId}
+
+*/
+
+const mongoose = require('mongoose');
+
+const User = require('./models/User');
+
+const util = require('./utils');
+
+const { clearHash } = require('./services/cache');
+
+const { connectDB } = require('../../config/db'); ('use strict'); module.exports.handler = async (event) => {
+
+try {
+
+const userId = decodeURIComponent(event.pathParameters.userId); const response = await connectDB().then(async () => { const user = await User.findByIdAndRemove({ _id: userId }); console.log(`Successfully deleted user in db: ${userId}`); return {
+
+statusCode: 204,
+
+headers: util.getResponseHeaders()
+
+};
+
+}); clearHash(userId);
+
+mongoose.connection.close(); return response; } catch (err) {
+
+console.log('Encountered an error:', err); return {
+
+statusCode: err.statusCode ? err.statusCode : 500,
+
+headers: util.getResponseHeaders(),
+
+body: JSON.stringify({
+
+error: err.name ? err.name : 'Exception',
+
+message: err.message ? err.message : 'Unknown error',
+
+}),
+
+};
+
+}
+
+};
+
+get-user.js
+
+/**
+
+* Route: GET /api/v1/user/{userId}
+
+*/
+
+const mongoose = require('mongoose');
+
+const User = require('./models/User');
+
+const util = require('./utils');
+
+require('./services/cache');
+
+const { connectDB } = require('../../config/db'); ('use strict'); module.exports.handler = async (event) => {
+
+try {
+
+const userId = decodeURIComponent(event.pathParameters.userId); const response = await connectDB().then(async () => {
+
+const user = await User.findById({
+
+_id: userId,
+
+}).cache({ key: userId }); console.log(`Successfully fetched user from db: ${user._id}`); return {
+
+statusCode: 200,
+
+headers: util.getResponseHeaders(),
+
+body: JSON.stringify(user),
+
+};
+
+}); mongoose.connection.close(); return response; } catch (err) {
+
+console.log('Encountered an error:', err); return {
+
+statusCode: err.statusCode ? err.statusCode : 500,
+
+headers: util.getResponseHeaders(),
+
+body: JSON.stringify({
+
+error: err.name ? err.name : 'Exception',
+
+message: err.message ? err.message : 'Unknown error',
+
+}),
+
+};
+
+}
+
+};
+
+get-users.js
+
+/**
+
+* Route: GET /api/v1/users
+
+*/
+
+const mongoose = require('mongoose');
+
+const User = require('./models/User');
+
+const util = require('./utils');
+
+require('./services/cache');
+
+const { connectDB } = require('../../config/db'); ('use strict'); module.exports.handler = async (event) => {
+
+try { const response = await connectDB().then(async () => {
+
+const users = await User.find().cache(); console.log('Successfully fetched users from db'); return {
+
+statusCode: 200,
+
+headers: util.getResponseHeaders(),
+
+body: JSON.stringify(users),
+
+};
+
+}); mongoose.connection.close(); return response; } catch (err) {
+
+console.log('Encountered an error:', err); return {
+
+statusCode: err.statusCode ? err.statusCode : 500,
+
+headers: util.getResponseHeaders(),
+
+body: JSON.stringify({
+
+error: err.name ? err.name : 'Exception',
+
+message: err.message ? err.message : 'Unknown error',
+
+}),
+
+};
+
+}
+
+};
+
+utils.js
